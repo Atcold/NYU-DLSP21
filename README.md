@@ -1,5 +1,4 @@
-# DLSP21
-NYU Deep Learning Spring 2021
+# NYU Deep Learning Spring 2021 (NYU-DLSP21)
 
 
 ## Content new organisation
@@ -39,7 +38,7 @@ A more powerful one.
 
 ## Previous releases
 
-Before DLSP21 there were…
+Before NYU-DLSP21 there were…
 
 - [NYU-DLSP20](https://github.com/Atcold/pytorch-Deep-Learning)
 - [NYU-DLSP19](https://github.com/Atcold/pytorch-Deep-Learning/releases/tag/dlsp19)

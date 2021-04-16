@@ -1,0 +1,46 @@
+permalink:           pretty
+
+# Setup
+title:               'Deep Learning'
+url:                 https://atcold.github.io/pytorch-Deep-Learning/
+baseurl:             '/pytorch-Deep-Learning'
+homepage_title:      Home
+default_lang:        'en'
+
+# About/contact
+author:
+name:                atcold
+url:                 https://twitter.com/alfcnz
+github:
+  repo:              https://github.com/atcold/pytorch-Deep-Learning/
+
+# Custom vars
+version:             dlsp20
+
+src:                 "."
+default_theme:       "ayu"
+
+defaults:
+  - scope:
+      path: "" # an empty string here means all files in the project
+    values:
+      layout: "custom"
+
+# For Maths
+markdown:            kramdown
+
+# To use hljs, disable the default highlighter
+kramdown:
+  syntax_highlighter_opts:
+    disable: true
+  math_engine: null
+
+exclude:
+  - jekyllbook
+  - en/index.md
+  - vendor
+
+################################### English ####################################
+# prologues:
+#   - path: en/about.md
+chapters:

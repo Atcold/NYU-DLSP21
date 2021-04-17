@@ -50,4 +50,4 @@ Before NYU-DLSP21 there were…
 
 ## More info
 
-Keep reading on the [class website](atcold.github.io/nyu-dlsp21/).
+Keep reading on the [class website](https://atcold.github.io/NYU-DLSP21/).

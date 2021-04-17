@@ -40,7 +40,7 @@ A more powerful one.
 
 Before NYU-DLSP21 there were…
 
-- [NYU-DLSP20](https://github.com/Atcold/pytorch-Deep-Learning)
+- [NYU-DLSP20](https://github.com/Atcold/pytorch-Deep-Learning) (major release)
 - [NYU-DLSP19](https://github.com/Atcold/pytorch-Deep-Learning/releases/tag/dlsp19)
 - [AIMS-DLFL19](https://github.com/Atcold/pytorch-Deep-Learning/releases/tag/aims-fl18)
 - [CoDaS-HEP18](https://github.com/Atcold/pytorch-Deep-Learning/releases/tag/v1.0.0)

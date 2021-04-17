@@ -30,7 +30,7 @@ Henceforth, I've redesigned my whole deck of slides.
 ## This semester repository
 
 That's why this repo has been created.
-I'm **not** going to try to the same insane work I've put up with last year, but I need a space where to post updated slides, notebooks, and host new transcriptions.
+I'm **not** going to try to do the same insane work I've put up with last year, but I need a space where to post updated slides, notebooks, and host new transcriptions.
 Last year material is still valid.
 This year you have a different take.
 A more powerful one.

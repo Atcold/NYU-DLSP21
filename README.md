@@ -46,3 +46,4 @@ Before NYU-DLSP21 there were…
 - [CoDaS-HEP18](https://github.com/Atcold/pytorch-Deep-Learning/releases/tag/v1.0.0)
 - [NYU-DLSP18](https://docs.google.com/document/d/1_p1Mw-NtMGN_vpas_pchLsQC2u0NM5mTnRapBrQ2ivk/)
 - [Purdue-DLFL16](https://docs.google.com/document/d/1ugJRMqQ_cCUQC1B8mSE0iro7sKrDT8-BnppTZv0rA08/)
+- [torch-Video-Tutorials](https://github.com/Atcold/torch-Video-Tutorials)

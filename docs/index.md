@@ -11,7 +11,7 @@ lang-ref: home
 | LECTURES    | Wednesday 9:30 – 11:30, Zoom |
 | PRACTICA    | Tuesdays 9:30 – 10:30, Zoom |
 | FORUM       | [r/NYU_DeepLearning](https://www.reddit.com/r/NYU_DeepLearning/) |
-| MATERIAL    | [Notebooks 2020](https://github.com/Atcold/pytorch-Deep-Learning), [Notebooks 2021](https://github.com/Atcold/NYU-DLSP21) |
+| MATERIAL    | [2021 repo](https://github.com/Atcold/NYU-DLSP21) |
 
 
 ## Content new organisation

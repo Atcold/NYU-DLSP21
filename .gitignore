@@ -1,0 +1,26 @@
+# Remove [I]Python caching
+__pycache__
+.ipynb_checkpoints
+
+# Remove Mac shit
+.DS_Store
+
+# Remove Vim temp files
+*sw*
+
+# Ignore Data files
+*.tar.gz
+*.feat
+*.txt
+*.data
+.idea/
+*.pth
+*-ubyte
+*.pt
+*.png
+!docs/**/*.png
+imdb
+data
+.jekyll-cache
+_site
+.vscode

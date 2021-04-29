@@ -44,3 +44,15 @@ exclude:
 # prologues:
 #   - path: en/about.md
 chapters:
+  - path: en/week01/01.md
+  - path: en/week02/02.md
+  - path: en/week03/03.md
+  - path: en/week04/04.md
+  - path: en/week05/05.md
+  - path: en/week06/06.md
+  - path: en/week07/07.md
+  - path: en/week10/10.md
+  - path: en/week11/11.md
+  - path: en/week12/12.md
+  - path: en/week13/13.md
+  - path: en/week14/14.md

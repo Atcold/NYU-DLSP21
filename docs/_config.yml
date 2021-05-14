@@ -2,8 +2,8 @@ permalink:           pretty
 
 # Setup
 title:               'Deep Learning'
-url:                 https://atcold.github.io/pytorch-Deep-Learning/
-baseurl:             '/pytorch-Deep-Learning'
+url:                 https://atcold.github.io/NYU-DLSP21/
+baseurl:             '/NYU-DLSP21'
 homepage_title:      Home
 default_lang:        'en'
 
@@ -12,10 +12,10 @@ author:
 name:                atcold
 url:                 https://twitter.com/alfcnz
 github:
-  repo:              https://github.com/atcold/pytorch-Deep-Learning/
+  repo:              https://github.com/atcold/NYU-DLSP21
 
 # Custom vars
-version:             dlsp20
+version:             dlsp21
 
 src:                 "."
 default_theme:       "ayu"
@@ -58,5 +58,7 @@ chapters:
   - path: en/week10/10.md
   - path: en/week11/11.md
   - path: en/week12/12.md
+    sections:
+        - path: en/week12/12-3.md
   - path: en/week13/13.md
   - path: en/week14/14.md

@@ -57,6 +57,7 @@ chapters:
   - path: en/week11/11.md
   - path: en/week12/12.md
     sections:
+        - path: en/week12/12-1.md
         - path: en/week12/12-3.md
   - path: en/week13/13.md
   - path: en/week14/14.md

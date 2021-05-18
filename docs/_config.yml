@@ -47,6 +47,8 @@ chapters:
   - path: en/week01/01.md
   - path: en/week02/02.md
   - path: en/week03/03.md
+    sections:
+        - path: en/week03/03-3.md
   - path: en/week04/04.md
   - path: en/week05/05.md
   - path: en/week06/06.md

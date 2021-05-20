@@ -46,6 +46,8 @@ exclude:
 chapters:
   - path: en/week01/01.md
   - path: en/week02/02.md
+    sections:
+        - path: en/week02/02-3.md
   - path: en/week03/03.md
     sections:
         - path: en/week03/03-3.md

@@ -55,6 +55,8 @@ chapters:
   - path: en/week05/05.md
   - path: en/week06/06.md
   - path: en/week07/07.md
+    sections:
+      - path: en/week07/07-3.md
   - path: en/week08/08.md
     sections:
       - path: en/week08/08-3.md

@@ -28,3 +28,4 @@ Check the repo's [`README.md`](https://github.com/Atcold/NYU-DLSP21/blob/master/
 
 Most of the lectures, labs, and notebooks are similar to the previous edition, nevertheless, some are brand new.
 I will try to make clear which is which.
+

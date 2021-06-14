@@ -11,6 +11,7 @@ lang-ref: home
 | LECTURES    | Wednesday 9:30 – 11:30, Zoom |
 | PRACTICA    | Tuesdays 9:30 – 10:30, Zoom |
 | FORUM       | [r/NYU_DeepLearning](https://www.reddit.com/r/NYU_DeepLearning/) |
+| DISCORD     | [NYU DL](discord.gg/CthuqsX8Pb) |
 | MATERIAL    | [2021 repo](https://github.com/Atcold/NYU-DLSP21) |
 
 
@@ -28,4 +29,3 @@ Check the repo's [`README.md`](https://github.com/Atcold/NYU-DLSP21/blob/master/
 
 Most of the lectures, labs, and notebooks are similar to the previous edition, nevertheless, some are brand new.
 I will try to make clear which is which.
-

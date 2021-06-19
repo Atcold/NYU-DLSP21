@@ -24,16 +24,16 @@ We've treated LV-EBM as a *basic* module, which to build upon.
 
 ## Nouvelle organisation du contenu
 
-Ce semestre, nous avons réorganisé le matériel didactique.
-Au cours de la première moitié du semestre, nous avons couvert 3 sujets, s'étalant sur deux semaines, chacun étant suivi d'un devoir.
-De plus, à chaque cours magistral correspondait un travail pratique.
+Ce semestre, nous avons réorganisé le matériel didactique.  
+Au cours de la première moitié du semestre, nous avons couvert 3 sujets, s'étalant sur deux semaines, chacun étant suivi d'un devoir.  
+De plus, à chaque cours magistral sont associés des travaux dirigés.    
 
-1. Historique, rétropropagation et descente de gradient.
-2. Partage des paramètres : réseaux récurrents et convolutifs
-3. Modèles à base d'énergie (EBMs pour "energy based models" ) à variable latente (LV pour "latent variable ")
+1. Historique, rétropropagation et descente de gradient.  
+2. Partage des paramètres : réseaux récurrents et convolutifs.  
+3. Modèles à base d'énergie (EBMs pour "energy based models" ) à variable latente (LV pour "latent variable ").  
 
-Notez que nous avons remanié le programme et le contenu des cours.
-Nous avons traité les LV-EBMs comme un module *de base*, sur lequel il faut s'appuyer.
+Notez que nous avons remanié le programme et le contenu des cours.  
+Nous avons traité les LV-EBMs comme un module *de base*, sur lequel il faut s'appuyer.  
 
 
 <!--
@@ -51,14 +51,14 @@ Henceforth, I've redesigned my whole deck of slides.
 
 ## La seconde moitié du semestre
 
-Alfredo pensait reproduire les mêmes travaux pratiques utilisés pour l'édition de l'année dernière, [NYU-DLSP20](https://github.com/Atcold/pytorch-Deep-Learning), mais dans un ordre différent.
+Alfredo pensait reproduire les mêmes travaux pratiques utilisés pour l'édition de l'année dernière, [NYU-DLSP20](https://github.com/Atcold/pytorch-Deep-Learning), mais dans un ordre différent.  
 
-Cependant il n'a pas pu.
+Cependant il n'a pas pu.  
 
-Les étudiants de cette année ont vu les LV-EBMs et on leur a parlé du *gâteau*.
-Alfredo ne pouvait donc pas prétendre qu'il n'existe pas et enseigner comme s'ils n'étaient pas conscients de l'éléphant dans la pièce.
-Cela aurait été intellectuellement malhonnête.
-Il a donc redessiné l'ensemble de ses diapositives.
+Les étudiants de cette année ont vu les LV-EBMs et on leur a parlé du *gâteau*.  
+Alfredo ne pouvait donc pas prétendre qu'il n'existe pas et enseigner comme s'ils n'étaient pas conscients de l'éléphant dans la pièce.  
+Cela aurait été intellectuellement malhonnête.  
+Il a donc redessiné l'ensemble de ses diapositives.  
 
 
 <!--
@@ -73,11 +73,11 @@ A more powerful one.
 
 ## Dépôt de ce semestre
 
-C'est pourquoi ce dépôt a été créé.
-Il n'est **pas** prévu de faire le même travail insensé que l'année dernière, mais Alfredo a besoin d'un espace où poster des diapositives mises à jour, des notebooks et accueillir de nouvelles transcriptions/traductions.
-Le matériel de l'année dernière est toujours valable.
-Cette année, vous avez un point de vue différent.
-Un point de vue plus puissant.
+C'est pourquoi ce dépôt a été créé.  
+Il n'est **pas** prévu de faire le même travail insensé que l'année dernière, mais Alfredo a besoin d'un espace où poster des diapositives mises à jour, des notebooks et accueillir de nouvelles transcriptions/traductions.  
+Le matériel de l'année dernière est toujours valable.  
+Cette année, vous avez un point de vue différent.  
+Un point de vue plus puissant.  
 
 
 <!--

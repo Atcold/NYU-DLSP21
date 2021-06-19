@@ -1,5 +1,8 @@
 # NYU Deep Learning Spring 2021 (NYU-DLSP21)
 
+<!-- English - French -->
+[🇬🇧](https://github.com/Atcold/NYU-DLSP21/blob/master/README.md) &nbsp; [🇫🇷](https://github.com/Atcold/NYU-DLSP21/blob/master/docs/fr/README-FR.md)
+
 
 ## Content new organisation
 

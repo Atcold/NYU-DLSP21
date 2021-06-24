@@ -30,7 +30,7 @@ De plus, à chaque cours magistral sont associés des travaux dirigés.
 
 1. Historique, rétropropagation et descente de gradient.  
 2. Partage des paramètres : réseaux récurrents et convolutifs.  
-3. Modèles à base d'énergie (EBMs pour "energy based models" ) à variable latente (LV pour "latent variable ").  
+3. Modèles à base d'énergie (EBMs pour *energy based models*) à variable latente (LV pour *latent variable*).  
 
 Notez que nous avons remanié le programme et le contenu des cours.  
 Nous avons traité les LV-EBMs comme un module *de base*, sur lequel il faut s'appuyer.  

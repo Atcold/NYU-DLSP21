@@ -30,5 +30,5 @@ Consultez le fichier [`README.md`](https://github.com/Atcold/NYU-DLSP21/blob/mas
 
 ## Cours magistraux
 
-La plupart des cours, des travaux pratiques et des notebooks sont similaires à l'édition précédente, néanmoins, certains sont tout nouveaux.
-Nous essayrons d'indiquer clairement lesquels.
+La plupart des cours, des travaux dirigés et des *notebooks* sont similaires à l'édition précédente, néanmoins, certains sont tout nouveaux.
+Nous essayerons d'indiquer clairement lesquels.

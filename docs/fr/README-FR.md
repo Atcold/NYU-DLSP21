@@ -1,7 +1,7 @@
 <!--
 # NYU Deep Learning Spring 2021 (NYU-DLSP21)
 -->
-Cours sur l'apprentissage profond de la NYU - printemps 2021 (NYU-DLSP21)
+# Cours sur l'apprentissage profond de la NYU - printemps 2021 (NYU-DLSP21)
 
 <!-- English - French -->
 [🇬🇧](https://github.com/Atcold/NYU-DLSP21/blob/master/README.md) &nbsp; [🇫🇷](https://github.com/Atcold/NYU-DLSP21/blob/master/docs/fr/README-FR.md)

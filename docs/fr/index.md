@@ -14,11 +14,11 @@ translator: Loïck Bourdois
 | COURS MAGISTRAUX  | Mercredi 9:30 – 11:30, Zoom |
 | TRAVAUX DIRIGÉS   | Jeudi 9:30 – 10:30, Zoom |
 | FORUM       | [r/NYU_DeepLearning](https://www.reddit.com/r/NYU_DeepLearning/) |
-| DISCORD     | [NYU DL](discord.gg/CthuqsX8Pb) |
+| DISCORD     | [NYU DL](https://discord.gg/CthuqsX8Pb) |
 | MATERIEL    | [2021 repo](https://github.com/Atcold/NYU-DLSP21) |
 
 
-## Informations liées à l'édition 2021 
+## Informations liées à l'édition 2021
 
 Consultez le fichier [`README.md`](https://github.com/Atcold/NYU-DLSP21/blob/master/docs/fr/README-FR.md) du dépôt pour en savoir plus sur  :
 

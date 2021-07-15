@@ -73,6 +73,8 @@ I will try to make clear which is which.
 
 La plupart des cours, des travaux dirigés et des notebooks sont similaires à l’édition précédente, néanmoins, certains sont nouveaux. Nous essayerons d’indiquer clairement lesquels.
 
+**Légende**: 🖥 diapositives, 📓 notebook Jupyter , 🎥 vidéos YouTube
+
 ### Thème 1 : Introduction
 
  * Historique et ressources [🎥](https://youtu.be/mTtDfKgLm54) [🖥 ](https://drive.google.com/file/d/1vVNUye-1JNJnqP4A0704sjtF7gs_MpCI/)

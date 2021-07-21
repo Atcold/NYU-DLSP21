@@ -30,7 +30,8 @@ Check the repo's [`README.md`](https://github.com/Atcold/NYU-DLSP21/blob/master/
 Most of the lectures, labs, and notebooks are similar to the previous edition, nevertheless, some are brand new.
 I will try to make clear which is which.
 
-**Legend**: 🖥 slides, 📓 Jupyter notebook, 🎥 YouTube video.
+**Legend**: 🖥 slides, 📝 notes, 📓 Jupyter notebook, 🎥 YouTube video.
+
 
 ### Theme 1: Introduction
 
@@ -40,3 +41,12 @@ I will try to make clear which is which.
  * Modules and architectures [🎥](https://youtu.be/IYQN3i7dJIQ)
  * [Neural nets training](https://atcold.github.io/NYU-DLSP21/en/week03/03-3/) [🎥](https://youtu.be/EyKiYVwrdjE) [🖥 ](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/slides/01%20-%20Spiral%20classification.pdf) [📓](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/04-spiral_classification.ipynb)[📓](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/05-regression.ipynb)
 * [Homework 1](https://drive.google.com/drive/folders/1g-uQNEi_NJyELGRMrJGXXxmARDabcXFd)
+
+
+### Theme 2: Parameters sharing
+
+ * Recurrent and convolutional nets [🎥](https://youtu.be/7dU3TFBJl-0) [🖥 ](https://drive.google.com/file/d/1GtI4ywzI84oamyr_W5k_wzgfRN139aFD/) [📝 ](https://drive.google.com/file/d/12jP4ssUIoGURAU8jGj6QwKXyZVdXW0o6/)
+ * ConvNets in practice [🎥](https://youtu.be/-wz_vADGbtE) [🖥 ](https://drive.google.com/file/d/1WX3HoZhekL4MVvi_7VuLRYJtBGnF9JJY/) [📝 ](https://drive.google.com/file/d/1ToWP7e71diAeMtQ0D9pU-f0BXF4bAg46/)
+ * Natural signals properties and the convolution [🎥](https://youtu.be/KvvNkE2vQVk) [🖥 ](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/slides/02%20-%20CNN.pdf) [📓](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/06-convnet.ipynb)
+ * Recurrent neural networks, vanilla and gated (LSTM) [🎥](https://youtu.be/5KSGNomPJTE) [🖥 ](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/slides/04%20-%20RNN.pdf) [📓](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/08-seq_classification.ipynb)[📓](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/09-echo_data.ipynb)
+ * [Homework 2](https://drive.google.com/drive/folders/1or1YiW0fFiZGEYy6b4EOEDgRPr0GQX0i)

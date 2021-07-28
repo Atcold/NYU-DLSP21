@@ -74,6 +74,15 @@ I will try to make clear which is which.
  * Natural signals properties and the convolution [🎥](https://youtu.be/KvvNkE2vQVk) [🖥 ](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/slides/02%20-%20CNN.pdf) [📓](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/06-convnet.ipynb)
  * Recurrent neural networks, vanilla and gated (LSTM) [🎥](https://youtu.be/5KSGNomPJTE) [🖥 ](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/slides/04%20-%20RNN.pdf) [📓](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/08-seq_classification.ipynb)[📓](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/09-echo_data.ipynb)
  * [Homework 2](https://drive.google.com/drive/folders/1or1YiW0fFiZGEYy6b4EOEDgRPr0GQX0i)
+
+### Theme 3: Energy based models, foundations
+
+ * Energy based models (I) [🎥](https://youtu.be/xIn-Czj1g2Q) [🖥 ](https://drive.google.com/file/d/1kLUgZdRYFO5ksYHzbsRS8m8IocNiGu2J/)
+ * Inference for LV-EBMs [🎥](https://youtu.be/xA_OPjRby5g) [🖥 ](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/slides/12%20-%20EBM.pdf)
+ * What are EBMs good for? [🎥](https://youtu.be/eJeJWWEo7cE)
+ * Energy based models (II) [🎥](https://youtu.be/8u2s64ZtmiA) [🖥 ](https://drive.google.com/file/d/1czfiEE6IPqE7q1fTm-SWOiC3VNEtpNrj/) [📝 ](https://drive.google.com/file/d/1IB5dkcAQ6GsHEz8Eg2hjaeQeVtT2i4Z5/)
+ * Training LV-EBMs [🎥](https://youtu.be/XIMaWj5YjOQ) [🖥 ](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/slides/12%20-%20EBM.pdf)
+ * [Homework 3: structured prediction](https://drive.google.com/drive/folders/1zGy_SnMBqaoS7_dHRmKiOFtqNV1jJJb6)
 -->
 
 ## Cours magistraux
@@ -99,3 +108,13 @@ La plupart des cours, des travaux dirigés et des notebooks sont similaires à l
  * Les propriétés des signaux naturels et la convolution [🎥](https://youtu.be/KvvNkE2vQVk) [🖥 ](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/slides/02%20-%20CNN.pdf) [📓](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/06-convnet.ipynb)
  * Réseaux neuronaux récurrents, de base et à portes (LSTM) [🎥](https://youtu.be/5KSGNomPJTE) [🖥 ](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/slides/04%20-%20RNN.pdf) [📓](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/08-seq_classification.ipynb)[📓](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/09-echo_data.ipynb)
  * [Devoir 2](https://drive.google.com/drive/folders/1or1YiW0fFiZGEYy6b4EOEDgRPr0GQX0i)
+
+
+### Thème 3 : Modèles à base d'énergie (EBMs), fondations
+
+ * Modèles à base d'énergie (I) [🎥](https://youtu.be/xIn-Czj1g2Q) [🖥 ](https://drive.google.com/file/d/1kLUgZdRYFO5ksYHzbsRS8m8IocNiGu2J/)
+ * Inférence pour les modèles à base d'énergie à variable latente (LV-EBMs) [🎥](https://youtu.be/xA_OPjRby5g) [🖥 ](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/slides/12%20-%20EBM.pdf)
+ * A quoi servent les EBMs ? [🎥](https://youtu.be/eJeJWWEo7cE)
+ * Modèles à base d'énergie (II) [🎥](https://youtu.be/8u2s64ZtmiA) [🖥 ](https://drive.google.com/file/d/1czfiEE6IPqE7q1fTm-SWOiC3VNEtpNrj/) [📝 ](https://drive.google.com/file/d/1IB5dkcAQ6GsHEz8Eg2hjaeQeVtT2i4Z5/)
+ * Entraînement des LV-EBMs [🎥](https://youtu.be/XIMaWj5YjOQ) [🖥 ](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/slides/12%20-%20EBM.pdf)
+ * [Devoir 3](https://drive.google.com/drive/folders/1zGy_SnMBqaoS7_dHRmKiOFtqNV1jJJb6)

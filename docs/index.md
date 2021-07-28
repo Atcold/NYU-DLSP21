@@ -40,7 +40,7 @@ I will try to make clear which is which.
  * [Neural nets inference](https://atcold.github.io/NYU-DLSP21/en/week02/02-3/) [🎥](https://youtu.be/0TdAmZUMj2k) [📓](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/02-space_stretching.ipynb)
  * Modules and architectures [🎥](https://youtu.be/IYQN3i7dJIQ)
  * [Neural nets training](https://atcold.github.io/NYU-DLSP21/en/week03/03-3/) [🎥](https://youtu.be/EyKiYVwrdjE) [🖥 ](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/slides/01%20-%20Spiral%20classification.pdf) [📓](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/04-spiral_classification.ipynb)[📓](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/05-regression.ipynb)
-* [Homework 1](https://drive.google.com/drive/folders/1g-uQNEi_NJyELGRMrJGXXxmARDabcXFd)
+* [Homework 1: backprop](https://drive.google.com/drive/folders/1g-uQNEi_NJyELGRMrJGXXxmARDabcXFd)
 
 
 ### Theme 2: Parameters sharing
@@ -49,4 +49,13 @@ I will try to make clear which is which.
  * ConvNets in practice [🎥](https://youtu.be/-wz_vADGbtE) [🖥 ](https://drive.google.com/file/d/1WX3HoZhekL4MVvi_7VuLRYJtBGnF9JJY/) [📝 ](https://drive.google.com/file/d/1ToWP7e71diAeMtQ0D9pU-f0BXF4bAg46/)
  * Natural signals properties and the convolution [🎥](https://youtu.be/KvvNkE2vQVk) [🖥 ](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/slides/02%20-%20CNN.pdf) [📓](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/06-convnet.ipynb)
  * Recurrent neural networks, vanilla and gated (LSTM) [🎥](https://youtu.be/5KSGNomPJTE) [🖥 ](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/slides/04%20-%20RNN.pdf) [📓](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/08-seq_classification.ipynb)[📓](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/09-echo_data.ipynb)
- * [Homework 2](https://drive.google.com/drive/folders/1or1YiW0fFiZGEYy6b4EOEDgRPr0GQX0i)
+ * [Homework 2: RNN & CNN](https://drive.google.com/drive/folders/1or1YiW0fFiZGEYy6b4EOEDgRPr0GQX0i)
+
+### Theme 3: Energy based models, foundations
+
+ * Energy based models (I) [🎥](https://youtu.be/xIn-Czj1g2Q) [🖥 ](https://drive.google.com/file/d/1kLUgZdRYFO5ksYHzbsRS8m8IocNiGu2J/)
+ * Inference for LV-EBMs [🎥](https://youtu.be/xA_OPjRby5g) [🖥 ](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/slides/12%20-%20EBM.pdf)
+ * What are EBMs good for? [🎥](https://youtu.be/eJeJWWEo7cE)
+ * Energy based models (II) [🎥](https://youtu.be/8u2s64ZtmiA) [🖥 ](https://drive.google.com/file/d/1czfiEE6IPqE7q1fTm-SWOiC3VNEtpNrj/) [📝 ](https://drive.google.com/file/d/1IB5dkcAQ6GsHEz8Eg2hjaeQeVtT2i4Z5/)
+ * Training LV-EBMs [🎥](https://youtu.be/XIMaWj5YjOQ) [🖥 ](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/slides/12%20-%20EBM.pdf)
+ * [Homework 3: structured prediction](https://drive.google.com/drive/folders/1zGy_SnMBqaoS7_dHRmKiOFtqNV1jJJb6)

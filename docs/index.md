@@ -51,6 +51,7 @@ I will try to make clear which is which.
  * Recurrent neural networks, vanilla and gated (LSTM) [🎥](https://youtu.be/5KSGNomPJTE) [🖥 ](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/slides/04%20-%20RNN.pdf) [📓](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/08-seq_classification.ipynb)[📓](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/09-echo_data.ipynb)
  * [Homework 2: RNN & CNN](https://drive.google.com/drive/folders/1or1YiW0fFiZGEYy6b4EOEDgRPr0GQX0i)
 
+
 ### Theme 3: Energy based models, foundations
 
  * Energy based models (I) [🎥](https://youtu.be/xIn-Czj1g2Q) [🖥 ](https://drive.google.com/file/d/1kLUgZdRYFO5ksYHzbsRS8m8IocNiGu2J/)
@@ -59,3 +60,13 @@ I will try to make clear which is which.
  * Energy based models (II) [🎥](https://youtu.be/8u2s64ZtmiA) [🖥 ](https://drive.google.com/file/d/1czfiEE6IPqE7q1fTm-SWOiC3VNEtpNrj/) [📝 ](https://drive.google.com/file/d/1IB5dkcAQ6GsHEz8Eg2hjaeQeVtT2i4Z5/)
  * Training LV-EBMs [🎥](https://youtu.be/XIMaWj5YjOQ) [🖥 ](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/slides/12%20-%20EBM.pdf)
  * [Homework 3: structured prediction](https://drive.google.com/drive/folders/1zGy_SnMBqaoS7_dHRmKiOFtqNV1jJJb6)
+
+
+### Theme 4: Energy based models, advanced
+
+ * Energy based models (III) [🎥](https://youtu.be/AOFUZZZ6KyU) [🖥 ](https://drive.google.com/file/d/19crFMCpJ5YCGbWv6myv7O4pGaJT6-u5p/)
+ * [Unsup learning and autoencoders](https://atcold.github.io/NYU-DLSP21/en/week07/07-3/) [🎥](https://youtu.be/IuXsG3sN3zY) [🖥 ](https://drive.google.com/file/d/1aa1Hzq5KRekq32mlW4_pgIXMec18WgOg/)
+ * Energy based models (VI) [🎥](https://youtu.be/bdebHVF__mo) [🖥 ](https://drive.google.com/file/d/1w6QO0a2_0Prz1U1mxa1n-YP9U8GW1_kq/)
+ * [From LV-EBM to target prop to (any) autoencoder](https://atcold.github.io/NYU-DLSP21/en/week08/08-3/) [🎥](https://youtu.be/PpcN-F7ovK0) [🖥 ](https://drive.google.com/file/d/1aa1Hzq5KRekq32mlW4_pgIXMec18WgOg/)
+ * Energy based models (V) [🎥](https://youtu.be/AQtPoDnauq4) [🖥 ](https://drive.google.com/file/d/1tKzrnJgptnyMcE_4zWJNP5INeVcVBWkr/)
+ * [AEs with PyTorch and GANs](https://atcold.github.io/NYU-DLSP21/en/week09/09-3/) [🎥](https://youtu.be/bZF4N8HR1cc) [🖥 ](https://drive.google.com/file/d/1aa1Hzq5KRekq32mlW4_pgIXMec18WgOg/) [📓](https://github.com/Atcold/NYU-DLSP21/blob/master/10-autoencoder.ipynb)[📓](https://github.com/Atcold/NYU-DLSP21/blob/master/11-VAE.ipynb)

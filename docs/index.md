@@ -70,3 +70,35 @@ I will try to make clear which is which.
  * [From LV-EBM to target prop to (any) autoencoder](https://atcold.github.io/NYU-DLSP21/en/week08/08-3/) [🎥](https://youtu.be/PpcN-F7ovK0) [🖥 ](https://drive.google.com/file/d/1aa1Hzq5KRekq32mlW4_pgIXMec18WgOg/)
  * Energy based models (V) [🎥](https://youtu.be/AQtPoDnauq4) [🖥 ](https://drive.google.com/file/d/1tKzrnJgptnyMcE_4zWJNP5INeVcVBWkr/)
  * [AEs with PyTorch and GANs](https://atcold.github.io/NYU-DLSP21/en/week09/09-3/) [🎥](https://youtu.be/bZF4N8HR1cc) [🖥 ](https://drive.google.com/file/d/1aa1Hzq5KRekq32mlW4_pgIXMec18WgOg/) [📓](https://github.com/Atcold/NYU-DLSP21/blob/master/10-autoencoder.ipynb)[📓](https://github.com/Atcold/NYU-DLSP21/blob/master/11-VAE.ipynb)
+
+
+### Theme 5: Associative memories
+
+ * Energy based models (V) [🎥](https://youtu.be/AQtPoDnauq4) [🖥 ](https://drive.google.com/file/d/1tKzrnJgptnyMcE_4zWJNP5INeVcVBWkr/)
+ * [Attention & transformer](https://atcold.github.io/NYU-DLSP21/en/week10/10-3/) [🎥](https://youtu.be/fEVyfT-gLqQ) [🖥 ](https://drive.google.com/file/d/1MGfNPjg9YpxMcdfP2GcjluMQXlXud10C/) [📓](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/15-transformer.ipynb)
+
+
+### Theme 6: Graphs
+
+ * [Graph transformer nets](https://atcold.github.io/NYU-DLSP21/en/week11/11/) [[A](https://atcold.github.io/NYU-DLSP21/en/week11/11-1/)][[B](https://atcold.github.io/NYU-DLSP21/en/week11/11-2/)] [🎥](https://youtu.be/Of9s8epjflU) [🖥 ](https://drive.google.com/file/d/1-u2fSSICaWoFu91oiMsd2mAhg6ZGomMg/)
+ * Graph convolutional nets (I) [from last year] [🎥](https://youtu.be/Iiv9R6BjxHM) [🖥 ](https://drive.google.com/file/d/1oq-nZE2bEiQjqBlmk5_N_rFC8LQY0jQr/)
+ * Graph convolutional nets (II) [🎥](https://youtu.be/lWUh7jzhQ1Q) [🖥 ](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/slides/11%20-%20GCN.pdf) [📓](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/16-gated_GCN.ipynb)
+
+
+### Theme 7: Control
+
+ 1. [Planning and control](https://atcold.github.io/NYU-DLSP21/en/week12/12-3/) [🎥](https://youtu.be/wTg6qJlXkok) [🖥 ](https://drive.google.com/file/d/1JDssHbOxX_MZlmOopQaPZxuyCVoNExcM/)
+ 2. The Truck Backer-Upper [🎥](https://youtu.be/C4iSZ3IJU-w) [🖥 ](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/slides/09%20-%20Controller%20learning.pdf) [📓](https://github.com/Atcold/pytorch-Deep-Learning/blob/master/14-truck_backer-upper.ipynb)
+ 3. Prediction and Planning Under Uncertainty [🎥](https://youtu.be/DJgloa244ZQ) [🖥 ](http://bit.ly/PPUU-slides)
+
+
+### Theme 8: Optimisation
+ * Optimisation (I) [from last year] [🎥](https://youtu.be/--NZb480zlg) [🖥 ](https://drive.google.com/open?id=1pwlGN6hDFfEYQqBqcMjWbe4yfBDTxsab)
+ * Optimisation (II) [🎥](https://youtu.be/n1w5b5rTFv0) [🖥 ](https://drive.google.com/file/d/1ExKFOOdyUiLuk3zN5LAVwUyEoI1HJxag/) [📝 ](https://drive.google.com/file/d/1UJibhwdwJPZDwqlVVzeAHScPxK4TDCq5/)
+
+
+### Miscellaneous
+
+ * [SSL for vision](https://atcold.github.io/NYU-DLSP21/en/week10/10/) [[A](https://atcold.github.io/NYU-DLSP21/en/week10/10-1/)][[B](https://atcold.github.io/NYU-DLSP21/en/week10/10-2/)] [🎥](https://youtu.be/8L10w1KoOU8) [🖥 ](https://drive.google.com/file/d/1BQlWMVesOcioW69RCKWCjp6280Q42W9q/)
+ * [Low resource machine translation](https://atcold.github.io/NYU-DLSP21/en/week12/12/) [[A](https://atcold.github.io/NYU-DLSP21/en/week12/12-1/)][[B](https://atcold.github.io/NYU-DLSP21/en/week12/12-2/)] [🎥](https://youtu.be/fR42OOy9ROo) [🖥 ](https://drive.google.com/file/d/1pm1fM1DFqCHrjGorCQCwg5SgMjwZBwGR/)
+ * Lagrangian backprop, final project, and Q&A [🎥](https://youtu.be/MJfnamMFylo) [🖥 ](https://drive.google.com/file/d/1Z9tkkTpsHzcyoPN9yqq8Nv_Bnw5bghEK/) [📝 ](https://drive.google.com/file/d/1BMoaE7I-IwZF32YfASiTw1OnMblWAVGb/)

@@ -26,7 +26,7 @@ translator: Loïck Bourdois
 | TRAVAUX DIRIGÉS   | Jeudi 9:30 – 10:30, Zoom |
 | FORUM       | [r/NYU_DeepLearning](https://www.reddit.com/r/NYU_DeepLearning/) |
 | DISCORD     | [NYU DL](https://discord.gg/CthuqsX8Pb) |
-| MATERIEL    | [2021 repo](https://github.com/Atcold/NYU-DLSP21) |
+| MATERIEL    | [répertoire GitHub](https://github.com/Atcold/NYU-DLSP21) |
 
 
 <!--
@@ -46,7 +46,7 @@ Consultez le fichier [`README.md`](https://github.com/Atcold/NYU-DLSP21/blob/mas
 
 - La nouvelle organisation du contenu
 - Le dilemme intellectuel de la seconde moitié du semestre
-- Le référentiel de ce semestre
+- Le répertoire de ce semestre
 - Les éditions précédentes
 
 
@@ -128,9 +128,9 @@ I will try to make clear which is which.
 
 ## Cours magistraux
 
-La plupart des cours, des travaux dirigés et des notebooks sont similaires à l’édition précédente, néanmoins, certains sont nouveaux. Nous essayerons d’indiquer clairement lesquels.
+La plupart des cours, des travaux dirigés et des notebooks sont similaires à l’édition précédente. Néanmoins certains sont nouveaux. Nous essayerons d’indiquer clairement lesquels.
 
-**Légende**: 🖥 diapositives, 📓 notebook Jupyter , 🎥 vidéos YouTube
+**Légende** : 🖥 diapositives, 📓 *notebook* Jupyter, 🎥 vidéos YouTube
 
 ### Thème 1 : Introduction
 
@@ -200,4 +200,4 @@ La plupart des cours, des travaux dirigés et des notebooks sont similaires à l
 
  * [Apprentissage autosupervisé en vision](https://atcold.github.io/NYU-DLSP21/fr/week10/10/) [[A](https://atcold.github.io/NYU-DLSP21/fr/week10/10-1/)][[B](https://atcold.github.io/NYU-DLSP21/fr/week10/10-2/)] [🎥](https://youtu.be/8L10w1KoOU8) [🖥 ](https://drive.google.com/file/d/1BQlWMVesOcioW69RCKWCjp6280Q42W9q/)
  * [Traduction automatique à faibles ressources](https://atcold.github.io/NYU-DLSP21/fr/week12/12/) [[A](https://atcold.github.io/NYU-DLSP21/fr/week12/12-1/)][[B](https://atcold.github.io/NYU-DLSP21/fr/week12/12-2/)] [🎥](https://youtu.be/fR42OOy9ROo) [🖥 ](https://drive.google.com/file/d/1pm1fM1DFqCHrjGorCQCwg5SgMjwZBwGR/)
- * Rétropropagation lagrangienne, projet final, et Q&R [🎥](https://youtu.be/MJfnamMFylo) [🖥 ](https://drive.google.com/file/d/1Z9tkkTpsHzcyoPN9yqq8Nv_Bnw5bghEK/) [📝 ](https://drive.google.com/file/d/1BMoaE7I-IwZF32YfASiTw1OnMblWAVGb/)
+ * Rétropropagation lagrangienne, projet final et Q&R [🎥](https://youtu.be/MJfnamMFylo) [🖥 ](https://drive.google.com/file/d/1Z9tkkTpsHzcyoPN9yqq8Nv_Bnw5bghEK/) [📝 ](https://drive.google.com/file/d/1BMoaE7I-IwZF32YfASiTw1OnMblWAVGb/)

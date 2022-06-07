@@ -42,6 +42,34 @@ def plot_model(X, y, model):
     plt.title('Model decision boundaries')
 
 
+def plot_embeddings(X, y, model, zoom=10):
+    # Use forward hook to get internal embeddings of the second last layer
+    layer_outputs = {}
+
+    def get_layer_outputs(name):
+        def hook(model, input, output):
+            layer_outputs[name] = output.detach()
+
+        return hook
+
+    layer = model[-2]
+
+    if layer.__class__ == torch.nn.modules.linear.Linear and layer.out_features == 2:
+        layer.register_forward_hook(get_layer_outputs("low_dim_embeddings"))
+        model(X)  # pass data through model to populate layer_outputs
+        plot_data(
+            layer_outputs["low_dim_embeddings"],
+            y,
+            zoom=zoom,
+            title="Low dim embeddings",
+        )
+    else:
+        print(
+            "Cannot plot: second-last layer is not a linear layer"
+            f" with output in R^2 (it is {layer})"
+        )
+
+
 def acc(l, y):
     score, predicted = torch.max(l, 1)
     return (y == predicted).sum().float() / len(y)

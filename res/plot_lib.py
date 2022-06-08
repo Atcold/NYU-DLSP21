@@ -63,6 +63,14 @@ def plot_embeddings(X, y, model, zoom=10):
             zoom=zoom,
             title="Low dim embeddings",
         )
+        last_layer = model[-1]
+        mesh = torch.arange(-1.1, 1.1, 0.01) * zoom
+        xx, yy = torch.meshgrid(mesh, mesh, indexing="ij")
+        with torch.no_grad():
+            data = torch.stack((xx.reshape(-1), yy.reshape(-1)), dim=1)
+            Z = last_layer(data)
+        Z = Z.argmax(dim=1).reshape(xx.shape)
+        plt.contourf(xx, yy, Z, cmap=plt.cm.Spectral, alpha=0.3, levels=y.max().item())
     else:
         print(
             "Cannot plot: second-last layer is not a linear layer"

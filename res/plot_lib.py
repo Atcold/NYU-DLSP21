@@ -1,9 +1,8 @@
-from matplotlib import pyplot as plt
+import matplotlib as mpl
 import numpy as np
 import torch
-from IPython.display import HTML, display, clear_output
-import matplotlib as mpl
-from mpl_toolkits import mplot3d
+from IPython.display import clear_output
+from matplotlib import pyplot as plt
 
 
 def set_default(figsize=(10, 10), dpi=100):

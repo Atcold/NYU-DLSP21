@@ -13,7 +13,7 @@ def set_default(figsize=(10, 10), dpi=100):
     plt.rc('figure', figsize=figsize, dpi=dpi)
 
 
-def plot_data(X, y, d=0, auto=False, zoom=1):
+def plot_data(X, y, d=0, auto=False, zoom=1, title='Training data (x, y)'):
     X = X.cpu()
     y = y.cpu()
     s = plt.scatter(X.numpy()[:, 0], X.numpy()[:, 1], c=y, s=20, cmap=plt.cm.Spectral)
@@ -25,7 +25,7 @@ def plot_data(X, y, d=0, auto=False, zoom=1):
     _m, _c = 0, '.35'
     plt.axvline(0, ymin=_m, color=_c, lw=1)
     plt.axhline(0, xmin=_m, color=_c, lw=1)
-    plt.title('Training data (x, y)')
+    plt.title(title)
     return s
 
 
@@ -40,6 +40,34 @@ def plot_model(X, y, model):
     plt.contourf(xx, yy, Z, cmap=plt.cm.Spectral, alpha=0.3)
     plot_data(X, y)
     plt.title('Model decision boundaries')
+
+
+def plot_embeddings(X, y, model, zoom=10):
+    # Use forward hook to get internal embeddings of the second last layer
+    layer_outputs = {}
+
+    def get_layer_outputs(name):
+        def hook(model, input, output):
+            layer_outputs[name] = output.detach()
+
+        return hook
+
+    layer = model[-2]
+
+    if layer.__class__ == torch.nn.modules.linear.Linear and layer.out_features == 2:
+        layer.register_forward_hook(get_layer_outputs("low_dim_embeddings"))
+        model(X)  # pass data through model to populate layer_outputs
+        plot_data(
+            layer_outputs["low_dim_embeddings"],
+            y,
+            zoom=zoom,
+            title="Low dim embeddings",
+        )
+    else:
+        print(
+            "Cannot plot: second-last layer is not a linear layer"
+            f" with output in R^2 (it is {layer})"
+        )
 
 
 def acc(l, y):

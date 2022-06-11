@@ -47,7 +47,7 @@ def plot_embeddings(X, y, model, zoom=10):
 
     def get_layer_outputs(name):
         def hook(model, input, output):
-            layer_outputs[name] = output.detach()
+            layer_outputs[name] = output
 
         return hook
 
@@ -55,7 +55,8 @@ def plot_embeddings(X, y, model, zoom=10):
 
     if layer.__class__ == torch.nn.modules.linear.Linear and layer.out_features == 2:
         layer.register_forward_hook(get_layer_outputs("low_dim_embeddings"))
-        model(X)  # pass data through model to populate layer_outputs
+        with torch.no_grad():
+            model(X)  # pass data through model to populate layer_outputs
         plot_data(
             layer_outputs["low_dim_embeddings"],
             y,

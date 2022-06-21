@@ -1,9 +1,8 @@
-from matplotlib import pyplot as plt
+import matplotlib as mpl
 import numpy as np
 import torch
-from IPython.display import HTML, display, clear_output
-import matplotlib as mpl
-from mpl_toolkits import mplot3d
+from IPython.display import clear_output
+from matplotlib import pyplot as plt
 
 
 def set_default(figsize=(10, 10), dpi=100):
@@ -48,7 +47,7 @@ def plot_embeddings(X, y, model, zoom=10):
 
     def get_layer_outputs(name):
         def hook(model, input, output):
-            layer_outputs[name] = output.detach()
+            layer_outputs[name] = output
 
         return hook
 
@@ -56,13 +55,22 @@ def plot_embeddings(X, y, model, zoom=10):
 
     if layer.__class__ == torch.nn.modules.linear.Linear and layer.out_features == 2:
         layer.register_forward_hook(get_layer_outputs("low_dim_embeddings"))
-        model(X)  # pass data through model to populate layer_outputs
+        with torch.no_grad():
+            model(X)  # pass data through model to populate layer_outputs
         plot_data(
             layer_outputs["low_dim_embeddings"],
             y,
             zoom=zoom,
             title="Low dim embeddings",
         )
+        last_layer = model[-1]
+        mesh = torch.arange(-1.1, 1.1, 0.01) * zoom
+        xx, yy = torch.meshgrid(mesh, mesh, indexing="ij")
+        with torch.no_grad():
+            data = torch.stack((xx.reshape(-1), yy.reshape(-1)), dim=1)
+            Z = last_layer(data)
+        Z = Z.argmax(dim=1).reshape(xx.shape)
+        plt.contourf(xx, yy, Z, cmap=plt.cm.Spectral, alpha=0.3, levels=y.max().item())
     else:
         print(
             "Cannot plot: second-last layer is not a linear layer"

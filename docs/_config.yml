@@ -90,6 +90,8 @@ chapters:
 ################################### French ####################################
 fr:
   title: 'Apprentissage Profond'
+  prologues:
+    - path: fr/faq.md
   chapters:
     - path: fr/week01/01.md
     - path: fr/week02/02.md

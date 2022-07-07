@@ -64,7 +64,7 @@ La traduction en français qui vous est proposée a été effectuée par une seu
 - Pour les vidéos :  
 Afin de fluidifier la traduction et la compréhension, il a été décidé de ne pas retranscrire les mots « parasites » de remplissage et de transition (les « *you know* »,  « *sort of* », « *right* », « *so* », etc.).  
 Quand le débit est élevé, une traduction ne reste qu'environ 4 secondes à l'écran. Pour pouvoir retranscrire le plus d'informations possibles dans cet intervalle de temps, nous utilisons des abréviations lorsque cela est possible (« RNNs » au lieu de « réseaux de neurones récurrents » par exemple). Nous privilégions également l'usage de mots courts (par exemple un « car » à la place d’un « parce que »).  
-En raison du travail important nécessaire pour effectuer la traduction (1h de travail pour 10min de vidéo) il n'a pas été possible d'effectuer une relecture détaillée des traductions vidéos. Ainsi, si vous remarquez des fautes d'orthographe/de conjugaison, fautes de frappes, etc., nous vous invitons à soumettre une PR sur le [répertoire GitHub du site](https://github.com/Atcold/pytorch-Deep-Learning/pulls) en précisant avec un `[FR]` qu’elle concerne la traduction française.
+En raison du travail important nécessaire pour effectuer la traduction (1h de travail pour 10min de vidéo) il n'a pas été possible d'effectuer une relecture détaillée des traductions vidéos. Ainsi, si vous remarquez des fautes d'orthographe/de conjugaison, fautes de frappes, etc., nous vous invitons à soumettre une PR sur le [répertoire GitHub du site](https://github.com/Atcold/NYU-DLSP21/pulls) en précisant avec un `[FR]` qu’elle concerne la traduction française.
 
 
 ###	Choix de traductions des termes techniques : 

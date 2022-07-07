@@ -42,8 +42,8 @@ exclude:
 
 
 ################################### English ####################################
-# prologues:
-#   - path: en/about.md
+prologues:
+  - path: en/faq.md
 chapters:
   - path: en/week01/01.md
   - path: en/week02/02.md

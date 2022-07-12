@@ -42,8 +42,8 @@ exclude:
 
 
 ################################### English ####################################
-# prologues:
-#   - path: en/about.md
+prologues:
+  - path: en/faq.md
 chapters:
   - path: en/week01/01.md
   - path: en/week02/02.md
@@ -90,6 +90,8 @@ chapters:
 ################################### French ####################################
 fr:
   title: 'Apprentissage Profond'
+  prologues:
+    - path: fr/faq.md
   chapters:
     - path: fr/week01/01.md
     - path: fr/week02/02.md

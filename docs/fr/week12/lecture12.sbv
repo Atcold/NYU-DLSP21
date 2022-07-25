@@ -1,0 +1,3801 @@
+0:00:00.320,0:00:05.279							                 Et voilà, bonjour à tous, 9h30, New York en direct.
+0:00:05.279,0:00:08.800
+Nous sommes ici pour un autre cours d'apprentissage profond et cette fois
+
+0:00:08.800,0:00:12.799
+nous avons avec nous Marc'Aurelio Ranzato qui va nous parler de
+
+0:00:12.799,0:00:19.880
+traduction et tant de choses intéressantes surtout dans le cadre de données rares.
+
+0:00:19.880,0:00:28.000
+Marc'Aurelio est un chercheur et un manager à FAIR dans le laboratoire de la ville de New York.
+
+0:00:28.000,0:00:32.880
+Il est intéressé en général par l'apprentissage automatique, la vision par ordinateur, le traitement du langage naturel
+
+0:00:32.880,0:00:36.719
+et, plus généralement, l'intelligence artificielle.
+
+0:00:36.719,0:00:40.239
+Son objectif à long terme est de permettre aux machines d'apprendre à partir d'une supervision plus faible
+
+0:00:40.239,0:00:43.360
+et de transférer efficacement les connaissances d'une tâche à l'autre
+
+0:00:43.360,0:00:47.000
+en tirant parti de la structure de composition des signaux naturels..
+
+0:00:47.000,0:00:51.039
+Il est originaire de Padoue en Italie et
+
+0:00:51.039,0:00:54.640
+est un collègue ingénieur électronicien
+
+0:00:54.640,0:00:58.399
+[Alfredo se demande comment on dit électronicien en anglais].
+
+0:00:58.399,0:01:05.519
+Après avoir passé plusieurs mois à Caltech, il a commencé un doctorat en informatique
+
+0:01:05.519,0:01:10.720
+à l'université de New York avec notre superviseur commun, Yann Le Cun.
+
+0:01:10.720,0:01:15.000
+Ensuite, en 2009, il a rejoint le laboratoire de Joffrey Hinton en tant que postdoc.
+
+0:01:15.000,0:01:20.960
+En 2011, il est passé à l'industrie et a été l'un des tous premiers membres de l'équipe Google Brain.
+
+0:01:20.960,0:01:26.240
+En 2013, il a rejoint Facebook et en a été un membre fondateur de FAIR.
+
+0:01:26.240,0:01:35.200
+Et donc sans plus attendre, j'ai hâte d'écouter la spectaculaire conférence de Marc'Aurelio.
+
+0:01:35.200,0:01:43.119
+[Yann : en fait, tu pourrais dire que Marc'Aurelio était à Facebook avant que je le sois] [Alfredo : oh wow]
+
+0:01:43.119,0:01:49.439
+[Yann : environ six mois, on peut dire qu'il m'a en quelque sorte embauché].
+
+0:01:49.439,0:01:53.680
+[rires] [Alfredo : sympa. Je vais disparaître de la caméra].
+
+0:01:53.680,0:01:57.759
+Merci de me recevoir, c'est un grand honneur d'être ici
+
+0:01:57.759,0:02:01.920
+pour vous parler un peu de la traduction automatique
+
+0:02:01.920,0:02:08.960
+et en particulier la traduction automatique lorsque l'on ne dispose pas d'un grand nombre de données annotées.
+
+0:02:08.960,0:02:15.960
+L'idée est que vous découvrirez une application pratique de l’apprentissage profond.
+
+0:02:15.960,0:02:24.940
+Ici, la traduction automatique mais il y a des principes que vous pouvez espérer généraliser à d'autres applications.
+
+0:02:24.940,0:02:29.280
+Donc passons en revue ce qu'est la traduction automatique.
+
+0:02:29.280,0:02:33.200
+Tout commence avec des données.
+
+0:02:33.200,0:02:43.519
+Donc supposons que nous avons ce que nous appelons un « jeu de données parallèles » qui est un jeu de données qui se compose
+
+0:02:43.519,0:02:47.920
+d’une collection de phrases parallèles. Donc une phrase en langue étrangère
+
+0:02:47.920,0:02:55.680
+disons l’italien et sa traduction correspondante en anglais, qui est, disons, notre langue cible.
+
+0:02:55.680,0:03:00.000
+Donc nous avons un grand jeu de données où nous avons beaucoup de phrases
+
+0:03:00.000,0:03:03.120
+en italien avec une traduction correspondante en anglais.
+
+0:03:03.120,0:03:10.239
+Ce sont nos données annotées. Voyons maintenant comment entraîner un
+
+0:03:10.239,0:03:15.760
+système de traduction automatique pour s'adapter à ces données et, si possible, généraliser à de nouvelles
+
+0:03:15.760,0:03:22.080
+phrases en italien dans ce cas. Donc la façon dont cela est fait de nos
+
+0:03:22.080,0:03:26.400
+nos jours, est en entraînant un système de traduction automatique neuronal.
+
+0:03:26.400,0:03:32.560
+Plus précisément, de nos jours, l'architecture est un transformer
+
+0:03:32.560,0:03:36.159
+entraîné par descente de gradient stochastique.
+
+0:03:36.159,0:03:42.000
+La manière dont ça fonction, est que vous essayez de modéliser la
+
+0:03:42.000,0:03:48.560
+probabilité conjointe de toutes les séquences de tokens ordonnés dans
+
+0:03:48.560,0:03:53.000
+la phrase cible en fonction de la phrase source.
+
+0:03:53.000,0:04:02.319
+Et bien sûr, vous essayez de maximiser cette probabilité sur l'ensemble des paramètres de votre modèle.
+
+0:04:02.319,0:04:13.000
+Nous maximisons ça en utilisant la règle du produit de la théorie des probabilités.
+
+0:04:13.000,0:04:18.000
+Maintenant, la probabilité conjointe de toutes les séquences de tokens,
+
+0:04:18.000,0:04:23.400
+disons « The cat sat on the mat » [Le chat s'est assis sur le tapis] avec un token correspondant à un mot.
+
+0:04:23.400,0:04:26.840
+Donc vous avez une chaine qui est composée sept tokens.
+
+0:04:26.840,0:04:33.040
+Vous pouvez l'écrire comme le produit d'un token étant donné le préfixe et la phrase source.
+
+0:04:33.040,0:04:41.199
+Donc dans l'espace des logarithmes, ce produit devient une somme et c'est ce que vous voyez ici.
+
+0:04:41.199,0:04:44.960
+J’espère que vous voyez mon curseur. Donc on écrit cette distribution jointe
+
+0:04:44.960,0:04:48.880
+comme la somme des log probabilités
+
+0:04:48.880,0:04:53.600
+d'un token du côté de la cible, donc dans ce cas c’est un mot provenant
+
+0:04:53.600,0:04:58.560
+de la phrase anglaise, étant donné le préfixe et la phrase source.
+
+0:04:58.560,0:05:05.000
+Donc essentiellement tout se résume à un tas de tâches de classification.
+
+0:05:05.000,0:05:07.840
+Donc c'est très facile.
+
+0:05:07.840,0:05:13.000
+Et tous ces classifieurs partagent leurs paramètres.
+
+0:05:13.000,0:05:19.759
+Plongeons un peu plus dans les détails pour s'assurer que nous comprenons bien comment cela fonctionne.
+
+0:05:19.759,0:05:24.720
+Donc disons que notre phrase source est cette phrase italienne
+
+0:05:24.720,0:05:29.039
+qui est traduite en anglais par « The cat sat on the mat ».
+
+0:05:29.039,0:05:33.000
+Je vais m'abstraire des détails de ce qu'est l'architecture.
+
+0:05:33.000,0:05:42.400
+Cela n'a pas d'importance si c'est un réseau de neurones récurrents, un réseau de neurones convolutifs ou un transformer. Ce que je dis s'applique à tous.
+
+0:05:42.400,0:05:47.280
+Je parle davantage de l'algorithme que l'architecture spécifique.
+
+0:05:47.280,0:05:51.919
+J'ai emprunté ce vieux diagramme à Yann
+
+0:05:51.919,0:05:58.000
+où les cercles représentent les variables et les carrés les transformations entre les variables.
+
+0:05:58.000,0:06:02.720
+dans ce cas, je dépeins un réseau neuronal récurrent mais si vous avez un transformer
+
+0:06:02.720,0:06:07.360
+ça veut juste dire que cet état caché est produit par un
+
+0:06:07.360,0:06:13.440
+bloc transformer qui dépend du token d'entrée qui est enchâssé ici.
+
+0:06:13.440,0:06:19.919
+Et tous les états cachés précédents. Donc dans ce cas nous faisons
+
+0:06:19.919,0:06:22.800
+de la modélisation du langage parce que nous ne prenons pas en compte
+
+0:06:22.800,0:06:25.759
+la phrase source. Donc dans la modélisation du langage ce que vous faites,
+
+0:06:25.759,0:06:32.759
+étant donné le mot à l'instant t, vous essayez de prédire le mot à la prochaine étape temporelle. 
+
+0:06:32.759,0:06:39.520
+Donc à partir de « cat », vous essayez de prédire « sat ». Mais nous avions aussi la phrase source.
+
+0:06:39.520,0:06:42.000
+Donc nous devrions être capables de faire mieux que le
+
+0:06:42.000,0:06:46.720
+modèle de langage car nous avons accès à la phrase source.
+
+0:06:46.720,0:06:51.720
+Nous devrions être en mesure de faire une prédiction. Nous considérons aussi les informations de la phrase source.
+
+0:06:51.720,0:07:01.520
+Et la façon dont nous faisons est en prenant la représentation des caractéristiques,
+
+0:07:01.520,0:07:10.319
+ce z(t+1), et en même temps en représentant chaque mot de la phrase source.
+
+0:07:10.319,0:07:21.000
+Disons que c'est votre RNN ou votre transformer, pour chaque token d’entrée vous représentez ça.
+
+0:07:21.000,0:07:26.000
+Donc si c'est un transformer, pour chaque token, vous allez en produire un autre à la sortie.
+
+0:07:26.000,0:07:33.039
+Disons que vous avez un vecteur de dimension D ici, qui correspond à
+
+0:07:33.039,0:07:38.639
+la dimensionnalité ici. Donc ce que vous faites, c’est prendre le produit
+
+0:07:38.639,0:07:46.720
+scalaire entre cet état caché, avec tous les états cachés, provenant des  tokens sources,
+
+0:07:46.720,0:07:51.440
+et après ça vous appliquez la SoftMax. Donc maintenant vous avez
+
+0:07:51.440,0:07:54.560
+une distribution de vos tokens. Des valeurs qui sont
+
+0:07:54.560,0:08:01.759
+Positives et qui somme à 1. Puis vous produisez une représentation de
+
+0:08:01.759,0:08:07.520
+toute la phrase source, qui est conditionnée par ce z(t+1)
+
+0:08:07.520,0:08:11.500
+du côté de la cible, en multipliant ces poids par les valeurs.
+
+0:08:11.500,0:08:15.280
+Et les valeurs peuvent être une certaine transformation
+
+0:08:15.280,0:08:19.680
+de ces représentations d'entrée des tokens. Donc après vous
+
+0:08:19.680,0:08:22.000
+prenez une somme pondérée et obtenez un vecteur.
+
+0:08:22.000,0:08:25.199
+Puis ce vecteur est combiné avec ce z(t+1),
+
+0:08:25.199,0:08:29.400
+disons que vous concaténez, faites une sorte de transformation, vous
+
+0:08:29.400,0:08:35.580
+pouvez avoir plusieurs couches et finalement vous prédisez une distribution sur le prochain mot.
+
+0:08:35.580,0:08:39.599
+Vous pouvez appliquer une perte d'entropie croisée sur cette distribution sur le prochain mot car vous
+
+0:08:39.599,0:08:42.800
+avez aussi la vérité terrain, vous connaissez quel est le
+
+0:08:42.800,0:08:47.120
+mot suivant dans la séquence. Et donc vous faites cela pour chaque token,
+
+0:08:47.120,0:08:51.640
+à chaque position, et puis vous pouvez rétropropager à travers tout ça.
+
+0:08:51.640,0:09:00.880
+Donc c’est la vue d'ensemble de la mécanique d'entraînement d’un modèle de séquences à séquences.
+
+0:09:00.880,0:09:04.959
+Pour la traduction automatique mais pas seulement.
+
+0:09:04.959,0:09:11.440
+Le truc cool à propos de ça c'est que vous n’avez pas besoin d'aligner.
+
+0:09:11.440,0:09:20.360
+Pendant longtemps en traduction automatique, les gens étaient un peu obsédées par la façon d'aligner un mot de la cible avec un mot de la source.
+
+0:09:20.360,0:09:28.240
+Ceci est appris par le modèle de manière douce en utilisant la SoftMax.
+
+0:09:28.240,0:09:38.240
+L'autre bonne chose est que si vous utilisez un ConvNet ou un transformer, toutes ces représentations peuvent être calculées en parallèle.
+
+0:09:38.240,0:09:48.240
+Donc c'est aussi très efficace. Ok. C'est comme ça qu’on entraine le système de traduction automatique neuronal.
+
+0:09:48.240,0:09:53.279
+Essentiellement, avec ce que l’on a décrit ici avec cette probabilité jointe, etc.
+
+0:09:53.279,0:09:58.720
+ici, vous scorez. Cela signifie que pour une phrase source donnée
+
+0:09:58.720,0:10:09.360
+vous produisez un score pour une traduction, pour une phrase dans la langue cible.
+
+0:10:09.360,0:10:12.750
+Mais cela ne signifie pas que vous pouvez générer. La seule chose que vous
+
+0:10:12.750,0:10:16.160
+pouvez faire est : si je vous donne une phrase en italien, une autre 
+
+0:10:16.160,0:10:19.440
+en anglais, on peut donner un score indiquant à quel point c'est plausible
+
+0:10:19.440,0:10:22.880
+que cette phrase est en fait une traduction de la phrase source.
+
+0:10:22.880,0:10:26.880
+Et donc comment générer ? La façon dont vous générez… 
+
+0:10:26.880,0:10:36.880
+En fait, il y a plusieurs façons de générer. La plus populaire et qui est aussi très efficace est d'utiliser le décodage en faisceau.
+
+0:10:36.880,0:10:47.760
+Le décodage en faisceau essaie d'approcher, de trouver de manière approximative, le maximum de la
+
+0:10:47.760,0:10:52.160
+distribution de probabilité de y étant donné x ou votre cible étant donné l'entrée.
+
+0:10:52.160,0:10:55.519
+Vous n'avez pas y, donc vous maximisez sur y.
+
+0:10:55.519,0:10:59.040
+On vous donne x, donc vous cherchez sur l'espace des y.
+
+0:10:59.040,0:11:04.399
+Bien sûr, l'espace des y est très très grand, donc vous ne pouvez pas le faire exactement.
+
+0:11:04.399,0:11:11.519
+Et donc vous utilisez une technique d’approximation comme la recherche en faisceau.
+
+0:11:11.519,0:11:17.200
+La façon dont la recherche en faisceau fonctionne est que vous commencez par le token qui débute votre phrase.
+
+0:11:17.200,0:11:21.520
+C'est la toute première étape de l'opération de décodage.
+
+0:11:21.520,0:11:26.000
+Disons que vous faites celui-ci… en fait c’est même l’étape d’avant.
+
+0:11:26.000,0:11:33.519
+Vous devez prédire « the » comme début de votre phrase.
+
+0:11:33.519,0:11:43.600
+Donc de votre token de début de phrase, vous produisez une distribution sur ce qui est le premier mot dans la phrase.
+
+0:11:43.600,0:11:53.600
+Donc pour chacun de ces mots nous avons un score de log-probabilité.
+
+0:11:53.600,0:12:00.000
+Il y a autant de branches que de tokens dans votre vocabulaire.
+
+0:12:00.000,0:12:05.519
+Ici, j'utilise des mots mais cela peut aussi être des n-grams.
+
+0:12:05.519,0:12:11.839
+Disons que « Life » a un score de -1 et « Today » un score de -0,5.
+
+0:12:11.839,0:12:21.839
+Puis, ce que la recherche en faisceau fait est que parmi toutes ces branches, elle sélectionne les top-k plus grands scores.
+
+0:12:21.839,0:12:31.920
+Disons qu’ici on a k = 2, donc parmi tous ces scores, les deux ayant les plus grands scores sont « Life » et « Today » avec -1 et -0,5.
+
+0:12:32.959,0:12:46.000
+Après ça, la recherche en faisceau passe à l'étape suivante et dit « ok, quels sont les prochains tokens possibles pour « Life » si j’agrandis la branche ? »
+
+0:12:46.000,0:12:52.360
+Donc on étend la taille du vocabulaire à partir de « Life ». Donc a « Life a », « Life the », « Life is », etc.
+
+0:12:52.360,0:12:55.600
+La même chose avec « Today ». Donc c'est ce que vous faites.
+
+0:12:55.600,0:13:05.279
+Donc pour chaque token suivant vous avez aussi un score de log-probabilité, ou un score en général, il n'a pas besoin d'être normalisé.
+
+0:13:05.279,0:13:12.000
+Et maintenant vous devez calculer un score pour ce chemin.
+
+0:13:12.000,0:13:19.399
+Et ce score est simplement la somme des scores sur les arcs qui composent ce chemin.
+
+0:13:19.399,0:13:23.399
+Donc dans ce cas vous avez -1 + -1, ce qui donne -2.
+
+0:13:23.399,0:13:30.639
+Et pareil pour « Life is », et de même pour « Today » ceci et « Today » cela.
+
+0:13:30.639,0:13:37.680
+Donc vous avez dans ce cas des chemins de deux fois la taille du vocabulaire
+
+0:13:37.680,0:13:43.399
+Et vous sélectionnez les top-k avec les scores les plus élevés.
+
+0:13:43.399,0:13:49.839
+Dans notre cas, entre -2, -1,5, -3 et -3,5
+
+0:13:49.839,0:13:53.999
+nous sélectionnons « Life is » et « Life was ». Et on répète ce processus.
+
+Et0:13:53.999,0:13:58.160
+Donc on passe au suivant… 
+
+0:13:58.160,0:14:01.600
+Donc on laisse tomber ces chemins, on garde « Life was » et « Life is ».
+
+0:14:01.600,0:14:08.079
+On développe ces arcs avec un arc correspondant à un token du vocabulaire.
+
+0:14:08.079,0:14:16.000
+On calcule le score pour les différents chemins et on sélectionne les deux ayant le plus grand score.
+
+0:14:16.000,0:14:20.519
+Ici ce sera « Life is great » et « Life is beautiful ».
+
+0:14:20.519,0:14:27.199
+Et vous continuez comme ça jusqu'à ce que vous trouviez un token de fin de phrase.
+
+0:14:27.199,0:14:39.120
+Et, à la toute fin, vous sélectionnez le chemin qui a le score le plus élevé. Dans ce cas, celui en orange.
+
+0:14:39.120,0:14:45.839
+Donc c'est la base de la recherche en faisceau qui est une procédure gourmande.
+
+0:14:45.839,0:14:53.040
+Il y a un compromis à faire. Plus la valeur de k est grande dans votre
+
+0:14:53.040,0:14:58.720
+choix du top-k, plus l'approximation est bonne. Cependant vous
+
+0:14:58.720,0:15:10.079
+augmentez aussi le coût de calcul. En pratique la recherche en faisceau est plutôt efficace pour trouver des chemins à haut score.
+
+0:15:10.079,0:15:13.440
+Mais elle a aussi des propres problèmes.
+
+0:15:13.440,0:15:19.000
+Par exemple, disons que dans notre jeu de données, « la vita bella » a été traduite deux tiers du temps
+
+0:15:19.000,0:15:24.720
+en « Life is beautiful », et un tiers du temps en « Life is great ».
+
+0:15:24.720,0:15:28.160
+Maintenant, quand vous faites la recherche en faisceau,
+
+0:15:28.160,0:15:32.160
+elle va toujours choisir le chemin le plus probable.
+
+0:15:32.160,0:15:37.279
+En supposant que le modèle est bien calibré, la phrase sera alors toujours
+
+0:15:37.279,0:15:42.560
+traduite en « Life is beautiful ». Cent pourcent du temps. Cela signifie
+
+0:15:42.560,0:15:45.999
+que la traduction que votre système produit va être biaisée
+
+0:15:45.999,0:15:51.279
+juste à cause de la sélection maximale naturelle.
+
+0:15:51.279,0:16:00.079
+Et cela peut ne pas être bon. Par exemple, disons que vous passez d'une langue qui n’est pas « infléchie » comme le chinois ou l'anglais
+
+0:16:00.079,0:16:04.320
+vers une qui l’est comme l'italien ou le français,
+
+0:16:04.320,0:16:09.680
+si vous dites… je ne sais pas… « The truck driver is strong », 
+
+0:16:09.680,0:16:13.750
+alors vous ne savez pas quel est le genre du chauffeur de camion.
+
+0:16:13.750,0:16:18.000
+Mais en italien ou en français, vous devez le spécifier.
+
+0:16:18.0000,0:16:23.040
+Et donc si vous utilisez la recherche en faisceau, vous allez
+
+0:16:23.040,0:16:29.600
+choisir cent pour cent des fois le genre revenant le plus fréquemment dans votre jeu de données.
+
+0:16:29.600,0:16:36.000
+Et donc vous allez introduire une sorte de biais. Donc c'est un des problèmes de la recherche en faisceau.
+
+0:16:36.000,0:16:38.999
+Elle ne gère pas bien l'incertitude.
+
+0:16:38.999,0:16:44.759
+[Alfredo : que veut dire « infléchie » ?]
+
+0:16:44.759,0:16:52.240
+Cela veut dire que c’est une langue qui spécifie le genre et le nombre.
+
+0:16:54.240,0:16:57.519
+Donc la fin d’un mot peut changer avec le genre et/ou le nombre.
+
+0:16:57.519,0:17:04.920
+Par exemple, en anglais, « beautiful » va bien pour…
+
+0:17:04.920,0:17:08.480
+Ah non c’est un mauvais exemple [rires]
+
+0:17:08.480,0:17:20.720
+Hummm si je dis « driver » en anglais, cela s'applique à la fois aux femmes et aux hommes
+
+0:17:20.720,0:17:25.600
+mais en italien il faut spécifier le sexe. [Alfredo : ok, ok].
+
+0:17:25.600,0:17:33.280
+Maintenant, vous pouvez dire que puisque nous avons une fonction qui score,
+
+0:17:33.280,0:17:37.679
+une distribution de probabilité normalisée, il est possible de générer par
+
+0:17:37.679,0:17:42.000
+échantillonnage à partir du modèle. C'est une chose tout à fait raisonnable à faire.
+
+0:17:42.000,0:17:47.200
+Sauf que parce que les distributions sont produites par une SoftMax,
+
+0:17:47.200,0:17:52.200
+vous n'attribuez jamais exactement la probabilité 0 à des tokens du vocabulaire.
+
+0:17:52.200,0:17:58.000
+Cela signifie que dans les données, si vous regardez la distribution, il y a beaucoup de pics.
+
+0:17:58.000,0:18:01.840
+Donc il y a beaucoup de régions qui ont une masse de probabilité nulle.
+
+0:18:01.840,0:18:06.960
+Mais le modèle étale la probabilité un peu partout.
+
+0:18:06.960,0:18:10.720
+Et cela signifie que lorsque vous échantillonnez, vous
+
+0:18:10.720,0:18:16.000
+avez de fortes chances d'atteindre des endroits qui ne sont pas très bons.
+
+0:18:16.000,0:18:22.240
+Donc, d'habitude, l'échantillonnage ne produit pas des phrases fluides.
+
+0:18:22.240,0:18:27.679
+Elles sont très diverses mais pas très fluides, de pas très bonne qualité.
+
+0:18:27.679,0:18:31.000
+Donc les gens ont trouvé des moyens entre les deux comme
+
+0:18:31.000,0:18:35.999
+l'échantillonnage top-k où vous dites qu’à chaque pas de temps,
+
+0:18:35.999,0:18:39.360
+j'ai une distribution sur les tokens du pas suivant,
+
+0:18:39.360,0:18:46.080
+je sélectionne les top-k mots les mieux notés et j’échantillonne à partir d’eux.
+
+0:18:46.080,0:18:54.080
+Donc c’est un échantillonnage biaisé. Il existe une énorme littérature sur la façon de générer, de décoder.
+
+0:18:54.080,0:18:58.840
+Il y a des approches de reclassement à la fois génératif et discriminatif.
+
+0:18:58.840,0:19:01.750
+Dans le reclassement discriminatif en particulier,
+
+0:19:01.750,0:19:05.280
+Vous rétropropagez à travers la recherche en faisceau. Donc à la place
+
+0:19:05.280,0:19:08.000
+d’entraîner pour avoir un score, vous entraînez pour générer.
+
+0:19:08.000,0:19:13.919
+Si vous êtes intéressés par ces sujets, je serais heureux de vous envoyer des références.
+
+0:19:13.919,0:19:21.440
+Et je pense que c’est également lié à ce dont Awni vous a parlé il y a quelques temps [cf. CM 11].
+
+0:19:21.440,0:19:25.000
+Mais pour cette conférence je vais m'arrêter ici,
+
+0:19:25.000,0:19:29.679
+à moins que vous n'ayez des questions. Cela couvre les notions de base
+
+0:19:29.679,0:19:36.840
+sur la traduction automatique à partir des données, comment vous entraînez et comment vous l'utilisez.
+
+0:19:36.840,0:19:39.980
+[Alfredo : il y a une question d’un étudiant.
+
+0:19:39.980,0:19:48.240
+Donc la question est la suivante : comment est-ce que ça marche intuitivement ? Je pense que la première étape est ce que nous avons fait
+
+0:19:48.240,0:19:51.520
+dans le devoir trois qui était sur la reconnaissance manuscrite.
+
+0:19:51.520,0:19:57.520
+Donc pour obtenir un ensemble d’enchâssements. Deuxième partie, je ne suis pas sûr de la façon dont le produit scalaire
+
+0:19:57.520,0:20:02.000
+et la SoftMax remplacent l'alignement. Est-ce que le produit scalaire
+
+0:20:02.000,0:20:06.240
+essaye de trouver quels sont les enchâssements qui s'alignent avec z(t+1) ?
+
+0:20:06.240,0:20:12.159
+Comment est-ce que les phrases sources et cibles s’alignent ?]
+
+0:20:16.000,0:20:20.880
+Ok, donc l'idée ici est que dans vos processus à l'intérieur
+
+0:20:20.880,0:20:24.240
+vous avez une certaine représentation venant du préfixe.
+
+0:20:24.240,0:20:28.799
+Et vous voulez inclure une représentation de la source.
+
+0:20:28.799,0:20:32.480
+En particulier, pour prédire le prochain mot, vous devez déterminer
+
+0:20:32.480,0:20:38.880
+essentiellement quel ensemble correspond à la phrase source.
+
+0:20:38.880,0:20:43.679
+Dans ce cas, c’est le bigramme ici « e’ seduto ».
+
+0:20:43.679,0:20:50.080
+Cette séquence de deux mots. 
+
+0:20:50.080,0:20:59.799
+Vous devez gonfler la probabilité de la traduction du mot « sul » qui veut dire « on » en anglais.  
+
+0:20:59.799,0:21:05.520
+Donc si je devais le faire à la main ce que je ferais, c’est
+
+0:21:05.520,0:21:11.360
+dire que j'ai besoin d'aligner, j'ai besoin de découvrir que « sat » correspond à ces deux choses.
+
+0:21:11.360,0:21:15.960
+Et la prochaine chose à traduire est ce mot qui en anglais se traduit par celui-ci.
+
+0:21:15.960,0:21:19.400
+Ok, donc c'est comme un alignement manuel.
+
+0:21:19.400,0:21:28.400
+Ce que j'ai décrit ici avec ce schéma, vous aimeriez que le modèle apprenne à le faire pour vous, apprenne à aligner.
+
+0:21:28.400,0:21:34.440
+Comment ça marche ? Vous enchâssez ce que vous dites, chaque token.
+
+0:21:34.440,0:21:37.840
+Donc vous enchâssez chaque token ici.
+
+0:21:37.840,0:21:42.960
+Vous avez la possibilité d'affiner cette représentation
+
+0:21:42.960,0:21:46.159
+afin de produire des enchâssements contextualisés.
+
+0:21:46.159,0:21:49.760
+Par exemple, en ayant un bloc transformer ici.
+
+0:21:49.760,0:21:54.640
+Ok et maintenant de ces représentations de ces mots,
+
+0:21:54.640,0:21:58.240
+on fait un produit scalaire avec cet état caché.
+
+0:21:58.240,0:22:06.880
+Cela vous indique essentiellement à quel mot de la phrase source correspond un mot de la phrase cible.
+
+0:22:06.880,0:22:13.120
+C'est ce que fait le produit scalaire. Quand vous faites la SoftMax, vous
+
+0:22:13.120,0:22:16.240
+convertissez ce score en quelque chose de normalisé.
+
+0:22:16.240,0:22:19.840
+C'est comme une distribution de probabilité.
+
+0:22:19.840,0:22:24.240
+La somme de tous ces nombres est égale à 1 et ils sont tous positifs.
+
+0:22:24.240,0:22:27.600
+Disons que vous avez un score élevé ici pour
+
+0:22:27.600,0:22:34.080
+pour ce token qui correspond à ce mot. Maintenant vous devez
+
+0:22:34.080,0:22:37.280
+convertir ces scores en un vecteur car c'est ce que vous
+
+0:22:37.280,0:22:42.400
+devez brancher sur le décodeur du côté de la cible.
+
+0:22:42.400,0:22:48.320
+Et pour convertir cela en un vecteur, on prend par exemple ces vecteurs,
+
+0:22:48.320,0:22:51.360
+peut-être qu’on les transforme, et on prend
+
+0:22:51.360,0:23:01.640
+la somme de ces scores. Cela vous donnera un seul vecteur qui représente l'ensemble de la phrase source pour ce mot cible spécifique.
+
+0:23:01.640,0:23:07.280
+Donc cela fait l'alignement à cause du produit scalaire. Vous faites en quelque sorte correspondre.
+
+0:23:07.280,0:23:15.640
+Dans la pratique, si vous regardez dans un système de traduction automatique et regardez ces scores,
+
+0:23:15.640,0:23:24.080
+ils correspondent en fait à une certaine interprétation d’un alignement de la phrase cible avec la phrase source.
+
+0:23:24.080,0:23:27.000
+Je ne sais pas si c'était clair.
+
+0:23:27.000,0:23:37.280
+[Alfredo : sur le côté droit, ce z(t+1) vient aussi d'un modèle f non entraîné ou bien est-il pré-entraîné ?]
+
+0:23:37.280,0:23:41.279
+Initialement il n'est pas entraîné. En fait, ça dépend.
+
+0:23:41.279,0:23:49.679
+Si vous avez un très grand jeu de données, alors vous partez d'un point de départ aléatoire, vous partez de
+
+0:23:49.679,0:23:53.520
+poids initialisés de manière aléatoire. Et donc, au départ, cette application sera aléatoire.
+
+0:23:53.520,0:23:58.400
+Mais vous rétropropagez tout donc vous allez avoir une perte d'entropie croisée ici.
+
+0:23:58.400,0:24:01.520
+Les gradients viennent ici. Vous mettez à jour les paramètres ici.
+
+0:24:01.520,0:24:05.679
+Et aussi les gradients vont passer par l'encodeur ici.
+
+0:24:05.679,0:24:10.080
+Maintenant si vous n'avez pas beaucoup de données annotées, alors
+
+0:24:10.080,0:24:16.240
+vous pourriez vouloir pré-entraîner. Nous allons voir ce cas-ci
+
+0:24:16.240,0:24:21.159
+dans les prochaines minutes. Donc oui vous pouvez pré-entraîner.
+
+0:24:21.159,0:24:25.400
+[Alfredo : avec un modèle de langue à droite].
+
+0:24:25.400,0:24:31.000
+Vous pouvez effectuer un pré-entraînement avec un modèle de langue qui est
+
+0:24:31.000,0:24:36.000
+entraîner sur plusieurs langues à la fois, partager les paramètres entre l'encodeur et le décodeur.
+
+0:24:36.000,0:24:40.679
+Il y a plusieurs façons… comme BERT par exemple, je pense que vous avez…
+
+0:24:40.679,0:24:43.679
+[Alfredo : oui, nous en avons parlé].
+
+0:24:43.679,0:24:50.400
+Donc vous pouvez appliquer BERT sur plusieurs langues à la fois et je vais en parler.
+
+0:24:50.400,0:24:53.679
+[Alfredo : c’est logique. Oh, et l'étudiant suit bien l’explication.
+
+0:24:53.679,0:24:57.750
+Comment retourner le fait que certaines phrases sont incertaines ?
+
+0:24:57.750,0:25:07.880
+Si vous entraînez pendant longtemps avec seulement une phrase dans une séquence, cela ne va t’il pas finir par biaiser ce réseau ?
+
+0:25:07.880,0:25:15.520
+Ce réseau va presque avoir une probabilité d'impulsion, n'est-ce pas ? Si on arête trop tôt].
+
+0:25:15.520,0:25:20.159
+Peux-tu répéter la deuxième partie de la toute dernière phrase ?
+
+0:25:20.159,0:25:30.720
+[Si on entraîne longtemps avec une seule phrase avec seulement un seul séquence à séquence, cela ne va-t-il pas finir par biaiser ce réseau ?
+
+0:25:30.720,0:25:34.799
+Attends, peut-être que la phrase est cassée].
+
+0:25:34.799,0:25:40.640
+Disons que vous avez... en fait c’est très très similaire à MNIST.
+
+0:25:40.640,0:25:57.080
+Donc disons que chaque fois que vous voyez la classe 0, avec une probabilité de 0,9, vous attribuez l’étiquette 0 qui est la vérité terrain.
+
+0:25:57.080,0:26:05.000
+Et pour avec une probabilité de 0,1 vous assignez à une classe supplémentaire 11.
+
+0:26:05.000,0:26:09.600
+Chaque fois que vous dites 0, ça peut être la classe 0 ou 11.
+
+0:26:09.600,0:26:16.240
+Vous pouvez entraîner cette chose car vous essayez de faire correspondre
+
+0:26:16.240,0:26:21.279
+la distribution de sortie. En supposant que vous ne surentraînez pas,
+
+0:26:21.279,0:26:25.760
+ce qui se passe, c'est que la distribution de la sortie va avoir
+
+0:26:25.760,0:26:33.039
+une probabilité de 0,9 pour 0 et une probabilité de 0,1 pour 11.
+
+0:26:33.039,0:26:41.840
+Maintenant si vous prédisez en prenant le max, vous allez toujours prédire 0.
+
+0:26:41.840,0:26:44.840
+Cent pourcent du temps. Mais si vous échantillonnez,
+
+0:26:44.840,0:26:48.799
+en supposant que le modèle est bien calibré et ne surentraîne pas,
+
+0:26:48.799,0:26:52.960
+vous pouvez matcher la distribution qu'il y a dans les données.
+
+0:26:52.960,0:27:01.679
+C'est la même chose ici. Donc si vous avez une phrase qui se traduit de plusieurs façons,
+
+0:27:01.679,0:27:14.559
+le modèle devrait vous donner une distribution de probabilité sur toutes les traductions possibles en supposant que le modèle est bien calibré.
+
+0:27:14.559,0:27:21.840
+[Alfredo : ok, merci]. C’est en fait tout un sujet.
+
+0:27:21.840,0:27:31.279
+Car, bien sûr, vous pouvez aider le modèle à faire face à l'incertitude en introduisant des variables latentes.
+
+0:27:31.279,0:27:39.000
+Donc vous pouvez avoir un certain état de variable latente qui permet de traduire d’une certaine manière,
+
+0:27:39.000,0:27:44.880
+par exemple si on reprends le passage d’une langue non-infléchie à une langue infléchie,
+
+0:27:42.880,0:27:49.200
+alors vous pouvez avoir un état de variable latente qui produit toutes les
+
+0:27:49.200,0:27:56.960
+choses au féminin singulier, un autre état qui ressort tout au féminin pluriel, etc.
+
+0:27:56.960,0:28:03.200
+Vous pouvez jouer avec le modèle pour mieux représenter cette incertitude.
+
+0:28:03.200,0:28:07.999
+[Alfredo : je crois que nous avons vu récemment quelques nouvelles sur
+
+0:28:07.999,0:28:13.279
+Google Translate et comment traduire aller-retour du turc vers l'anglais.
+
+0:28:13.279,0:28:18.559
+La traduction se fait essentiellement dans un seul sens].
+
+0:28:18.559,0:28:25.000
+Oui, ce n'est pas surprenant. Car, encore une fois, quand vous décodez avec la recherche en faisceau,
+
+0:28:25.000,0:28:29.000
+la traduction est très fluide. C'est la classe majoritaire.
+
+0:28:29.000,0:28:33.500
+Bien sûr, si on passe de quelque chose qui n'est pas infléchi comme l'anglais 
+
+0:28:33.500,0:28:38.500
+vers le turc qui est lui hautement infléchi, on va avoir beaucoup de perte.
+
+0:28:38.500,0:28:47.520
+Car cela ne produit une distribution sur les traductions, elle ne vous en donne qu'une seule. Et c'est je pense aussi un problème avec l’UI.
+
+0:28:47.520,0:28:53.000
+D'autres questions ? [Alfredo : c'est tout].
+
+0:28:53.000,0:28:57.600
+Ce sont d'excellentes questions, d'ailleurs. Merci de les avoir posées et
+
+0:28:57.600,0:29:02.080
+n'hésitez pas à en demander plus. Je partagerais évidemment les diapositives.
+
+0:29:02.080,0:29:06.080
+Donc même si je ne passe pas tout en revue, vous aurez accès au matériel.
+
+0:29:06.080,0:29:09.000
+Je préfère rendre ce processus interactif.
+
+0:29:09.000,0:29:13.039
+Pour conclure l'examen de la traduction automatique à un niveau assez élevé,
+
+0:29:13.039,0:29:22.000
+nous avons parlé de l’entraînement, de l'inférence et comment générer à partir du système de traduction automatique, la dernière partie est l'évaluation.
+
+0:29:22.000,0:29:30.320
+A moins de faire une évaluation humaine, l'évaluation automatique est très simple.
+
+0:29:30.320,0:29:38.559
+En gros, vous avez typiquement une phrase source et vous avez une référence/traduction humaine.
+
+0:29:38.559,0:29:44.000
+Et vous avez une hypothèse de système. Donc une prédiction produite par le système de traduction automatique.
+
+0:29:44.000,0:29:49.200
+Ce que vous voulez faire c’est faire correspondre ces deux chaînes de caractères d'une manière ou d'une autre.
+
+0:29:49.200,0:29:55.039
+Et la façon dont cela est fait… Il y a beaucoup de métriques, il y a une énorme littérature.
+
+0:29:55.080,0:30:04.000
+Mais la métrique la plus couramment utilisée aujourd'hui s'appelle BLEU. 
+
+0:30:04.000,0:30:10.000
+C’est simplement une moyenne géométrique des scores de précision. Ce pn
+
+0:30:10.000,0:30:15.000
+ici peut correspondre à un unigramme, bigramme, trigramme, quadrigramme.
+
+0:30:15.00,0:30:18.500
+Un unigramme est un mot unique, un bigramme est une séquence
+
+0:30:18.500,0:30:23.500
+de deux mots, un trigramme est une séquence de trois mots et un quadrigramme est une séquence de quatre mots.
+
+0:30:23.500,0:30:29.500
+Un score de précision vérifie simplement si un certain n-gramme qui est présent dans la prédiction
+
+0:30:29.500,0:30:33.500
+du système de traduction est aussi présent dans la référence humaine.
+
+0:30:33.500,0:30:37.840
+Et vous comptez combien de correspondances vous avez. Vous calculez le score de précision comme ça.
+
+0:30:37.840,0:30:44.320
+C’est donc essentiellement une correspondance de chaînes de caractères un niveau d’un n-gramme. C’est tout ce que vous devez savoir.
+
+0:30:44.320,0:30:47.360
+C'est un nombre habituellement donné entre 0 et 100.
+
+0:30:47.360,0:30:52.559
+Il devrait être entre 0 et 1 mais il est généralement donné entre 0 et 100.
+
+0:30:52.559,0:31:02.559
+100 est la correspondance parfaite et 0 si vous n’obtenez pas un seul n-gramme en commun.
+
+0:31:02.559,0:31:06.880
+Bien sûr, comme nous l'avons déjà dit, il y a aussi le fait que
+
+0:31:06.880,0:31:10.240
+pour un phrase source donnée, il existe plusieurs traductions plausibles.
+
+0:31:10.240,0:31:15.000
+Donc il est très peu probable que vous obtenez 100.
+
+0:31:15.000,0:31:22.880
+Pour les systèmes en anglais très performants sur les domaines qui correspondent au jeu d’entraînement, on obtient quelque chose comme 50.
+
+0:31:22.880,0:31:27.039
+A cause de cette incertitude.
+
+0:31:27.039,0:31:33.840
+C'était un récapitulatif sur la traduction automatique.
+
+0:31:33.840,0:31:40.320
+Grossièrement une application de modélisation de séquence à séquence à la tâche de traduction. 
+
+0:31:40.320,0:31:46.320
+Prenons du recul pour réfléchir aux hypothèses que nous avons faites implicitement. Donc la première est que
+
+0:31:46.320,0:31:50.720
+les langues considérées sont l'italien et l'anglais, qui sont deux langues européennes.
+
+0:31:50.720,0:31:53.840
+Les langues européennes ont beaucoup de points communs.
+
+0:31:53.840,0:31:57.279
+La seconde hypothèse est que nous avons un jeu de données étiqueté.
+
+0:31:57.279,0:32:00.320
+Donc nous avons beaucoup de phrases parallèles.
+
+0:32:00.320,0:32:06.679
+Pourquoi en avons-nous besoin de beaucoup ? Car le système de traduction automatique a beaucoup de paramètres.
+
+0:32:06.679,0:32:12.399
+Si vous regardez un manuel standard, on vous dit que vous avez besoin d'environ
+
+0:32:12.399,0:32:15.159
+trois points de données pour estimer chaque paramètre.
+
+0:32:15.159,0:32:21.919
+Ici nous parlons de modèles qui ont des centaines de millions de paramètres. Si ce n’est plus.
+
+0:32:21.919,0:32:31.679
+Avons-nous trois/quatre fois des phrases parallèles ? Peut-être pas.
+
+0:32:31.679,0:32:36.720
+Il s'avère qu'il y a six mille langues dans le monde.
+
+0:32:36.720,0:32:46.000
+La communauté travaillant sur la traduction automatique est très centrée sur l’anglais et les langues européennes.
+
+0:32:46.000,0:32:56.000
+Mais il s'avère que seulement cinq pour cent de la population mondiale a l’anglais comme langue maternelle.
+
+0:32:57.000,0:33:03.360
+En fait, les 10 premières langues les plus parlées ne représentent que 50 pour cent de la population mondiale.
+
+0:33:03.360,0:33:08.559
+Cela signifie que la distribution des locuteurs dans chaque langue
+
+0:33:08.559,0:33:13.320
+est une queue très lourde. Vous avez beaucoup de gens qui parlent
+
+0:33:13.320,0:33:17.360
+des langues qui sont globalement parlées par très peu de personnes.
+
+0:33:17.360,0:33:24.799
+La somme de toutes ces petites populations, représente une grande part de
+la population mondiale. Donc c'est un problème car
+
+0:33:24.799,0:33:33.000
+si vous regardez les moteurs de traduction automatique : Google Translate, Bing, etc.
+
+0:33:33.000,0:33:38.399
+Ils sont seulement capables de traduire de et vers l'anglais typiquement
+
+0:33:38.399,0:33:42.720
+et seulement pour une centaine de langues. Cela signifie qu'il existe une
+
+0:33:42.720,0:33:47.200
+énorme queue dans la distribution des langues que nous sommes
+
+0:33:47.200,0:33:51.279
+actuellement pas en mesure de traduire correctement ou du tout.
+
+0:33:51.279,0:33:57.500
+Je pense honnêtement qu’il y a qu’un peu d'espoir de traduire les langues à l'extrême droite de la queue car
+
+0:33:57.500,0:34:01.679
+beaucoup de ces langues ne sont que parlées, elles ne sont pas écrites.
+
+0:34:01.679,0:34:07.000
+On ne trouve pratiquement pas de ressources numérisées. Mais pour les intermédiaires
+
+0:34:07.000,0:34:10.320
+que je montre en jaune ici, je pense qu'il y a de l'espoir.
+
+0:34:10.320,0:34:14.159
+Pour ces langues peut-être vous n'avez pas de données parallèles
+
+0:34:14.159,0:34:17.599
+mais vous avez peut-être au moins du texte brut
+
+0:34:17.599,0:34:20.399
+dans chaque langue et la question est de savoir si
+
+0:34:20.399,0:34:23.999
+on peut utiliser ces données non étiquetées pour construire un système
+
+0:34:23.999,0:34:28.639
+de traduction automatique. Et donc pourquoi c'est un problème ?
+
+0:34:28.639,0:34:35.200
+Vous pouvez le voir ici. Donc la zone grise est la quantité de données parallèles qu'il y a
+
+0:34:35.200,0:34:41.040
+en anglais pour un tas d’autres langues. Donc de celle qui est
+
+0:34:41.040,0:34:43.679
+a la plus grande ressource disponible à celle qui
+
+0:34:43.679,0:34:48.320
+est la ressource la plus faible. La zone plus sombre est la performance
+
+0:34:48.320,0:34:52.079
+des systèmes de traduction automatique actuels. Vous pouvez voir qu'il y a une sorte de
+
+0:34:52.079,0:34:56.399
+une transition de phase ici. En dessous d'une certaine quantité de données parallèles,
+
+0:34:56.399,0:35:03.999
+la qualité se dégrade beaucoup. Et dans cette zone, le système de traduction fonctionne si mal qu’il n'est pas utile.
+
+0:35:03.999,0:35:11.119
+Et donc actuellement vous avez besoin de beaucoup de données étiquetées afin d'entraîner les systèmes de traduction automatique.
+
+0:35:11.119,0:35:18.240
+Donc réfléchissons à la façon dont nous construirions, disons qu'un système de traduction automatique anglais/népalais.
+
+0:35:18.240,0:35:25.520
+Le népalais est une langue parlée au Népal, un beau pays, par 25 millions de personnes.
+
+0:35:25.520,0:35:28.800
+Donc c’est très peu de personnes.
+
+0:35:28.800,0:35:32.640
+Il s’avère que la quantité de données parallèles est très très petite.
+
+0:35:32.640,0:35:35.640
+Ce n'est pas ce que nous décrivions avant.
+
+0:35:35.640,0:35:39.999
+Si vous êtes intéressé par la traduction automatique ou en général par
+
+0:35:39.999,0:35:49.040
+des corpus qui sont traduits en plusieurs langues pour tout ce qui est classification de texte ou autre, 
+
+0:35:49.040,0:35:58.240
+vous pouvez aller sur ce site web. C’est un dépôt public de toutes les données parallèles disponibles. C'est très très bien.
+
+0:35:58.240,0:36:01.680
+Donc si vous entrez anglais/népalais par exemple,
+
+0:36:01.680,0:36:06.680
+cela vous donne cette liste de jeux de données que vous pouvez télécharger gratuitement.
+
+0:36:06.680,0:36:16.560
+Maintenant si vous regardez le nombre de phrases, vous réalisez que les sources qui ont le plus grand nombre de
+
+0:36:16.560,0:36:20.880
+phrases sont JW300 qui sont des magazines des témoins de Jéhovah
+
+0:36:20.880,0:36:25.040
+et puis GNOME et KDE4 qui sont des manuels Ubuntu.
+
+0:36:25.040,0:36:35.880
+Vous voyiez le problème. Le problème est a) vous n'avez pas beaucoup de données parallèles
+
+0:36:35.880,0:36:44.720
+b) celles que nous avons sont dans des domaines qui ne sont pas super utiles, qui sont bruyants.
+
+0:36:44.720,0:36:53.839
+Par exemple WikiMatrix est aligné automatiquement donc ce n'est pas de très haute qualité. Si c'est de haute qualité,
+
+0:36:53.839,0:36:57.359
+c’est sur des domaines de niche qui ne nous intéressent généralement pas.
+
+0:36:57.359,0:37:03.040
+Qui veut traduire de nouvelles phrases du manuel Ubuntu ?
+
+0:37:03.040,0:37:07.200
+Donc qu’est-ce que la traduction automatique en pratique pour
+
+0:37:07.200,0:37:14.160
+la grande majorité des langues ? Donc ça ressemble à ça. Disons qu’on
+
+0:37:14.160,0:37:23.280
+représente les phrases avec des boîtes : bleues pour l’anglais et rouges pour les traductions correspondantes en népalais.
+
+0:37:23.280,0:37:32.960
+Donc il s'avère qu'un jeu de données parallèle est un objet qui est un peu plus compliqué car il est composé de
+
+0:37:32.960,0:37:36.480
+certaines de phrases qui proviennent de l'anglais et d'autres
+
+0:37:36.480,0:37:42.480
+provenant du népalais. Donc maintenant je vais montrer avec une boîte vide
+
+0:37:42.480,0:37:52.760
+les traductions humaines. Donc dans ce cas, la boite rouge vide correspond à la traduction humaine de ces phrases en anglais.
+
+0:37:52.760,0:38:04.599
+Elles proviennent de la Bible alors que ces phrases en népalais proviennent de données parlementaires.
+
+0:38:04.599,0:38:12.000
+Vous pouvez être d'accord avec moi que la traduction de ces phrases de la Bible n'est pas la chose la plus intéressante à faire.
+
+0:38:12.000,0:38:17.320
+Alors peut-être que ce que vous voulez faire, c'est traduire, disons, des données d'actualités de l'anglais en népalais.
+
+0:38:17.320,0:38:20.960
+Mais le problème est que vous n'avez pas
+
+0:38:20.960,0:38:27.000
+de données parallèles dans le domaine des actualités. Si vous avez de la chance, vous avez des données monolingues.
+
+0:38:27.000,0:38:33.880
+Des données monolingues sont juste des textes bruts sans la traduction correspondante dans une langue donnée.
+
+0:38:33.880,0:38:45.839
+Vous avez peut-être juste des actualités en anglais, par exemple de la BBC ou autre et vous avez des nouvelles népalaises des médias locaux de là-bas.
+
+0:38:45.839,0:38:54.560
+Ce que vous voulez faire, c'est traduire les actualités de votre jeu de données en anglais vers le népalais.
+
+0:38:54.560,0:39:00.560
+Comment faire cela ? Ce n'était pas évident pour moi quand nous avons étudié ce problème.
+
+0:39:00.560,0:39:10.000
+Il s'avère que le problème est en fait un peu plus compliqué dans un sens qu’en étant plus compliqué, il devient plus simple à résoudre.
+
+0:39:10.000,0:39:18.000
+Vous n'avez pas seulement des données pour l'anglais en népalais, vous avez aussi peut-être des données dans d'autres langues.
+
+0:39:18.000,0:39:24.000
+Par exemple l’hindi. Le népalais et l'hindi appartiennent à la même famille
+
+0:39:24.000,0:39:27.680
+et l'hindi a des ressources beaucoup plus développées que le népalais.
+
+0:39:27.680,0:39:32.240
+Vous pouvez trouver un grand corpus de données parallèles entre l'anglais et l'hindi.
+
+0:39:32.240,0:39:37.000
+Mais peut-être que celui-ci porte sur un autre domaine.
+
+0:39:37.000,0:39:42.640
+Si vous poussez ça plus loin, vous découvrirez que ce que vous pouvez collecter,
+
+0:39:42.640,0:39:49.999
+est un jeu de données portant sur plusieurs domaines, ici à travers les lignes, et plusieurs langues, ici à travers les colonnes.
+
+0:39:49.999,0:39:54.240
+Donc ce que vous voulez faire, c’est traduire
+
+0:39:54.240,0:39:59.119
+des données d'actualités de l'anglais au népalais. La question est de savoir si vous pouvez tirer profit de
+
+0:39:59.119,0:40:04.250
+toutes ces grilles de jeu de données pour améliorer la généralisation de votre
+
+0:40:04.250,0:40:13.240
+système de traduction automatique. C'est un apprentissage de type « Mondrian » que je ne pense pas que vous trouverez dans votre manuel.
+
+0:40:13.319,0:40:22.839
+Un objectif de cette conférence a pour but de vous expliquer comment aborder ce type d'apprentissage.
+
+0:40:22.839,0:40:30.400
+Y’a-t-il des questions jusqu'ici ?
+
+0:40:30.400,0:40:33.760
+[Alfredo : non, je ne vois pas de questions ici].
+
+0:40:33.760,0:40:40.880
+Ok, excellent. Donc le message à retourner est que,
+
+0:40:40.880,0:40:46.240
+souvent quand… Ok, j’aime faire de la modélisation, j'aime venir avec de
+
+0:40:46.240,0:40:51.760
+nouveaux algorithmes ou architectures. Souvent nous pensons que c'est
+
+0:40:51.760,0:40:56.480
+la chose la plus cool à faire. Quand on nous donne une tâche,
+
+0:40:56.480,0:41:00.319
+un jeu de données, nous passons 90 % du temps à chercher
+
+0:41:00.319,0:41:05.520
+une bonne architecture, un bon algorithme d'apprentissage,
+
+0:41:05.520,0:41:10.000
+mais dans la pratique, l'image est un peu différente.
+
+0:41:10.000,0:41:15.839
+En pratique, où obtenez-vous les données ? Donc étant donnée une tâche, devoir déterminer quelles sont les bonnes données
+
+0:41:15.839,0:41:19.599
+pour la résolution de la tâche est un problème difficile.
+
+0:41:19.599,0:41:23.200
+Beaucoup de temps est consacré à l'élaboration d'un bon jeu de données.
+
+0:41:23.200,0:41:28.160
+Si vous n'avez pas beaucoup de données étiquetées,
+
+0:41:28.160,0:41:38.160
+vous devez trouver des moyens de fantasmer des données ou d'imaginer
+des tâches auxiliaires.
+
+0:41:38.160,0:41:45.119
+En pratique, d'après mon expérience, il y a beaucoup de science ici, du côté des données,
+
+0:41:45.119,0:41:50.960
+qui est souvent négligé lorsque l'on étudie l'apprentissage machine.
+
+0:41:50.960,0:41:54.560
+De plus, après avoir obtenu quelques données et votre modèle,
+
+0:41:54.560,0:42:00.400
+il y a beaucoup d'efforts à fournir sur l'analyse de ce que le modèle fait,
+
+0:42:00.400,0:42:04.800
+analyser les propriétés des données. Il y a beaucoup de boucles de rétroaction.
+
+0:42:04.800,0:42:08.560
+On doit revenir du modèle aux données, de l'analyse au modèle et aux données.
+
+0:42:08.560,0:42:14.000
+Afin de, par exemple, nettoyer les données, étendre les données,
+
+0:42:14.000,0:42:18.480
+de finetuner le modèle, etc. Sans compter que lorsque vous allez passer au déploiement, il y a
+
+0:42:18.480,0:42:23.240
+d'autres considérations, comme par exemple, est-ce que mon modèle correspond au budget de calcul que j’ai.
+
+0:42:23.240,0:42:26.240
+Puis vous devez revenir au modèle.
+
+0:42:26.240,0:42:32.260
+Ou est-ce que le modèle est performant sur l'ensemble de la distribution des entrées ? Auquel cas vous devez revenir aux données.
+
+0:42:32.260,0:42:37.750
+C'est donc un processus itératif et je pense qu'il est important de comprendre qu’il y a une image globale.
+
+0:42:37.750,0:42:44.750
+Souvent nous nous concentrons sur le côté modèle car nous sommes des praticiens de l'apprentissage automatique et nous aimons ça 
+
+0:42:44.750,0:42:50.750
+mais si vous voulez résoudre une application, vous devez avoir l'ensemble du tableau dans votre esprit.
+
+0:42:50.750,0:42:55.280
+Donc l'objectif de cette conférence n'est pas de parler d’architectures.
+
+0:42:55.280,0:43:01.000
+Je parlerai de certains algorithmes, mais nous aborderons aussi les données et l’analyse.
+
+0:43:01.000,0:43:10.560
+Donc le deuxième conseil est que lorsque vous n'avez pas beaucoup de données étiquetées,
+
+0:43:10.560,0:43:14.960
+vous pouvez faire deux choses. Vous pouvez réduire l'échelle du modèle.
+
+0:43:14.960,0:43:19.040
+Faire de l'apprentissage à petite échelle, mais habituellement ce n'est pas une bonne idée.
+
+0:43:19.040,0:43:28.480
+A la place, ce que je vous encourage à faire, c'est de penser aux moyens de rassembler plus de données pour arriver à des tâches auxiliaires.
+
+0:43:28.480,0:43:32.599
+Cela pourrait d’autres tâches supervisées ou non.
+
+0:43:32.599,0:43:41.000
+Il faut trouvez des moyens d'élargir votre jeu de données et de faire de l'apprentissage à grande échelle. Généralement c'est la chose qui
+
+0:43:41.000,0:43:47.599
+va généraliser beaucoup mieux. Donc qu'est-ce que la traduction automatique à faibles ressources ?
+
+0:43:47.599,0:43:54.560
+Etant donné qu'un modèle est de l'ordre de la centaine millions de paramètres, la traduction automatique à faibles ressources est une
+
+0:43:54.560,0:44:00.319
+tâche de traduction automatique où le nombre de phrases parallèles est inférieur à 10 000.
+
+0:44:00.319,0:44:07.760
+Ok alors d'habitude quand on a si peu de données parallèles, la performance est très pauvre.
+
+0:44:07.760,0:44:10.720
+Les défis sont bien sûr, comme je l'ai dit,
+
+0:44:10.720,0:44:14.500
+de trouver des données pour entraîner le modèle,
+
+0:44:14.500,0:44:17.520
+avoir des jeux de données test de haute qualité
+
+0:44:17.520,0:44:23.800
+car si vous n’avez pas un bon moyen de mesurer les performances, il est alors très difficile de progresser.
+
+0:44:23.800,0:44:27.280
+Il y a aussi les défis liés aux métriques.
+
+0:44:27.280,0:44:30.960
+Comme faire une évaluation humaine ? Ce n'est pas facile de trouver des locuteurs
+
+0:44:30.960,0:44:37.960
+des langues à faible ressource ou qui parle couramment d’autres langues.
+
+0:44:37.960,0:44:42.240
+Ce n'est pas facile de faire une évaluation automatique. Par exemple si vous prenez
+
+0:44:42.240,0:44:47.520
+le birman ce n'est pas une langue dans laquelle il y a des mots segmentés.
+
+0:44:47.520,0:44:51.920
+Donc vous devez trouver différentes façons de mesurer l'erreur,
+
+0:44:51.920,0:44:56.079
+votre BLEU. Et puis il y a bien sûr les défis de modélisation :
+
+0:44:56.079,0:45:01.200
+qu'est-ce qu’un bon paradigme d'apprentissage lorsque vous avez tant de jeux de données provenant de tant
+
+0:45:01.200,0:45:11.200
+de nombreuses langues et domaines ? Et car c’est un problème d’apprentissage à grande échelle, comment passez à l’échelle de façon efficace ?
+
+0:45:11.200,0:45:17.200
+En plus de ça, voici les défis généraux de la traduction automatique, dont certains que nous avons abordés avant,
+
+0:45:17.200,0:45:27.200
+comme le biais d'exposition, le fait que d'habitude nous entraînons pour scorer mais nous nous intéressons finalement à la de génération.
+
+0:45:27.200,0:45:31.750
+Donc pouvons-nous entraîner pour faire de la génération qui est votre tâche finale ? Comment modéliser l'incertitude ?
+
+0:45:31.770,0:45:36.880
+Quelles sont les meilleures métriques que BLEU ? Si vous avez un budget pour le calcul,
+
+0:45:36.880,0:45:40.000
+comment entraîner en en tenant compte ?
+
+0:45:40.000,0:45:44.520
+Comment modéliser la longue queue de la distribution ?
+
+0:45:44.520,0:45:50.160.
+Par exemple, toutes les erreurs ne valent pas la même chose.
+
+0:45:50.160,0:45:59.599
+Disons que vous traduisez des actualités portant sur le prix de l'action Coca-Cola qui a baissé de 10%.
+
+0:45:59.839,0:46:03.839
+Maintenant vous remplacez Coca-Cola par Pepsi.
+
+0:46:03.839,0:46:14.560
+C’est un exemple stupide, mais vous pouvez voir avec que le simple remplacement d'un mot peut avoir un effet énorme en aval.
+
+0:46:14.560,0:46:23.240
+Donc comment détecter ces erreurs et comment les mesurer et les réparer ?
+
+0:46:26.240,0:46:31.079
+Donc c'était une sorte d'introduction. Une introduction de quasiment une heure.
+
+0:46:31.079,0:46:42.960
+Ce que j'avais prévu de faire aujourd'hui est de vous montrer le cercle de la recherche, la façon dont je le vois.
+
+0:46:42.960,0:46:48.119
+Pour moi, ce cercle tourne autour de trois piliers. Le premier est les données.
+
+0:46:48.119,0:46:52.960
+Il vous faut des données sources pour entraîner et vous devez trouver comment évaluer,
+
+0:46:52.960,0:46:56.560
+et en fonction de ce que vous voulez explorer, vous devez proposer
+
+0:46:56.560,0:47:01.040
+différents jeux de données. Il y a toute une science sur la collecte de données.
+
+0:47:01.040,0:47:04.880
+Après avoir obtenu des données, vous passez au modèle.
+
+0:47:04.880,0:47:08.560
+C'est la chose que nous aimons faire. Donc vous devez concevoir une
+
+0:47:08.560,0:47:12.280
+architecture, trouver un algorithme s'adaptant aux données
+
+0:47:12.280,0:47:16.560
+et généralisant à de nouvelles issues de la distribution ou d'un signal.
+
+0:47:16.560,0:47:20.400
+Après avoir fait la modélisation, vient l'analyse.
+
+0:47:20.400,0:47:24.240
+Vous pouvez analyser plusieurs choses.
+
+0:47:24.240,0:47:27.760
+Par exemple, dans ce papier, nous avons analysé comment
+
+0:47:27.760,0:47:31.359
+la distribution du modèle correspond à la distribution des données.
+
+0:47:31.359,0:47:33.839
+Donc nous avons analysé le modèle.
+
+0:47:33.839,0:47:38.240
+Dans cet autre article, nous avons analysé la métrique et dans l'article dont je vais parler
+
+0:47:38.240,0:47:42.559
+aujourd'hui je vais analyser les données. Donc vous pouvez analyser
+
+0:47:42.559,0:47:46.079
+plusieurs choses. En fonction des problèmes apparaissant suite
+
+0:47:46.079,0:47:49.839
+à l’analyse, vous pouvez vous rendre compte que vous avez besoin
+
+0:47:49.839,0:47:54.880
+d’un nouveau jeu de données permettant d'explorer ce que vous voulez
+
+0:47:54.880,0:47:58.079
+d'une meilleure manière. Et peut-être que vous avez besoin
+
+0:47:58.079,0:48:02.160
+d’un nouveau modèle. Et vous continuez à itérer dans ce processus.
+
+0:48:02.160,0:48:11.359
+Donc cela marche dans ce domaine et je pense que cela s'applique également à d'autres applications.
+
+0:48:11.359,0:48:15.520
+Je vais mettre en avant trois travaux ici.
+
+0:48:15.520,0:48:23.400
+Et je vais commencer par les données, sauf s'il y a des questions ou que vous vouliez prendre une pause. 
+
+0:48:24.160,0:48:31.839
+[Alfredo : pas de pause, pas de questions. Tout va bien ici]. Ok.
+
+0:48:31.839,0:48:36.400
+Donc laisse-moi revenir à mon cas anglais/népalais.
+
+0:48:36.400,0:48:40.319
+Donc, comme je l'ai dit, vous allez dans le dépôt d'Orpus et
+
+0:48:40.319,0:48:43.440
+voici les données dont vous disposez.
+
+0:48:43.440,0:48:47.599
+Donc une autre façon de le dessiner est avec ce tableau où
+
+0:48:47.599,0:48:53.240
+vous avez des données de la Bible en anglais traduites en népalais,
+
+0:48:53.240,0:49:00.079
+quelques données GNOME sur Ubuntu en anglais, traduites en népalais et ensuite vous avez un tas de
+
+0:49:00.079,0:49:10.839
+données monolingues qui sont juste du texte brut dans chaque langue provenant de Common Crawl issu du web mondial.
+
+0:49:10.839,0:49:14.000
+Vous pouvez filtrer pour ces langues spécifiques.
+
+0:49:14.000,0:49:18.000
+Vous avez Wikipédia qui est un sous-ensemble de Common Crawl.
+
+0:49:18.000,0:49:24.000
+Et peut-être que ce que vous voulez faire, c'est traduire les documents Wikipédia de l'anglais vers le népalais. 
+
+0:49:24.000,0:49:31.800
+La question est : comment allez-vous évaluer ? Car il n'y a pas autant de données parallèles dans Wikipédia.
+
+0:49:31.800,0:49:35.280
+C’est aussi un domaine assez générique.
+
+0:49:35.280,0:49:41.920
+Donc il y a quelques années, nous avons commencé cet effort de construire un benchmark d’évaluation
+
+0:49:41.920,0:49:48.920
+pour les langues à faibles ressources et nous avons commencé par le népalais, le singhalais, le kmer et le pachto.
+
+0:49:48.920,0:49:57.119
+Nous avons pris des documents de Wikipédia dans chaque langue et les avons traduit de et vers l'anglais.
+
+0:49:57.119,0:50:03.480
+Donc maintenant nous avons des benchmarks d'évolution critique dans ces quatre langues.
+
+0:50:03.480,0:50:11.760
+Vous pouvez dire : Ok pourquoi ? Cela peut être utile mais pourquoi je me soucierais de ça ?
+
+0:50:11.760,0:50:15.760
+Il s'avère qu'il n'y a pas, à ma connaissance,
+
+0:50:15.760,0:50:20.800
+il n'y a pas de documentation claire sur la façon dont on peut
+
+0:50:20.800,0:50:26.640
+collecter les données de traduction automatique. Quelles directives donner aux traducteurs et aux évaluateurs.
+
+0:50:26.640,0:50:28.880
+Quel est le pipeline ?
+
+0:50:28.880,0:50:33.280
+Il y a beaucoup de questions intéressantes. [Alfredo : elles ne sont pas parallèles ?
+
+0:50:33.280,0:50:37.599
+Il ne s’agit que des articles ?] Oui et que nous prévoyons de
+
+0:50:37.599,0:50:42.599
+traduire de et vers l'anglais pour construire le jeu de données pour l'évaluation.
+
+0:50:43.119,0:50:50.319
+Et donc la question est : aucun d'entre nous ne parle une de ces langues
+
+0:50:50.319,0:50:54.079
+malheureusement et donc comment s'assurer
+
+0:50:54.079,0:50:57.359
+qu’à chaque fois que l’on envoie une phrase à un traducteur,
+
+0:50:57.359,0:51:03.280
+la traduction effectuée est de bonne qualité ? Ce n'est pas évident. 
+
+0:51:03.280,0:51:09.200
+La façon dont nous avons fait ça est en utilisant ce pipeline. Donc après avoir traduit, nous avons
+
+0:51:09.200,0:51:15.760
+une série de plusieurs contrôles automatiques.
+
+0:51:15.760,0:51:21.119
+Par exemple, nous entraînons un modèle de langue pour chaque langue.
+
+0:51:21.119,0:51:24.780
+Puis on vérifie la complexité de chaque traduction.
+
+0:51:24.780,0:51:29.319
+Essentiellement, est-elle assez fluide d’après le modèle de langue ?
+
+0:51:29.319,0:51:34.720
+Un autre contrôle porte sur la translittération.
+
+0:51:34.720,0:51:37.839
+Est-ce que le traducteur effectue simplement une translittération ?
+
+0:51:37.839,0:51:41.040
+Disons que si vous passez de l'anglais au népalais, vous pouvez écrire
+
+0:51:41.040,0:51:45.680
+une phrase anglaise en caractères népalais mais sans traduction,
+
+0:51:45.680,0:51:51.000
+juste en utilisant les sons dans les caractères de la langue.
+
+0:51:51.000,0:51:56.319
+Une autre vérification consiste à s'assurer que le traducteur ne se contente pas de copier le résultat
+
+0:51:56.319,0:52:00.559
+d’un moteur de traduction automatique comme Bing ou Google Translate.
+
+0:52:00.559,0:52:06.400
+Vous serez surpris d'apprendre que c'était le problème le plus fréquent que nous avions.
+
+0:52:06.400,0:52:12.720
+C’est lié à la façon de mesurer l’incertitude dans la traduction d’une phrase.
+
+0:52:12.720,0:52:16.640
+Se pourrait-il qu'il n'y ait que très peu de façons de le faire et que
+
+0:52:16.640,0:52:19.999
+la traduction des moteurs de recherche correspond ?
+
+0:52:19.999,0:52:25.000
+Je ne vais pas entrer dans les détails maintenant
+
+0:52:25.000,0:52:33.280
+mais il y a des questions scientifiques très intéressants des questions sur la manière de mesurer la qualité de ces
+
+0:52:33.280,0:52:37.520
+traductions et aussi de décider quand s'arrêter.
+
+0:52:37.520,0:52:40.160
+J'ai des boucles de rétroaction où je dis « Ok, si
+
+0:52:40.160,0:52:46.400
+la perplexité est trop grande, je vais dire au traducteur qu'il doit améliorer la traduction »
+
+0:52:46.400,0:52:51.359
+ou si l'évaluation humaine ne donne pas un score assez élevée, je refais
+
+0:52:51.359,0:52:54.640
+un autre tour de traduction. Mais quand s'arrête-t-on ?
+
+0:52:54.640,0:53:02.240
+Quand est-ce que la traduction est assez bonne ?
+
+0:53:02.240,0:53:10.000
+Je ne pense pas avoir de réponse à ces questions. Ce que nous avons fait
+
+0:53:10.000,0:53:14.400
+c’est regarder la distribution. Par exemple pour la modélisation du langage,
+
+0:53:14.400,0:53:21.119
+nous examinons la distribution des perplexités et recherchons les valeurs aberrantes essentiellement.
+
+0:53:21.119,0:53:27.359
+Donc en regardant la distribution des phrases dans chaque langue, à travers
+
+0:53:27.359,0:53:29.520
+les langues et en cherchant les valeurs aberrantes.
+
+0:53:29.520,0:53:33.520
+C’est la méthode que nous avons utilisée.
+
+0:53:33.520,0:53:36.960
+Donc voici quelques exemples de phrases de
+
+0:53:36.960,0:53:41.520
+Wikipédia en singhalais qui ont été traduits en anglais.
+
+0:53:41.520,0:53:44.960
+Vous pouvez voir que, par exemple, si vous regardez la deuxième
+
+0:53:44.960,0:53:52.559
+phrase, sans même à avoir à appliquer les contrôles, ce n’est pas fluide.
+
+0:53:52.559,0:54:04.880
+Une autre chose est que si vous lisez les traductions ici et si vous lisez 
+
+0:54:04.880,0:54:08.480
+les phrases venant de Wikipédia en anglais, vous voyez que
+
+0:54:08.480,0:54:13.040
+les sujets sont un peu différents. En fait, beaucoup de documents de
+
+0:54:13.040,0:54:20.839
+Wikipédia en singhalais portent sur la religion ou l’histoire du pays.
+
+0:54:20.839,0:54:23.200
+Et c'est assez intéressant.
+
+0:54:23.200,0:54:28.160
+Nous verrons l'effet de cette différence de domaines plus tard.
+
+0:54:28.160,0:54:32.000
+Ok donc c'est un effort soutenu.
+
+0:54:32.000,0:54:37.839
+Vous pouvez trouver ces données publiquement sur ce site.
+
+0:54:37.839,0:54:44.799
+Et dans un mois, nous allons publier un jeu de données encore plus important avec plus de 100 langues.
+
+0:54:44.799,0:54:50.960
+Nous organisons aussi un concours au WMT qui est un atelier annuel sur
+
+0:54:50.960,0:55:00.400
+la traduction automatique. Ils organisent un concours annuel qui portera sur plus de 100 langues.
+
+0:55:00.400,0:55:04.240
+Il y au aussi des subventions de calcul pour les participants qualifiés.
+
+0:55:04.240,0:55:06.880
+Donc si vous êtes intéressés par la traduction automatique
+
+0:55:06.880,0:55:10.640
+ou par travailler dans ce domaine ou pensez avoir de bonnes idées sur la 
+
+0:55:10.640,0:55:15.359
+façon de résoudre la traduction automatique pour ces langues,
+
+0:55:15.359,0:55:19.359
+s'il vous plaît jetez un coup d'œil pour me contacter.
+
+0:55:19.359,0:55:26.240
+Ok, le point de cette partie est que la collecte de données n'est pas triviale, beaucoup de questions délicates.
+
+0:55:26.240,0:55:36.480
+C'est très important aussi de regarder les données afin de se faire une idée de ces problèmes.
+
+0:55:36.480,0:55:46.359
+Je reviendrai sur ce sujet plus tard. Donc la prochaine partie porte sur la modélisation à moins que vous n'ayez des questions,
+
+0:55:46.400,0:55:54.720
+[Alfredo : non, je pense que c'est bon pour l'instant]. Ok.
+
+0:55:54.720,0:56:04.799
+Je vais commencer par expliquer comment les algorithmes d'apprentissage automatique standards peuvent être appliqués
+
+0:56:04.799,0:56:09.119
+à la traduction automatique à faibles ressources et puis je passerai en revue quelques
+
+0:56:09.119,0:56:14.000
+validations de ces approches. Enfin je donnerais quelques perspectives.
+
+0:56:14.000,0:56:18.000
+Donc un rappel. C’est le genre de cadre que nous avons
+
+0:56:18.000,0:56:22.480
+où nous avons plusieurs langues et plusieurs domaines et voulons
+
+0:56:22.480,0:56:28.880
+maximiser la précision de la traduction eu égard à un certain domaine pour une paire de langue donnée.
+
+0:56:28.880,0:56:32.280
+Donc c'est le cadre que nous regardons.
+
+0:56:32.280,0:56:41.000
+Si nous pensons au type de données que nous avons en traduction automatique, il est intéressant de penser à comment
+
+0:56:41.000,0:56:46.000
+cela peut être mis en correspondance avec les techniques d'apprentissage automatique.
+
+0:56:46.000,0:56:53.079
+Donc si vous avez juste des données parallèles, c'est étiqueté donc on parle d'apprentissage supervisé.
+
+0:56:53.160,0:57:03.000
+Vous pouvez avoir des données monolingues qui sont donc juste du texte dans une langue donnée sans aucune traduction.
+
+0:57:03.000,0:57:06.960
+Cela correspond à avoir dans les paires x et y, et que des x.
+
+0:57:06.960,0:57:10.839
+C'est le cadre typique de l'apprentissage semi-supervisé.
+
+0:57:10.839,0:57:19.079
+Si vous n'avez que des x ou que des y, c'est faire de l'apprentissage non supervisé.
+
+0:57:19.079,0:57:24.960
+Quand vous avez des paires de langues multiples, disons que vous êtes intéressés
+
+0:57:24.960,0:57:30.160
+de traduire de l'anglais au népalais mais que vous avez aussi de l'anglais au hindi.
+
+0:57:30.160,0:57:33.440
+C'est un peu similaire à l’apprentissage multitâche.
+
+0:57:33.440,0:57:37.040
+Vous êtes intéressé par une tâche et vous ajoutez une tête de
+
+0:57:37.040,0:57:44.079
+classification pour une tâche connexe. Si vous faites disons népalais/anglais
+
+0:57:44.079,0:57:48.480
+et avez aussi des données hindi/anglais alors cela
+
+0:57:48.480,0:57:55.920
+ressemble un peu à un apprentissage multi-modal dans le sens où vous ajoutez une autre modalité à l'entrée pour la même tâche de prédiction.
+
+0:57:55.920,0:57:59.839
+Nous avons aussi plusieurs domaines.
+
+0:57:59.839,0:58:06.319
+Quand c’est le cas, naturellement vous pensez aux techniques d'adaptation au domaine.
+
+0:58:06.319,0:58:13.920
+Donc c’est intéressant de voir quelles sont les deux principales techniques d'adaptation applicables à la traduction automatique.
+
+0:58:13.920,0:58:18.000
+Commençons donc par un cadre simple, l'apprentissage supervisé.
+
+0:58:18.000,0:58:22.000
+Donc, dans l'apprentissage supervisé, vous avez un jeu de données parallèles.
+
+0:58:22.000,0:58:26.240
+Disons que vous traduisez de l'anglais au népalais. Vous avez un tas de phrases en anglais
+
+0:58:26.240,0:58:29.040
+qui sont traduits en népalais, c'est votre jeu d'entraînement.
+
+0:58:29.040,0:58:32.999
+Et vous avez un jeu de données que vous voulez traduire en népalais.
+
+0:58:32.999,0:58:41.200
+Ce jeu est ce D de paires x et y avec x en anglais y la traduction correspondante en népalais.
+
+0:58:41.200,0:58:48.079
+Comme je l'ai déjà dit, vous pouvez entraîner cela par maximum de vraisemblance.
+
+0:58:48.079,0:58:51.119
+C'est la perte par échantillon, vous essayez
+
+0:58:51.119,0:58:55.040
+de maximiser la log probabilité de y étant donné un x.
+
+0:58:55.040,0:59:02.000
+Le y donné avec un x donné. Une façon de représenter ceci est via
+
+0:59:02.000,0:59:05.119
+ce diagramme où vous avez un encodeur en bleu.
+
+0:59:05.119,0:59:09.040
+Il est bleu car il traite les phrases anglaises.
+
+0:59:09.040,0:59:18.720
+Le décodeur est rouge car il produit des traductions en népalais.
+
+0:59:18.720,0:59:30.000
+Le décodeur ne produit pas vraiment une prédiction mais une distribution 
+sur l'espace de y
+
+0:59:30.000,0:59:35.040
+Vous avez un traducteur humain qui a produit la référence y en fonction de x.
+
+0:59:35.040,0:59:38.579
+Vous pouvez calculer votre perte d'entropie croisée, rétropropager
+
+0:59:38.579,0:59:46.440
+et mettre à jour les paramètres du modèle pour entraîner votre système de traduction automatique.
+
+0:59:46.440,0:59:50.440
+Si le jeu de données parallèles est très petit, alors vous devez régulariser.
+
+0:59:50.440,0:59:56.400
+Il y a des moyens standards de régulariser : le dropout où on injecte du bruit dans l'état caché,
+
+0:59:56.400,1:00:01.200
+on met à 0 aléatoirement des états cachés. Vous pouvez faire un lissage des étiquettes.
+
+1:00:01.200,1:00:04.640					                                         Je ne sais pas si vous l’avez expliqué en classe, mais
+1:00:04.640,1:00:08.319
+l'idée ici est que chaque fois que vous faites une tâche de classification
+
+1:00:08.319,1:00:13.200
+vous avez généralement une cible qui est « one-hot ». Par exemple le mot suivant est « on ».
+
+1:00:13.200,1:00:21.599
+Donc vous dites que la probabilité cible n’est une probabilité de 1 pour « on » et 0 pour tous les autres
+
+1:00:21.599,1:00:26.960
+tokens du vocabulaire. Avec le lissage d'étiquette vous dites :
+
+1:00:26.960,1:00:30.480
+« ok, j'abandonne un peu de probabilité pour « on » ».
+
+1:00:30.480,1:00:34.000
+Au lieu de fixer la probabilité à 1, on la fixe à 0,9.
+
+1:00:34.000,1:00:37.200
+et le 0,1 restant est distribué uniformément à travers
+
+1:00:37.200,1:00:42.240
+tous les autres mots du vocabulaire. C'est bien pour vous car cela
+
+1:00:42.240,1:00:49.200
+empêche le modèle de s'adapter de manière excessive au petit jeu de données
+
+car vous diffusez un peu de la
+
+1:00:49.200,1:00:53.079
+masse de probabilité à travers tous les autres mots du dictionnaire.
+
+1:00:53.079,1:01:03.760
+Et retenez qu’une perte de log n'est généralement pas très… vous devez toujours régulariser une perte de log
+
+1:01:03.760,1:01:07.520
+sinon les poids vont aller à l'infini.
+
+1:01:07.520,1:01:12.319
+Ok donc tout est simple donc ça devrait être facile.
+
+1:01:12.319,1:01:19.520
+Maintenant, que se passe-t-il si vous avez aussi des données monolingues en anglais.
+
+1:01:19.520,1:01:24.799
+Donc vous avez un tas de phrases en anglais comment les utiliseriez-vous 
+
+1:01:24.799,1:01:29.119
+pour améliorer le système de traduction automatique ?
+
+1:01:29.119,1:01:32.400
+C'est une question pour le public, je vous laisse une minute.
+
+1:01:32.400,1:01:38.160
+Donc si en plus de ces paires de x et y, je vous donne aussi un tas de x,
+
+1:01:38.160,1:01:41.599
+comment utiliseriez-vous ces données supplémentaires pour améliorer
+
+1:01:41.599,1:01:47.200
+la généralisation ? Est-ce que vous pouvez utiliser le chat et Alfredo…
+
+1:01:47.200,1:01:54.480
+[Alfredo : ils peuvent répondre dans le chat, donner des suggestions.
+
+1:01:54.480,1:01:58.319
+Ou tu peux demander en fait de répondre par oui ou par non.]
+
+1:01:58.319,1:02:04.500
+Ok… Attendez une minute.
+
+1:02:04.500,1:02:07.599
+Je ne sais comment accéder au chat, laisse-moi voir.
+
+1:02:07.599,1:02:18.400
+[Alfredo : tu as une barre et tu as comme… Sur Zoom.] Ah oui, oui, oui.
+
+1:02:18.400,1:02:23.839
+[Alfredo : il y a aussi une question sur la translittération que je ne t’ai pas posée avant].
+
+1:02:23.839,1:02:33.520
+Ok, qu’elle était la question ? [Alfredo : Comment reconnaître une bonne translittération d’une mauvaise en traductions automatique 
+
+1:02:33.520,1:02:40.400
+puisque certaines langues utilisent leurs caractères pour les noms propres en langue anglaise.
+
+1:02:40.400,1:02:48.240
+Par exemple la version chinoise de Harry Potter est juste une translittération avec des caractères chinois.]
+
+1:02:48.240,1:02:57.760
+Oui. Alors tout d'abord la translittération ça ne veut pas dire traduction mot à mot… Désolé Alfredo je réponds à la question suivante du chat.
+
+1:02:57.760,1:03:07.760
+Cela signifie que vous utilisez les caractères d'une langue pour faire une traduction phonologique du mot dans la langue étrangère.
+
+1:03:07.760,1:03:11.839
+Comme ce que la personne de la première question disait.
+
+1:03:11.839,1:03:16.839
+Donc c'est comme si on utilisait les caractères chinois pour faire le son du mot anglais.
+
+1:03:16.839,1:03:22.319
+Maintenant c'est vrai que parfois vous avez besoin de translittérer pour de bons buts mais
+
+1:03:22.319,1:03:30.119
+les vérifications que nous faisons sont par exemple est-ce que 80 % des mots dans la phrase sont translittérés ?
+
+1:03:30.119,1:03:35.119
+Si c'est le cas, nous aurions signalé qu’il fallait retraduire la phrase.
+
+1:03:35.119,1:03:43.520
+[Alfredo : c’est aussi monitoré en utilisant la perplexité ?] C’est ça.
+
+1:03:43.520,1:03:47.440
+Le modèle de langage l’aurait signalé aussi.
+
+1:03:47.440,1:03:52.920
+[Alfredo : ok, j'avais mélangé les deux choses.] Pas de soucis.
+
+1:03:52.920,1:03:58.960
+[Alfredo : peux-tu répéter la question que tu as posé aux étudiants ?] Oui. Donc la question est nous avons un
+
+1:03:58.960,1:04:03.920
+un jeu de données parallèles de x et y. Nous pouvons entraîner notre perte d'entropie croisée avec.
+
+1:04:03.920,1:04:14.400
+Si je vous donne aussi un tas de x, venant d’un jeu de données monolingues additionel, comment l'utiliseriez-vous afin d’améliorer la généralisation ?
+
+1:04:14.400,1:04:27.400
+[Attente d’une réponse du chat].
+
+1:04:28.400,1:04:40.319
+Ok, Jeffrey dit : « si les x proviennent du même article alors je peux prédire le prochain x comme base pour la traduction ».
+
+1:04:40.319,1:04:49.000
+C'est une très bonne suggestion, bien qu'en général cela soit très rare que
+vous ayez accès au même document.
+
+1:04:49.000,1:04:54.160
+C'est une hypothèse très forte. Raul dit : « apprentissage semi-supervisé »
+
+1:04:54.160,1:04:59.999
+et ensuite Ganesh dit : « nous pouvons faire ce que fait BERT ».
+
+1:04:59.999,1:05:02.240
+Très bien, très bien, très bien0
+
+1:05:02.240,1:05:09.359
+Quelqu'un d'autre ? [Alfredo : il y a environ 56 personnes de plus qui n’ont pas répondues.]
+
+1:05:09.359,1:05:12.000
+[Rires] Ok, très bien.
+
+1:05:12.000,1:05:17.680
+Ce sont de très bonnes suggestions et je vais parler de l'une d'entre elles.
+
+1:05:17.680,1:05:23.920
+Donc une façon de tirer parti de données supplémentaires que j'appelle Mˢ.
+
+1:05:23.920,1:05:27.039
+Des données monolingues pour la source, un tas de x.
+
+1:05:27.039,1:05:35.440
+C’est en essayant de modéliser p(x). C'est ce que je pense Raoul disait avec l'approche semi-supervisée.
+
+1:05:35.440,1:05:39.760
+Où en plus de p(y|x), vous essayez aussi de modeler p(x).
+
+1:05:39.760,1:05:47.260
+Et donc une façon de modeler p(x) est par exemple en utilisant l'auto-encodeur débruiteur [DAE dans la suite]
+
+1:05:47.260,1:05:51.119
+que je suis sûr que vous abordez dans votre cours.
+
+1:05:51.119,1:05:54.960
+Et donc avec le DAE, ce que vous feriez, c’est prendre
+
+1:05:54.960,1:05:58.559
+une phrase de ce jeu de données, ce xˢ,
+
+1:05:58.559,1:06:04.160
+injecter du bruit, par exemple en supprimant des mots ou en les échangeant,
+
+1:06:04.160,1:06:06.559
+Si la phrase est « The cat sat on the mat »
+
+1:06:06.559,1:06:11.200
+alors ça devient par exemple « The sat cat on the » 
+
+1:06:11.200,1:06:16.160
+où vous avez supprimé des mots et intervertis certains.
+
+1:06:16.160,1:06:21.920
+Donc vous injectez un peu de bruit et ensuite vous essayez de
+
+1:06:21.920,1:06:32.240
+reconstruire l'entrée propre. Et à nouveau, la reconstruction se fait avec
+la perte d'entropie croisée.
+
+1:06:32.240,1:06:40.039
+Pourquoi est-ce utile ? Car cet encodeur bleu peut être partagé avec le système de traduction automatique.
+
+1:06:40.039,1:06:44.039
+Donc vous allez améliorer l'encodeur en faisant cela
+
+1:06:44.039,1:06:50.880
+Et bien sûr vous pouvez pré-entraîner avec ça ou entraîner avec les deux pertes en même temps.
+
+1:06:50.880,1:06:54.880
+C'est bien. Une chose à faire attention est la quantité de bruit.
+
+1:06:54.880,1:07:01.440
+Si vous injectez beaucoup de bruit, vous détruisez la phrase d'entrée entière, vous entraînez juste le décodeur.
+
+1:07:01.440,1:07:05.740
+Vous faites juste de la modélisation du langage et n’entraînez pas l’encodeur.
+
+1:07:05.740,1:07:08.060
+Cela va à l'encontre du but recherché.
+
+1:07:08.060,1:07:15.079
+Si vous n'injectez pas assez de bruit, alors l'encodeur-décodeur va avoir un temps très facile pour copier l'entrée
+
+1:07:15.079,1:07:18.880
+Et donc vous n'allez pas apprendre quelque chose d'utile.
+
+1:07:18.880,1:07:24.880
+La façon dont vous régler le bouton de la quantité de bruit est donc un peu délicate.
+
+1:07:24.880,1:07:29.079
+Une autre façon de…
+
+1:07:29.079,1:07:33.999
+Donc cette proposition est l'approche semi-supervisée ou l'approche BERT.
+
+1:07:33.999,1:07:44.400
+Un autre moyen de tirer parti des données non étiquetées du côté source est de faire ce qui s’appelle
+
+1:07:44.400,1:07:51.200
+l’auto-entraînement ou le pseudo-étiquetage. C'est un algorithme des années 90.
+
+1:07:51.200,1:07:54.480
+C’est très vieux. Et l'idée est un peu folle.
+
+1:07:54.480,1:08:00.480
+Vous prenez votre phrase dans le jeu de données monolingues et vous y injectez du bruit.
+
+1:08:00.480,1:08:06.720
+Vous encodez/décodez, faites une prédiction, mais [???] 
+
+1:08:06.720,1:08:10.319
+encodeur et décodeur du système de traduction automatique.
+
+1:08:10.319,1:08:13.520
+C'est donc le bloc rouge qui traduit en népalais.
+
+1:08:13.520,1:08:16.000
+Donc vous produisez une traduction.
+
+1:08:16.000,1:08:21.000
+Mais on ne vous donne pas la traduction terrain. Vous n'avez pas les humains ici.
+
+1:08:21.000,1:08:25.120
+Donc ce que vous faites, c’est utiliser une version escalier de votre
+
+1:08:25.120,1:08:29.520
+système de traduction pour produire la sortie souhaitée.
+
+1:08:29.520,1:08:33.520
+Et l'entrée de ceci est la version propre de x.
+
+1:08:33.520,1:08:42.000
+Et essentiellement vous entraînez les paramètres en minimisant la somme de l'entropie croisée standard
+
+1:08:42.000,1:08:46.960
+sur les données étiquetées que vous avez dans votre jeu de données parallèle
+
+1:08:46.960,1:08:52.560
+plus ces pertes du côté des données monolingues.
+
+1:08:52.560,1:08:56.960
+C'est assez fou. Donc laissez-moi vous expliquer à nouveau comment cela fonctionne.
+
+1:08:56.960,1:09:01.120
+Vous prenez le jeu de données parallèles D, vous entraînez votre système de traduction
+
+1:09:01.120,1:09:05.040
+automatique p(y|x) et ensuite vous répétez ce qui suit.
+
+1:09:05.040,1:09:08.560
+Il y a deux étapes. La première est de décoder
+
+1:09:08.560,1:09:13.120
+avec votre p(y|x) actuel sur l'ensemble des données monolingues.
+
+1:09:13.120,1:09:16.719
+Donc vous associez à chaque xˢ un y̅
+
+1:09:16.719,1:09:20.239
+qui est votre prédiction pour ce que la traduction devrait être.
+
+1:09:20.239,1:09:23.520
+Puis vous ré-entraînez le p(y|x) sur l'union
+
+1:09:23.520,1:09:26.799
+du jeu de données parallèles original avec ce
+
+1:09:26.799,1:09:33.600
+jeu de données artificielles Aˢ. Vous obtiendrez, espérons-le, un meilleur modèle
+
+1:09:33.600,1:09:36.799
+et ensuite vous pouvez répéter le processus : re-décoder et entraîner.
+
+1:09:36.799,1:09:43.120
+Re-décoder et entraîner. Vous devriez poser la question
+
+1:09:43.120,1:09:48.480
+«  pourquoi cela va-t-il fonctionner ? » Il y a deux raisons à cela.
+
+1:09:48.480,1:09:57.679
+La première est que lorsque vous produisez la sortie souhaitée, vous allez typiquement faire une recherche en faisceau.
+
+1:09:57.679,1:10:05.500
+Donc ce que vous essayez de faire c’est faire correspondre la prédiction à cette sortie désirée, à
+
+1:10:05.500,1:10:10.000
+cette recherche en faisceau apprise. Donc généralement la recherche en faisceau vous donne
+
+1:10:10.000,1:10:14.239
+les deux ou trois points bleus suivants. Ici vous essayez d'apprendre la
+
+1:10:14.239,1:10:21.120
+procédure de la recherche en faisceau. La deuxième raison est que vous injectez
+
+1:10:21.120,1:10:27.719
+du bruit ici mais pas lorsque vous traduisez, lorsque vous produisez la cible.
+
+1:10:27.719,1:10:32.000
+En injectant du bruit, vous lissez un peu l'espace de sortie.
+
+1:10:32.000,1:10:36.719
+Et donc la combinaison de ces deux choses est assez critique à faire fonctionner.
+
+1:10:36.719,1:10:40.000
+Dans la pratique, cela peut être assez efficace
+
+1:10:40.000,1:10:48.000
+comme nous le verrons plus tard. Y a-t-il des questions à ce sujet ?
+
+1:10:48.000,1:10:52.800
+[Alfredo : c'est assez impressionnant] Oui, c'est assez fou.
+
+1:10:52.800,1:10:56.080
+C’est aussi très utile pour les personnes faisant de la reconnaissance vocale.
+
+1:10:56.080,1:11:02.080
+Au cours des deux dernières années, nous avons constaté que cela était très utile pour la reconnaissance vocale.
+
+1:11:02.239,1:11:08.560
+Si vous le faites de la détection d'objet, les gens l’ont utilisé en vision par ordinateur.
+
+1:11:08.560,1:11:13.280
+Cette approche est très ancienne. En aucun cas nous l'avons inventé.
+
+1:11:13.280,1:11:19.199
+On l’a découvert pour la traduction automatique.
+
+1:11:19.199,1:11:23.120
+J'ai dit que les gens devraient être perplexes mais peut-être pas autant que ça.
+
+1:11:23.120,1:11:27.500
+[Chat : cela ne renforce pas les erreurs du modèle ?] Excellente question. 
+
+1:11:27.500,1:11:33.860
+Oui, c'est ce que je pensais aussi. Cela dépend de comment on le fait.
+
+1:11:33.860,1:11:40.560
+Donc l'idée est que, encore une fois,
+
+1:11:40.560,1:11:45.360
+ces y̅ ne sont pas correctes. Ces y̅ ne sont pas correctes.
+
+1:11:45.360,1:11:49.920
+Cependant vous produisez y̅ en faisant une recherche en faisceau.
+
+1:11:49.920,1:11:54.920
+Et en supposant que la recherche en faisceau améliore le décodage standard,
+
+1:11:54.920,1:12:02.080
+alors quand vous vous entraînez le modèle en prédisant la sortie de la recherche en faisceau vous allez
+
+1:12:02.080,1:12:05.280
+améliorer car vous allez apprendre le processus de recherche en faisceau.
+
+1:12:05.280,1:12:09.840
+Et la deuxième raison encore une fois est que vous injectez du bruit ici.
+
+1:12:09.840,1:12:18.000
+En injectant du bruit, vous vous assurez que vous lissez… Si le modèle surentraînait…
+
+1:12:18.000,1:12:22.000
+imaginez que vous faites une classification pour simplifier les choses.
+
+1:12:22.000,1:12:25.080
+Imaginez que la sortie est un seul token.
+
+1:12:25.080,1:12:28.199
+Donc peut-être qu'avant vous surentraîniez et la
+
+1:12:28.199,1:12:37.040
+surface de prédiction était très irrégulière. En injectant du bruit vous allez la lisser et donc cela va aider à la généralisation.
+
+1:12:37.040,1:12:41.000
+Et donc en pratique vous ne renforcez pas les erreurs.
+
+1:12:41.000,1:12:46.239
+Si vous le faites de cette façon. [Alfredo : j'ai une question. La semaine dernière, nous avons dit  
+
+1:12:46.239,1:12:50.400
+que la recherche en faisceau ressemble à Viterbi. Trouver le
+
+1:12:50.400,1:12:54.000
+chemin ayant l'énergie la plus basse.] Oui. [Nous avons aussi évoqué qu’au
+
+1:12:54.000,1:12:57.600
+lieu de faire Viterbi, il faut aussi utiliser l'algorithme forward
+
+1:12:57.600,1:13:04.800
+pour avoir plus d'une solution correcte. Est-ce aussi fait en traduction ?]
+
+1:13:04.800,1:13:13.840
+Un peu oui. Donc ce qui se passe, c'est que pour les langues de très grande taille.
+
+1:13:13.840,1:13:18.560
+l’algorithme forward est généralement assez pauvre.
+
+1:13:18.560,1:13:24.880
+Donc on préfère la recherche en faisceau. C'est relativement efficace
+
+1:13:24.880,1:13:28.800
+et améliore les performances par rapport au décodage gourmand.
+
+1:13:28.800,1:13:33.800
+Le décodage gourmand signifie qu’on fait une recherche en faisceau avec k = 1.
+
+1:13:33.800,1:13:38.640
+Pour les langues à haute ressource pour lesquelles
+
+1:13:38.640,1:13:43.600
+le modèle prédictif est très bon, c’est-à-dire que la distribution 
+
+1:13:43.600,1:13:48.880
+produite en sortie est bien calibrée et s'adapte assez bien aux données,
+
+1:13:48.880,1:13:52.000
+alors ce que vous pouvez faire est l'échantillonnage top-k.
+
+1:13:52.000,1:13:56.000
+Donc à chaque fois que vous générez un échantillon…
+
+1:13:56.000,1:13:59.280
+Désolé, à chaque fois que vous voyez un xˢ,
+
+1:13:59.280,1:14:03.880
+vous produisez un échantillon différent qui est un peu similaire à ce que vous voyez.
+
+1:14:03.880,1:14:09.000
+Cela fonctionne généralement mieux. Mais le modèle doit être suffisamment bon à la base pour pouvoir faire ça.
+
+1:14:09.000,1:14:11.679
+[Alf : je vois, je vois].
+
+1:14:11.679,1:14:16.800
+A chaque fois que vous faites de l'apprentissage automatique, vous avez un bugdet.
+
+1:14:16.800,1:14:22.239
+Peut-être rencontrez-vous votre conseiller en informatique une fois par semaine.
+
+1:14:22.239,1:14:27.000
+C’est ce que j'avais l'habitude de faire avec Yann [rires].
+
+1:14:27.000,1:14:31.440
+Donc ça donne un délai pour que vous puissiez travailler.
+
+1:14:31.440,1:14:35.760
+Donc il y a un compromis entre la quantité de calcul que vous dépensez sur chaque exemple et
+
+1:14:35.760,1:14:40.239
+combien de données vous voyez. Donc vous pouvez produire, disons dix
+
+1:14:40.239,1:14:44.400
+traductions, pour chaque entrée et cela vous coûtera dix fois plus cher que
+
+1:14:44.400,1:14:50.000
+si vous en produisez qu’une. Ou avec une traduction, vous pouvez voir 10 fois plus d’exemples.
+
+1:14:50.000,1:14:56.320
+Il s'avère qu'il est généralement préférable de voir plus de données
+
+1:14:56.320,1:15:00.560
+que moins de données mais plus de calculs pour chaque point de données.
+
+1:15:00.560,1:15:07.560
+[Alfredo : si vous avez assez de données.] Ici, généralement vous avez toujours beaucoup de données non étiquetées.
+
+1:15:07.560,1:15:11.040
+[Alfredo : oh, ok ok ok ok ok. C’est logique.]
+
+
+1:15:19.000,1:15:25.760
+Ok, passons au cas suivant où, au lieu d'avoir un jeu de données monolingues
+
+1:15:25.760,1:15:31.040
+du côté source, nous avons un jeu de données monolingues du côté cible.
+
+1:15:31.040,1:15:38.640
+Donc la façon dont vous pouvez approcher cela est de d’abord entraîner
+
+1:15:38.640,1:15:42.480
+un système de rétrotraduction automatique.
+
+1:15:42.480,1:15:46.239
+Donc nous sommes intéressés à traduire de l'anglais au népalais et au lieu
+
+1:15:46.239,1:15:51.280
+d’entraîner ça, on entraîne un système de traduction automatique du népalais à l'anglais.
+
+1:15:51.280,1:15:54.320
+C'est cet encodeur-décodeur que vous voyez ici.
+
+1:15:54.320,1:16:00.960
+Il va de y à x et donc vous prenez votre phrase y du
+
+1:16:00.960,1:16:07.199
+côté cible du jeu de données monolingues et vous produisez une traduction x̅
+1:16:07.199,1:16:16.960
+Et maintenant vous utilisez ce x̅ comme une source bruitée pour votre système de traduction automatique qui va
+
+1:16:16.960,1:16:21.360
+de x à y qui est ce que vous voulez entraîner. Et la prédiction est y.
+
+1:16:21.360,1:16:25.520
+Ce que vous aviez au début ici.
+
+1:16:25.520,1:16:31.920
+Encore une fois, l'algorithme fonctionne de la manière suivante. Vous entraînez d'abord un
+
+1:16:31.920,1:16:34.000
+système de rétrotraduction automatique qui va
+
+1:16:34.000,1:16:39.280
+de y à x sur le jeu de données parallèles qui vous est donné.
+
+1:16:39.280,1:16:44.880
+Vous utilisez ça pour décoder les phrases du jeu de données monolingues du côté source
+
+1:16:44.880,1:16:51.760
+pour produire un jeu de données parallèles supplémentaires avec x̅ et y.
+
+1:16:51.760,1:16:55.760
+A nouveau, ces x̅ ne sont pas correctes.
+
+1:16:55.760,1:16:59.199
+Ils sont produits par le système de rétrotraduction automatique.
+
+1:16:59.199,1:17:03.199
+Et enfin vous faites ce que vous vouliez, c'est-à-dire entraîner votre
+
+1:17:03.199,1:17:07.520
+système de traduction qui fait correspondre x à y sur l'union du jeu de
+
+1:17:07.520,1:17:13.080
+données parallèles avec ce jeu de données parallèles artificiel additionnel, Aᵗ.
+
+1:17:13.080,1:17:17.280
+Et cet algorithme est appelé la rétrotraduction.
+
+1:17:17.280,1:17:22.880
+Donc, si on zoome en arrière, ça ressemble à un auto-encodeur où
+
+1:17:22.880,1:17:26.239
+l’encodeur est un système de traduction automatique et le décodeur est un autre système de
+
+1:17:26.239,1:17:30.080
+traduction automatique. Chacun d'entre eux est en fait, un
+
+1:17:30.080,1:17:35.040
+système d'encodeur-décodeur et typiquement vous faites juste
+
+1:17:35.040,1:17:38.400
+une itération bien que vous puissiez itérer davantage.
+
+1:17:38.400,1:17:41.440
+Et quand vous entraînez, vous ne vous rétropropagez jamais
+
+1:17:41.440,1:17:52.600
+à travers le système de traduction automatique. Vous pourriez le faire mais c'est très coûteux et généralement, cela ne vaut pas la peine de le faire.
+
+1:17:52.600,1:17:59.520
+Donc l'idée ici est que la prédiction est correcte.
+
+1:17:59.520,1:18:04.960
+Elle est correcte car elle vient de phrases écrites par des humains en népalais.
+
+1:18:04.960,1:18:10.480
+Cela signifie que le décodeur va beaucoup s'améliorer car il ne va pas
+
+1:18:10.480,1:18:14.000
+prédire des cibles corrompues comme dans le jeu d’entraînement mais
+
+1:18:14.000,1:18:18.800
+des cibles correctes. Le problème est qu'il y a un certain bruit de biais
+
+1:18:18.800,1:18:23.360
+dans les phrases sources. Mais en général, c'est un très bon moyen
+
+1:18:23.360,1:18:28.400
+pour faire de l'augmentation des données. Et pour la même quantité de données si les
+
+1:18:28.400,1:18:36.320
+domaines correspondent, la rétrotraduction fonctionne beaucoup mieux que l'auto-entraînement juste parce que les cibles sont correctes.
+
+1:18:36.320,1:18:42.480
+Je vois beaucoup de choses dans le chat. [Alfredo : Non, non, je clarifiais le fait que nous l'avons appelé
+
+1:18:42.480,1:18:52.400
+prédicteur car nous passons de l'espace x à la représentation cachée de l'espace y]. Ok merci.
+
+1:18:52.400,1:18:55.920
+S'il n'y a pas de questions, je vais essayer de combiner
+
+1:18:55.920,1:19:01.280
+ces deux algorithmes. [Alfredo : on est bon]. Donc toute cette conférence 
+
+1:19:01.280,1:19:06.480
+est sur des algorithmes et j'espère que c'est bon.
+
+1:19:06.480,1:19:10.719
+Donc l'idée ici est que maintenant vous avez un petit jeu de données parallèles.
+
+1:19:10.719,1:19:14.640
+On vous donne aussi un jeu de données monolingues source et cible.
+
+1:19:14.640,1:19:20.840
+Et donc ce que vous faites est très simple car vous combinez l’auto-entraînement et la rétrotraduction.
+
+1:19:20.840,1:19:27.040
+L'algorithme est ici sur la droite. Donc vous entraînez d'abord sur le petit jeu de données
+
+1:19:27.040,1:19:32.320
+le système de rétrotraduction automatique qui fait correspondre y à x.
+
+1:19:32.320,1:19:39.600
+Et le système de traduction automatique relie x à y, qui est celui auquel vous vous intéressés.
+
+1:19:39.600,1:19:44.600
+Puis vous répétez un processus itératif qui alterne entre deux phases.
+
+1:19:44.600,1:19:51.600
+Une phase est la phase de décodage utilisant utiliser le système de rétrotraduction automatique
+
+1:19:51.600,1:19:56.960
+pour décoder le jeu de données monolingues du côté cible
+
+1:19:56.960,1:20:02.719
+pour produire un jeu de données parallèles Aᵗ. Et vous utilisez le
+
+1:20:02.719,1:20:08.560
+système de traduction automatique pour décoder le jeu de données monolingues côté source
+
+1:20:08.560,1:20:13.920
+pour produire un autre jeu de données parallèles Aˢ.
+
+1:20:13.920,1:20:19.040
+Aᵗ et Aˢ sont générés par la machine. Puis vous ré-entraînez les deux systèmes
+
+1:20:19.040,1:20:24.960
+automatiques, la traduction et la rétrotraduction, sur l'union de tous ces jeux de données.
+
+1:20:24.960,1:20:31.199
+Et vous répétez le processus. A nouveau, vous entraînez en minimisant
+
+1:20:31.199,1:20:38.000
+la perte d'entropie croisée comme s'il s'agissait d'un seul jeu de données.
+
+1:20:38.000,1:20:41.000
+C'est très simple et très efficace.
+
+1:20:41.000,1:20:52.600
+Puisque c'est un cours d’apprentissage automatique, quelque chose à laquelle vous pouvez penser, c'est à quel point ça ressemble à une maximisation de l'espérance.
+
+1:20:52.600,1:21:00.560
+Donc vous pouvez penser qu'ici nous faisons une sorte de maximisation de l'espérance car
+
+1:21:00.560,1:21:06.320
+vous pouvez penser à cette phrase en anglais comme une variable latente.
+
+1:21:06.320,1:21:10.320
+Elle est latente car elle n'est pas observée.
+
+1:21:10.320,1:21:13.750
+Dans ce cas, cela s'avère être une phrase anglaise.
+
+1:21:13.750,1:21:16.750
+Et donc dans cet espace, vous faites
+
+1:21:16.750,1:21:20.480
+l'étape e où vous inférez les variables latentes.
+
+1:21:20.480,1:21:24.320
+En faisant maximisant l’espérance vous faites une recherche en faisceau.
+
+1:21:24.320,1:21:30.600
+Puis dans cet espace vous mettez à jour les paramètres, c'est l’étape m.
+
+1:21:27.600,1:21:33.320
+C'est donc un autre point de vue de ce qu’on fait ici.
+
+1:21:37.840,1:21:44.239
+Si vous mettez tout dans un seul type de modèle probabiliste.
+
+1:21:44.239,1:21:54.040
+Des questions ? Je suppose que tout est clair, j'espère que oui.
+
+1:21:54.040,1:21:59.000
+La question suivante est de savoir comment gérer plusieurs langues.
+
+1:21:59.000,1:22:03.679
+Disons que nous avons notre jeu de données parallèle pour l'anglais et le népalais mais
+
+1:22:03.679,1:22:06.960
+nous avons aussi des données parallèles entre l'anglais et l'hindi.
+
+1:22:06.960,1:22:10.239
+Donc nous avons ce jeu de données parallèles supplémentaire
+
+1:22:10.239,1:22:13.080
+et aussi entre le népalais et l'hindi.
+
+1:22:13.080,1:22:19.360
+Donc nous avons beaucoup de données vraisemblablement parallèles entre l'anglais et l'hindi.
+
+1:22:19.360,1:22:22.920
+On peut construire un système de traduction automatique et la question est 
+
+1:22:22.920,1:22:25.920
+de savoir comment transférer des connaissances entre le
+
+1:22:25.920,1:22:28.159
+système de traduction automatique anglais-hindi
+
+1:22:28.159,1:22:32.000
+et le système de traduction automatique anglais-népalais.
+
+1:22:32.000,1:22:36.000
+Nous travaillons avec des réseaux de neurones et c'est beau car rendent
+
+1:22:36.000,1:22:43.120
+l'apprentissage par transfert très simple. On peut partager tous les paramètres sauf pour un enchâssement qui spécifie la langue.
+
+1:22:43.120,1:22:47.400
+Nous pouvons donc avoir un seul système de traduction automatique, un seul encodeur,
+
+1:22:47.400,1:22:52.239
+un seul décodeur. Nous pouvons à nouveau donner une phrase source en
+
+1:22:52.239,1:22:56.400
+l'entrée, produire une traduction en sortie mais en quelle langue ?
+
+1:22:56.400,1:23:07.440
+Nous pouvons spécifier la langue en ajoutant un token supplémentaire sur la source.
+
+1:23:07.440,1:23:11.520
+Ce token spécifiera la langue dans laquelle vous voulez traduire votre phrase.
+
+1:23:11.520,1:23:16.080
+Donc nous avons un token d'identification de langue par langue.
+
+1:23:16.080,1:23:22.080
+Et donc cela va s'occuper de traduire de l'anglais au népalais, de l’anglais à hindi,
+
+1:23:22.080,1:23:30.639
+toutes les combinaisons possibles. Donc vous partagerez tous les paramètres sauf pour cet enchâssement de langue.
+
+1:23:30.639,1:23:38.639
+Donc c'est très simple. J'espère.
+
+1:23:38.639,1:23:42.880
+Et je pense que c'est tout ce que je voulais dire ici.
+
+1:23:42.880,1:23:48.000
+Donc si vous deviez coder ceci, ce serait faire
+
+1:23:48.000,1:23:52.719
+une simple perte d'entropie croisée, vous empilez tous vos jeux de données ensemble
+
+1:23:52.719,1:23:56.800
+et vous devez juste vous rappeler d'ajouter le token sur la phrase
+
+1:23:56.800,1:24:00.800
+source qui spécifie la langue vers laquelle vous voulez traduire.
+
+1:24:00.800,1:24:05.440
+Comment gérer l'adaptation du domaine ? Nous avons dit que souvent
+
+1:24:05.440,1:24:10.239
+le jeu de données d’entraînement est dans un autre domaine que le jeu de données test.
+
+1:24:10.239,1:24:15.760
+Actuellement, si vous avez un petit jeu de validation dans le domaine, ce que vous
+
+1:24:15.760,1:24:19.750
+pouvez faire est d'appliquer certaines techniques d’adaptation au domaine.
+
+1:24:19.750,1:24:22.719
+Une technique très simple est le finetuning.
+
+1:24:22.719,1:24:27.360
+Vous serez surpris de voir que c'est ce qui est fait, je dirais, 95% du temps.
+
+1:24:27.360,1:24:30.880
+Nous essayons beaucoup d'autres choses mais celle-ci
+
+1:24:30.880,1:24:35.679
+est super efficace et super simple. En gros vous entraînez votre système sur un
+
+1:24:35.679,1:24:40.480
+domaine A et puis vous faites quelques mises à jour des poids sur
+
+1:24:40.480,1:24:44.000
+le jeu des données de validation, puis vous déployez et vous avez terminé.
+
+1:24:44.000,1:24:51.280
+Une autre chose que vous pouvez faire est d’ajouter un autre token.
+
+1:24:51.280,1:24:58.000
+Si vous savez que cette phrase provient de ce jeu de données
+
+1:24:58.000,1:25:03.000
+appartenant à un certain domaine, vous pouvez ajouter un token
+
+1:25:03.000,1:25:08.000
+qui spécifie le domaine. C'est ce qu'on appelle le marquage du domaine.
+
+1:25:08.000,1:25:12.400
+Donc c'est aussi une autre façon de faire de l’adaptation de domaine
+
+1:25:12.400,1:25:16.239
+où je vous donne la phrase source, je vous donne le token
+
+1:25:16.239,1:25:19.920
+pour la langue cible et je vous indique aussi qu'il s'agit d’actualités.
+
+1:25:19.920,1:25:33.040
+Donc le modèle peut prendre en compte le sujet de la traduction.
+
+1:25:33.040,1:25:39.120
+Donc l'idée de base est qu'il y a plusieurs
+
+1:25:39.120,1:25:42.159
+approches d'apprentissage automatique assez basiques qui peuvent être utilisées
+
+1:25:42.159,1:25:47.440
+et combinées pour la traduction automatique à faibles ressources.
+
+1:25:47.440,1:25:52.440
+A un niveau très élevé, l'idée de base est de trouver des moyens de faire
+de l'augmentation de données.
+
+1:25:52.440,1:25:58.440
+Cela s’applique à la traduction automatique mais aussi la vision par ordinateur et d’autres domaines.
+
+1:25:58.440,1:26:02.440
+C’est le moyen le plus puissant d'améliorer la généralisation.
+
+1:26:02.440,1:26:08.480
+Les approches qui sont décrites sont très génériques et peuvent être appliqués à d'autres domaines.
+
+1:26:08.480,1:26:11.440
+Il y a quelque chose qui est très spécifique
+
+1:26:11.440,1:26:14.719
+et c'est le fait que la traduction automatique est une tâche symétrique.
+
+1:26:14.719,1:26:20.239
+Ce n'est pas tout à fait vrai car il y a le fait que vous pouvez aller d’une
+
+1:26:20.239,1:26:23.920
+langue qui n’est pas infléchie à une langue qui l’est par exemple.
+
+1:26:23.920,1:26:28.480
+Cela rend les choses non symétriques. Mais pour parler grossièrement, c’est symétrique.
+
+1:26:28.480,1:26:32.239
+C’est pour ça qu'on peut utiliser la rétrotraduction. Si vous faites de la
+
+1:26:32.239,1:26:37.000
+reconnaissance d'objets dans une image, disons prédire parmi dix catégories,
+
+1:26:37.000,1:26:41.000
+le passage de la catégorie à l'image est en fait une tâche très difficile
+
+1:26:41.000,1:26:43.800
+car vous devez apprendre un modèle génératif.
+
+1:26:43.800,1:26:47.800
+C'est peut-être plus difficile que de faire la tâche de classification en premier lieu.
+
+1:26:47.800,1:26:53.040
+En traduction automatique c’est simple car aller de x à y et de y à x, 
+
+1:26:53.040,1:26:57.679
+c'est d’une complexité à peu près identique. C'est donc la seule
+
+1:26:57.679,1:27:01.040
+tâche spécifique que nous utilisons mais à part ça
+
+1:27:01.040,1:27:04.500
+il n'y a rien qui soit spécifique à la langue.
+
+1:27:04.500,1:27:09.840
+Que nous faisons anglais-népalais ou anglais-français, nous utilisons à peu près les mêmes techniques.
+
+1:27:09.840,1:27:12.960
+Il n'y a rien de spécifique aux paires de langues.
+
+1:27:12.960,1:27:16.080
+Ce qui est la beauté de la chose car vous laissez le modèle apprendre
+
+1:27:16.080,1:27:19.920
+à partir des données, comment résoudre la tâche.
+
+1:27:19.920,1:27:24.320
+Cela nous permet de traduire 100 langues en même temps,
+
+1:27:24.320,1:27:32.400
+en utilisant la même boîte à outils. Y a-t-il des questions ?
+
+1:27:32.400,1:27:38.960
+[Alfredo : je ne vois rien ici]. Ok donc la conclusion jusqu'ici est
+
+1:27:38.960,1:27:44.560
+qu’il existe plusieurs paradigmes d’entraînement qui peuvent être combinés.
+
+1:27:44.560,1:27:51.040
+La manière de combiner est en fait très délicate car parfois
+
+1:27:51.040,1:28:01.000
+même un petit peu de décalage de domaine peut avoir une généralisation car il avait en quelque sorte le bruit.
+
+1:28:01.000,1:28:04.880
+Avoir besoin plus d’une technique par rapport à une autre dépend de
+
+1:28:04.880,1:28:08.239
+la paire de langues, dépend de la capacité du modèle, dépend des
+
+1:28:08.239,1:28:12.239
+données que vous avez. Donc cela devient assez empirique dans la pratique.
+
+1:28:12.239,1:28:20.000
+Et c’est un peu de compréhension de combiner ces différentes approches, malheureusement.
+
+1:28:20.000,1:28:27.000
+Et je pense qu’il y a beaucoup de travail à faire pour abstraire les principes sur la façon de combiner ces choses.
+
+1:28:27.000,1:28:43.000
+Et je pense qu’actuellement le domaine est d’essayer de trouver comment automatiser ces approches ou combiner ces différents algorithmes.
+
+1:28:43.000,1:28:52.159
+Donc, à moins qu'il y ait des questions, je vais présenter des exemples de ça, en commençant avec la traduction automatique non supervisée.
+
+1:28:52.159,1:28:55.199
+Considérons donc que vous avez juste des données monolingues.
+
+1:28:57.199,1:29:02.750
+Disons en anglais et français. Ce n'est pas un cas d'utilisation très utile et non réaliste mais par
+
+1:29:02.750,1:29:08.999
+simplicité disons que vous voulez traduire de l'anglais au français sans aucune donnée parallèle.
+
+1:29:08.999,1:29:12.560
+Donc ce que vous pourriez faire, c'est prendre une
+
+1:29:12.560,1:29:16.560
+phrase du jeu de données monolingue du côté cible.
+
+1:29:16.560,1:29:19.199
+Vous avez un système de traduction automatique qui va
+
+1:29:19.199,1:29:25.040
+du français à l'anglais. Vous donnez la phrase française et produisez
+
+1:29:25.040,1:29:29.120
+une sorte de traduction anglaise. Au départ, ce sera juste des mots aléatoires.
+
+1:29:29.120,1:29:32.800
+Vous n'avez pas la vérité terrain.
+
+1:29:32.800,1:29:36.719
+Donc ce que vous pourriez faire, c'est donner cette traduction à un autre
+
+1:29:36.719,1:29:40.000
+système de traduction automatique qui va de
+
+1:29:40.000,1:29:45.920
+de l'anglais au français. C’est un peu similaire à la
+
+1:29:45.920,1:29:52.639
+rétrotraduction que nous avons vue avant. Ici, remarquez que j'utilise des couleurs pour
+
+1:29:52.639,1:29:58.159
+indiquer dans quelle langue le bloc opère. Donc ici j'ai
+
+1:29:58.159,1:30:00.960
+un décodeur qui est bleu car il fonctionne en anglais.
+
+1:30:00.960,1:30:04.800
+Et ici le décodeur est bleu car il fonctionne aussi en anglais.
+
+1:30:04.800,1:30:09.760
+Le rouge se réfère au français. Si vous faites juste ça, cela ne va pas marcher du tout.
+
+1:30:09.760,1:30:16.560
+Et la raison en est qu'il n'y a pas de contrainte sur x̅. Il n'y a pas de
+
+1:30:16.560,1:30:21.880
+raison de croire que x̅ va être une phrase valide en anglais.
+
+1:30:21.880,1:30:31.120
+Donc la même astuce que pour l'auto-encodage ou la consistance de cycle
+
+1:30:31.120,1:30:34.800
+que nous utilisons en vision par ordinateur pour le transfert de style,
+
+1:30:34.800,1:30:38.880
+pour transformer les zèbres en chevaux et vice versa.
+
+1:30:38.880,1:30:43.679
+Dans leur cas, cette chose, ce petit algorithme, fonctionne
+
+1:30:43.679,1:30:46.560
+Car ils ont ajouté une contrainte sur x̅.
+
+1:30:46.560,1:30:50.800
+Ils avaient un discriminateur qui s'assurait que tout ce qui était produit ici
+
+1:30:50.800,1:30:58.080
+était un élément valide du domaine souhaité. Dans notre cas,
+
+1:30:58.080,1:31:01.199
+on ne peut pas vraiment ajouter le discriminateur ici
+
+1:31:01.199,1:31:05.960
+car c'est une séquence discrète de tokens et c'est difficile à rétropropager.
+
+1:31:05.960,1:31:14.800
+C’est un peu désordonné. Ce n'est pas que vous ne pouvez pas mais c'est
+difficile à faire fonctionner ensemble.
+
+1:31:14.800,1:31:19.679
+Une façon de contourner ce problème est de s'assurer que le décodeur
+
+1:31:19.679,1:31:29.000
+produit des phrases anglaises valides. On ne peut pas le garantir mais on peut essayer
+
+1:31:29.000,1:31:36.000
+en ajoutant un terme d’auto-encodeur débruiteur à la fonction de perte.
+
+1:31:36.000,1:31:40.000
+Donc nous pouvons prendre une phrase du jeu de données monolingues
+
+1:31:40.000,1:31:43.920
+côté source, injecter du bruit, passer par l'encodeur-décodeur.
+
+1:31:43.920,1:31:50.159
+Et si vous faites ça, ce décodeur va apprendre un bon modèle de langage.
+
+1:31:50.159,1:31:55.120
+Il va produire des phrases anglaises fluides et quand vous le branchez ici,
+
+1:31:55.120,1:31:58.639
+il devrait aussi produire des phrases anglaises fluides.
+
+1:31:58.639,1:32:04.880
+Et vous faites la même chose avec cet encodeur et ce décodeur rouges qui opèrent en français.
+
+1:32:04.880,1:32:12.000
+Maintenant, si vous faites ça, ça ne va pas fonctionner. La raison est que
+
+1:32:12.000,1:32:20.239
+le décodeur bleu ne peut fonctionner que lorsqu'il est alimenté par la sortie de l'encodeur bleu
+
+1:32:20.239,1:32:25.360
+qui opère sur des phrases anglaises. Mais il n'y a aucune raison de croire 
+
+1:32:25.360,1:32:29.679
+que cela peut fonctionner si vous l’alimentez avec la sortie de cet encodeur rouge
+
+1:32:29.679,1:32:34.080
+qui opère sur des phrases françaises. Il n'y a aucune raison
+
+1:32:34.080,1:32:39.040
+de croire qu'il va y avoir une modularité qui vous permet d'échanger
+
+1:32:39.040,1:32:44.000
+ces modules de la manière que vous voulez.
+
+1:32:44.000,1:32:48.880
+Il s'avère que le modèle va partitionner l'espace des caractéristiques
+
+1:32:48.880,1:32:52.080
+de manière à ce qu'il fonctionne bien lorsqu'il est alimenté avec
+
+1:32:52.080,1:32:57.679
+l'encodeur bleu mais il fonctionne très mal lorsqu'il est alimenté avec l'encodeur rouge.
+
+1:32:57.679,1:33:01.679
+Et donc, qu'est-ce qu'on fait pour ça ? Une façon d'arranger ça
+
+1:33:01.679,1:33:05.840
+est en partageant tous les paramètres de l'encodeur et du décodeur
+
+1:33:05.840,1:33:12.840
+de sorte que l'espace des caractéristiques est partagé. Peu importe si vous fournissez une phrase en français ou en anglais.
+
+1:33:12.840,1:33:16.080
+Donc maintenant nous avons seulement un encodeur et un décodeur.
+
+1:33:16.080,1:33:22.000
+On a plus un encodeur rouge et un encodeur bleu, on a juste un encodeur et un décodeur.
+
+1:33:22.000,1:33:36.000
+On spécifie la langue avec l’identifiant de langue et si on fait cette paramétrisation avec ces deux fonctions de perte, on peut obtenir
+
+1:33:36.000,1:33:42.500
+un système de traduction automatique apprenant même sans phrase parallèle dans certains cas.
+
+1:33:42.500,1:33:49.000
+Et à nouveau vous voyez donc que nous avons utilisé les trois blocs que nous avons construits avant.
+
+1:33:49.000,1:33:53.750
+L'un est la rétrotraduction itérative, l'autre est l’auto-encodeur débruiteur,
+
+1:33:53.750,1:33:59.280
+et l'autre est l’entraînement multilingue. [Alfredo : comment on utilise ce token d’identification ?
+
+1:33:59.280,1:34:05.480
+c'est comme une interaction multiplicative qui change le poids ? C’est un hyper-réseau ?]
+
+1:34:05.480,1:34:07.000
+Non, non.
+
+1:34:07.000,1:34:13.000
+Vous ajoutez une position supplémentaire à l'entrée et vous la donnez au modèle.
+
+1:34:13.000,1:34:18.320
+C’est comme si la phrase avait un token supplémentaire en l'entrée.
+
+1:34:18.320,1:34:22.000
+Vous enchâssez et puis ça va dans votre bloc transformer
+
+1:34:22.000,1:34:28.120
+comme s'il s'agissait de n'importe quel autre symbole dans votre phrase.
+
+1:34:28.120,1:34:32.440
+[Alfredo : ces x ne sont pas l'encodage one-hot de l’entrée ?]
+
+1:34:32.440,1:34:40.600
+Ce x est la séquence de tokens : « the cat sat on the mat »
+
+1:34:40.600,1:34:45.000
+suivi de l'identifiant de la langue.
+
+1:34:45.000,1:34:50.000
+Celui-ci est juste un autre token dans le vocabulaire.
+
+1:34:50.000,1:34:56.000
+Le tout est enchâssé et donné à un bloc transformer.
+
+1:34:56.000,1:35:02.400
+[Alfredo : ma question était, ce token qu’on envoie est-il one-hot ou autre chose ?]
+
+1:35:02.400,1:35:07.000
+Oui c'est ça, il est one-hot puis on l’enchâsse.
+
+1:35:07.000,1:35:11.000
+Donc une fois enchâssé on le passe dans un bloc transformer.
+
+1:35:11.000,1:35:15.440
+[Alfredo : donc pour chaque langue on va avoir un encodage one hot différent
+
+1:35:15.440,1:35:20.800
+et l’identifiant du token nous indique quel vocabulaire à utiliser].
+
+1:35:20.800,1:35:25.199
+Souvent il y a un chevauchement entre les vocabulaires.
+
+1:35:25.199,1:35:29.600
+Surtout si on décompose les mots en n-grammes comme on le fait habituellement.
+
+1:35:29.600,1:35:34.760
+Donc il y aura aussi des alignements.
+1:35:34.760,1:35:42.719
+En particulier pour le français/anglais. La grande majorité des tokens sont partagés.
+
+1:35:42.719,1:35:47.500
+Le token d’identification pour l’anglais va juste vous dire :
+
+1:35:47.500,1:35:54.239
+« je veux traduire en anglais » par opposition à produire une phrase en français.
+
+1:35:54.239,1:36:02.800
+[Alfredo : je vois. Si on utilise du chinois ou d’autres langues qui ne partagent pas les mêmes n-grammes…]
+
+1:36:02.800,1:36:10.280
+Donc dans ce cas, ça va un peu dans le prétraitement.
+
+1:36:10.280,1:36:14.000
+Donc si vous faites une traduction anglais-chinois,
+
+1:36:14.000,1:36:19.320
+il a beaucoup de données monolingues en anglais, beaucoup de données monolingues en chinois.
+
+1:36:19.320,1:36:22.500
+On va traiter ça comme un seul je de données.
+
+1:36:22.500,1:36:32.500
+Et on va apprendre un moyen de compresser les données en utilisant des n-grammes au niveau du caractère, c'est ce qu'on appelle le « Byte Pair Encoding ».
+
+1:36:32.500,1:36:37.500
+Il va traiter ce grand jeu de données comme une longue chaîne de caractères
+
+1:36:37.500,1:36:43.679
+et la question est de savoir comment la casser en n-grammes de caractères afin de le compresser au maximum.
+
+1:36:43.679,1:36:49.999
+Et bien sûr car c'est de l'anglais et du chinois il y a très peu de chevauchement.
+
+1:36:49.999,1:36:59.440
+Mais c’est bon. Il va y avoir des chevauchements entre les chiffres, des mots étrangers.
+
+1:36:59.440,1:37:05.000
+C'est généralement suffisant pour apprendre une représentation partagée.
+
+1:37:05.000,1:37:13.440
+[Alfredo : ok]. Ce qui compte le plus en pratique est très largement le domaine de la source et de la cible.
+
+1:37:15.000,1:37:23.600
+Comment cela fonctionne-t-il ? Depuis 2018, cela a été amélioré de façon considérable mais voici l'idée.
+
+1:37:23.600,1:37:28.000
+Donc considérez seulement la courbe bleue pour l'instant.
+
+1:37:28.000,1:37:36.400
+La courbe bleue hachurée est ce que vous obtenez sur ce jeu de données
+
+1:37:36.400,1:37:40.239
+qui est le standard en traduction automatique. Si vous entraînez
+
+1:37:40.239,1:37:44.239
+d'une manière non supervisée, on a un BLEU de 25.
+
+1:37:44.239,1:37:47.679
+Ce qui veut dire que c’est assez fluide, une traduction décente.
+
+1:37:47.679,1:37:51.360
+Si vous entraîniez d'une manière supervisée,
+
+1:37:51.360,1:37:55.440
+sur l'axe des x ici vous avez la quantité de données parallèles,
+
+1:37:55.440,1:37:59.199
+Vous obtenez cette courbe bleue. Et donc il s'avère qu’en
+
+1:37:59.199,1:38:05.600
+utilisant environ 10 millions de phrases monolingues dans chaque
+
+1:38:05.600,1:38:09.520
+langue et en entraînant de manière non supervisée,
+
+1:38:09.520,1:38:13.280
+on obtient les mêmes performances que si on utilise environ 100 000
+
+1:38:13.280,1:38:24.960
+phrases parallèles. Cela veut dire que chaque phrase parallèle représente environ 100 phrases monolingues, ce qui est assez intéressant.
+
+1:38:24.960,1:38:30.920
+Et c'est le cas où les langues sont très similaires et dans le cas où
+
+1:38:30.920,1:38:40.000
+les domaines correspondent parfaitement. Si vous prenez l'anglais et le chinois, c'est beaucoup plus éloigné.
+
+1:38:40.000,1:38:49.000
+Et si les domaines des deux jeux de données monolingues sont plus différents, ce ratio va augmenter considérablement.
+
+1:38:49.000,1:38:56.960
+Cela vous indique pourquoi la traduction automatique à faible ressource est en fait un apprentissage à très grande échelle.
+
+1:38:56.960,1:39:02.239
+Car on doit compenser l'absence de supervision directe en ajoutant
+
+1:39:02.239,1:39:06.639
+de plus en plus de données et en rendant le modèle de plus en plus grand.
+
+1:39:06.639,1:39:10.400
+Donc il apprend beaucoup de choses et parmi toutes ces choses
+
+1:39:10.400,1:39:14.800
+il y aura quelque chose d'utile pour la tâche qui vous intéresse.
+
+1:39:14.800,1:39:20.800
+S'il n'y a pas de questions, je vais passer au deuxième exemple
+
+1:39:20.800,1:39:28.800
+qui était l'exemple anglais-népalais qu’on aborde depuis le début de la conférence.
+
+1:39:28.800,1:39:35.520
+Dans ce cas, le jeu de données d'évaluation est issu du jeu de données FLoRes issu de l'effort de collecte que j'ai décrit précédemment.
+
+1:39:35.520,1:39:41.199
+Pour l’entraînement nous n'avons pas de données parallèles dans le domaine de Wikipédia, nous en avons quelques
+
+1:39:41.199,1:39:46.560
+données hors du domaine comme la Bible, etc.
+
+1:39:46.560,1:39:51.600
+Et nous avons un tas de phrases monolingues dans chaque langue.
+
+1:39:51.600,1:39:59.119
+Parce que nous n'avons pas beaucoup de données parallèles et parce que c’est hors du domaine, si on entraîne
+
+1:39:59.119,1:40:04.320
+de manière supervisée, on obtient des performances assez faibles : un BLEU de 7.6.
+
+1:40:04.320,1:40:10.639
+Donc c'est à peine compréhensible. Si vous faites de l'apprentissage non supervisé,
+
+1:40:10.639,1:40:13.999
+cela ne fonctionne pas du tout dans ce cas car les deux jeux
+
+1:40:13.999,1:40:20.119
+monolingues proviennent de différents domaines et qu'il n'y a aucun moyen de trouver des correspondances essentiellement.
+
+1:40:20.159,1:40:28.760
+Si vous entraînez en utilisant le jeu de données parallèles et le jeu de données monolingues, vous faites beaucoup mieux que le supervisé.
+
+1:40:28.760,1:40:33.119
+Et si vous itérez, vous améliorez encore plus.
+
+1:40:33.119,1:40:38.880
+Donc si vous faites cette rétrotraduction itérative,
+
+1:40:38.880,1:40:47.040
+vous améliorez beaucoup. Et si vous ajoutez aussi les données anglais-hindi,
+
+1:40:47.040,1:40:53.119
+alors vous améliorez de façon spectaculaire l'ensemble du tableau. En particulier aussi
+
+1:40:53.119,1:40:56.960
+l'apprentissage non supervisé qui commence à fonctionner.
+
+1:40:56.960,1:40:59.520
+C’est non supervisé car vous n'avez pas de données parallèles
+
+1:40:59.520,1:41:06.159
+entre le népalais et l'anglais mais est supervisé car vous avez des données parallèles entre l'anglais et l'hindi.
+
+1:41:06.159,1:41:12.320
+A cause de ça et parce que l'hindi et le népalais sont similaires vous
+
+1:41:12.320,1:41:16.560
+lancez le processus, cette rétrotraduction itérative avec le DAE
+
+1:41:16.560,1:41:21.000
+et puis aussi l'apprentissage non supervisé vers l'anglais-népalais.
+
+1:41:21.000,1:41:26.000
+[Chat : pourquoi utilisez-vous l'hindi pour le népalais ici ? Est-ce car les deux langues sont
+
+1:41:26.000,1:41:29.999
+plus dramatiquement similaire ? Cela donne de bonne performance
+
+1:41:29.999,1:41:35.999
+pour le népalais-italien ?] Oui, on les choisi car elles sont similaires. 
+
+1:41:35.999,1:41:46.800
+Si vous avez une langue source et qu'il y a une langue relativement proche qui est disponible en ressource élevée,
+
+1:41:46.800,1:41:52.960
+c'est super utile. Si ce n’est pas le cas, comme dit précédemment,
+
+1:41:52.960,1:41:56.880
+vous pouvez aussi utiliser l'anglais, l'italien et d'autres langues,
+
+1:41:56.880,1:42:01.520
+des langues qui ne sont pas si liées que ça. Cela aide généralement mais pas autant.
+
+1:42:01.520,1:42:09.000
+Si vous voulez qu'il en ait autant, il vous faut ajouter tellement de données de ces langues que
+
+1:42:09.000,1:42:12.840
+ça devient à très grande échelle car vous devez compenser.
+
+1:42:12.840,1:42:16.320
+C'est à peu près ce que je dis ici.
+
+1:42:16.320,1:42:22.560
+J'avance un argument stupide mais c’est pour vous donner l'idée.
+
+1:42:22.560,1:42:30.159
+Dans le cadre de l'apprentissage supervisé, chaque donnée vous donne x éléments d'information pour résoudre la tâche.
+
+1:42:30.159,1:42:33.760
+Et vous avez N exemples et vous avez besoin d'un modèle de taille Y MB
+
+1:42:33.760,1:42:37.199
+pour le résoudre. Dans le cadre de l'apprentissage non supervisé,
+
+1:42:37.199,1:42:46.639
+chaque données va vous donner, une fraction de cette information, disons mille fois moins. Mais si cela donne
+
+1:42:46.639,1:42:50.159
+vous 1000 fois moins, cela signifie que vous avez besoin d'environ
+
+1:42:50.159,1:42:53.199
+mille fois plus d'échantillons et aussi un modèle qui
+
+1:42:53.199,1:42:58.480
+est beaucoup plus grand. Et pour revenir à la question sur pourquoi choisir l’hindi,
+
+1:42:58.480,1:43:03.199
+si vous utilisez quelque chose qui est moins lié, si les domaines ne
+
+1:43:03.199,1:43:06.480
+correspondent pas, alors vous devez augmenter beaucoup plus.
+
+1:43:06.480,1:43:10.080
+Car la quantité d'information que vous avez obtenue est encore plus faible.
+
+1:43:10.080,1:43:16.920
+J'espère que c'est clair. Et pour moi c'est quelque chose que je ne
+
+1:43:16.920,1:43:21.199
+savais pas avant de commencer à travailler sur ça.
+
+1:43:21.199,1:43:27.360
+C’est peut-être évident rétrospectivement, mais il faut y réfléchir un peu
+
+1:43:27.360,1:43:32.320
+quand vous commencez à travailler sur une application.
+
+1:43:32.320,1:43:36.480
+Il me reste 15 minutes, je vais aborder la partie analyse
+
+1:43:36.480,1:43:43.560
+à moins qu'il y ait des questions. [Il ne dit « de rien » à une personne du chat].
+
+1:43:43.560,1:43:50.999
+Désolé qu’il n’y ait pas une seule pause mais si tout va bien vous aurez cinq minutes à la fin.
+
+1:43:50.999,1:43:55.920
+[rires]. J'espère que vous n'avez pas un autre cours après.
+
+1:43:55.920,1:43:59.679
+Donc parlons un peu de l'analyse.
+
+1:44:00.119,1:44:06.119
+Simulons le système de traduction automatique à faibles ressources.
+
+1:44:06.119,1:44:10.320
+Prenons notre anglais-français avec lequel nous sommes familiers
+
+1:44:10.320,1:44:16.840
+et un jeu de données de procédure du Parlement Européen.
+
+1:44:16.840,1:44:22.560
+On en extrait 20 000 phrases pour simuler un environnement à faibles ressources.
+
+1:44:22.560 :1:44:28.719
+Et prenons des données monolingues : 100 000 phrases sur le côté cible. On applique la rétrotraduction.
+
+1:44:28.719,1:44:32.239
+On constate que le score BLEU passe de 30 à près 34.
+
+1:44:32.239,1:44:38.800
+C'est génial, c'est une très bonne amélioration. Vous pouvez publier dans des grandes conférences si vous avez
+
+1:44:38.800,1:44:42.880
+une amélioration du BLEU de 0,5. Ici nous avons obtenu 3,4 donc c'est génial.
+
+1:44:42.880,1:44:51.600
+J'étais très excité quand nous avons fait ça.
+
+1:44:51.600,1:44:58.719
+Nous l'avons appliqué à des postes publics de l’anglais au birman.
+
+1:44:58.719,1:45:01.000
+On a fait la même chose.
+
+1:45:01.000,1:45:07.080
+Nous avons obtenu une amélioration du BLEU de 0,1. Comment cela se fait-il ?
+
+1:45:07.080,1:45:13.199
+Nous avons vérifié l’optimisation, l’initialisation, l’entraînement. Rien n'a fonctionné.
+
+1:45:13.199,1:45:19.280
+Donc qu’est-ce qu’il se passe ? Vous pouvez déjà le voir dans le jeu de données FLoRes.
+
+1:45:19.280,1:45:25.000
+Si vous regardez, si vous regardez ces traductions
+
+1:45:25.000,1:45:29.840
+en singhalais et comparez aux phrases originales provenant du Wikipédia en anglais,
+
+1:45:29.840,1:45:33.920
+vous voyez que les sujets abordés ici sont plutôt
+
+1:45:33.920,1:45:37.760
+différents de ceux que l'on trouve dans le Wikipédia anglais.
+
+1:45:37.760,1:45:44.639
+C'est ça le problème, peut-être. Si vous regardez le Wikipédia en anglais 
+
+1:45:44.639,1:45:52.480
+et le Wikipédia en chinois… Donc nous entraînons des classifieurs sur des documents pris au hasard dans les deux Wikipédia,
+
+1:45:52.480,1:45:59.000
+et voici les distributions des sujets entre des deux Wikipédia. Elles sont très différentes.
+
+1:45:59.000,1:46:03.000
+Par exemple, sur le Wikipédia anglais ils parlent beaucoup de films
+
+1:46:03.000,1:46:09.500
+alors que sur le Wikipédia chinois il y a beaucoup plus de documents sur les animaux pour une raison quelconque.
+
+1:46:09.500,1:46:18.400
+Même en prenant deux pays parlant à peu près la même langue, les Etats-Unis et le Royaume-Uni, pour un même sujet,
+
+1:46:18.400,1:46:23.760
+disons les magazines sportifs, on constate que les fans de sport aux États-Unis
+
+1:46:23.760,1:46:31.040
+parlent davantage de football américain, baseball, etc. alors qu’au Royaume-Uni, c'est plutôt le football, par exemple.
+
+1:46:31.040,1:46:39.960
+Donc les gens dans différents endroits du monde parlent de différentes choses.
+
+1:46:39.960,1:46:43.040
+Donc la distribution des sujets est différente et ce pour de multiples raisons.
+
+1:46:43.040,1:46:49.600
+L'une d'entre elles est que les gens parlent de ce qui se passe là où ils vivent.
+
+1:46:49.600,1:46:53.280
+S’il y a une chute de neige dans votre ville, il est peu probable qu'il y en ai une à Hong Kong.
+
+1:46:53.280,1:46:56.239
+Les gens vont parler de choses différentes.
+
+1:46:56.239,1:47:02.760
+Il y a des choses culturelles. Et puis pour le même sujet il y a aussi une distribution différente des mots.
+
+1:47:02.760,1:47:09.280
+Donc il s’avère qu’en apprentissage automatique et aussi en traduction automatique, nous avons
+
+1:47:09.280,1:47:13.750
+généralement un décalage de domaine entre l’entraînement et la distribution du texte.
+
+1:47:13.750,1:47:19.600
+Donc nous supposons que nous avons certaines données quand nous entraînons et quand nous testons nous
+
+1:47:19.600,1:47:24.920
+avons un domaine légèrement différent. Nous devons donc faire de l’adaptation au domaine.
+
+1:47:22.920,1:47:28.960
+Avant nous avons parlé du finetuning et du tagging de domaine mais ici, nous parlons d'un
+
+1:47:28.960,1:47:33.040
+autre type de non-concordance de domaine, à savoir une non-concordance de domaine source-cible.
+
+1:47:33.040,1:47:37.800
+Donc nous avons des données qui proviennent de la langue source.
+
+1:47:37.800,1:47:39.760
+Donc ceci est écrit par des gens
+
+1:47:39.760,1:47:44.320
+et ce sont des traductions humaines appartenant à un domaine Dˢ.
+
+1:47:44.320,1:47:51.199
+Puis nous avons d'autres données provenant de la langue cible et appartenant à un autre domaine.
+
+1:47:51.199,1:47:57.600
+Ces deux domaines ne correspondent pas. Est-ce que cela est un problème ?
+
+1:47:57.600,1:48:02.159
+Ça pourrait être un problème car si vous utiliser la rétrotraduction même si vous
+
+1:48:02.159,1:48:07.000
+traduisez parfaitement ces données monolingues cibles ici,
+
+1:48:07.000,1:48:09.600
+sans aucune erreur, ces données sont en dehors du domaine.
+
+1:48:09.600,1:48:16.000
+Et donc si vous êtes intéressés par la traduction du domaine source à la langue cible,
+
+1:48:16.000,1:48:20.199
+ces données seront beaucoup moins utiles.
+
+1:48:20.199,1:48:24.000
+Donc la question que j'ai pour vous est 
+
+1:48:24.000,1:48:35.280
+comment pouvons-nous tester cette hypothèse ? Est-ce que je fantasme ce problème ou est-ce un problème réel ?
+
+1:48:35.280,1:48:38.480
+Comment pouvons-nous étudier ce problème ?
+
+1:48:38.480,1:48:43.480
+Donc laissez-moi vous en parler un peu. Tout d'abord, il y a un peu comme une abstraction.
+
+1:48:43.480,1:48:50.159
+Donc une chose que vous pourriez vouloir faire, est de mesurer l’importance de l'incompatibilité de domaine.
+
+1:48:50.159,1:48:57.040
+Car si vous pouvez mesurer, alors vous pouvez quantifier et vous pouvez
+voir si un tel problème existe.
+
+1:48:57.040,1:49:02.040
+Donc disons que dans un espace conceptuel abstrait, il existe deux domaines.
+
+1:49:02.040,1:49:06.040
+De ces deux domaines, nous pouvons échantillonner des phrases.
+
+1:49:06.040,1:49:09.520
+C’est comme un domaine interlingual, puis à partir
+
+1:49:09.520,1:49:16.560
+des phrases de ces deux domaines différents, nous pouvons produire des phrases dans chaque langue. 
+
+1:49:16.560,1:49:23.000
+donc ce sont des réalisations, de disons d’actualités sportives, en anglais 
+
+1:49:23.000,1:49:29.000
+et des réalisations d’actualités politiques en népalais.
+
+1:49:29.000,1:49:36.639
+Donc supposons que nous pouvons faire une traduction humaine parfaite et qu'il n’y a pas d’erreurs quand vous traduisez.
+
+1:49:36.639,1:49:42.560
+Maintenant nous avons des phrases dans la même langue que nous pourrions comparer
+
+1:49:42.560,1:49:48.250
+et une façon très simple de comparer est de calculer la matrice TF-IDF de ces données.
+
+1:49:48.250,1:49:56.000
+Donc vous calculez combien de fois chaque mot apparaît, normalisez un peu
+et vous pouvez appliquer une factorisation SVD.
+
+1:49:56.000,1:50:00.999
+Donc à présent chaque phrase de corpus est représentée par une distribution sur les sujets.
+
+1:50:00.999,1:50:09.040
+Et maintenant tout ce que vous avez à faire est de comparer ces deux matrices. La matrice du haut
+
+1:50:09.040,1:50:15.239
+provient de la langue source et la matrice du bas provient des phrases du domaine source.
+
+1:50:15.239,1:50:23.520
+Si nous pouvons comparer ces distributions de sujets, c'est tout ce dont nous avons besoin pour dire si les
+
+1:50:23.520,1:50:28.000
+deux jeux de données sont similaires. Et donc une façon de le faire est de
+
+1:50:28.000,1:50:31.000
+prendre une ligne, ici, qui correspond à une phrase
+
+1:50:31.000,1:50:36.000
+et vous la comparez à chaque ligne du jeu des données ci-dessous.
+
+1:50:36.000,1:50:40.880
+Vous pouvez moyenner à travers les phrases, donc essentiellement vous prenez un produit scalaire entre ces deux
+
+1:50:40.880,1:50:46.159
+matrices, puis vous faites la moyenne des scores. Après vous mesurez la similarité entre
+
+1:50:46.159,1:50:50.080
+le jeu de données S et le jeu de données T. Nous pouvons arriver à un score
+
+1:50:50.080,1:50:57.360
+pour la similarité des deux jeux de données en normalisant par la similarité pour le
+
+1:50:57.360,1:51:03.520
+domaine source et le domaine cible. Donc si les deux domaines correspondent 
+
+1:51:03.520,1:51:11.920
+parfaitement alors quand vous faites un produit scalaire, le vecteur avec lui-même, vous pouvez obtenir à peu près 1.
+
+1:51:11.920,1:51:17.840
+Donc pour le score vous avez 1 +1 divisé par 1 plus 1 donc c’est égal à 1.
+
+1:51:17.900,1:51:23.040
+Si les deux distributions de sujets ne se chevauchent pas, elles sont donc totalement indépendantes,
+
+1:51:23.040,1:51:32.560
+orthogonales l'une à l'autre. Donc quand on fait le produit scalaire, on a 0 au numérateur et 2 au dénominateur donc le score est de 0.
+
+1:51:32.560,1:51:38.400
+Donc le score va de 0 à 1 selon la similarité entre les deux jeux de données.
+
+1:51:38.400,1:51:48.239
+Maintenant afin de vérifier s'il s'agit d'une bonne fonction de score, nous construisons le cadre de contrôle car
+
+1:51:48.239,1:51:51.119
+si vous voulez comprendre un problème, il est bon que vous construisiez des contrôles
+
+1:51:51.119,1:51:58.639
+pour s'assurer que la seule chose qui varie est le niveau d'incompatibilité des domaines.
+
+1:51:58.639,1:52:02.000
+Donc nous avons pris deux jeux de données très différents :
+
+1:52:02.000,1:52:07.760
+EuroParl portant sur les procédures parlementaires européennes
+
+1:52:07.760,1:52:12.080
+et OpenSubtitles portant sur de sous-titres des films0
+
+1:52:12.080,1:52:20.000
+Nous prétendons que EuroParl est à l’origine en français et nous prétendons que OpenSubtitles est à l’origine en anglais.
+
+1:52:20.000,1:52:25.599
+Donc si on fait ça, les deux domaines ne se chevauchent pas beaucoup.
+
+1:52:25.599,1:52:29.840
+Et ce que nous pouvons faire, c'est définir le domaine cible
+
+1:52:29.840,1:52:33.280
+comme une combinaison convexe de ces deux jeux de données avec un α qui
+
+1:52:33.280,1:52:38.239
+se situe entre 0 et 1. La quantité de données parallèles et de données
+
+1:52:38.239,1:52:48.239
+monolingues est la même. Avec α nous faisons varier de combien le domaine cible est dans le domaine avec le domaine source.
+
+1:52:48.239,1:52:57.239
+En particulier si α = 0, alors les deux domaines sont très différents. Si α = 1, ils correspondent parfaitement.
+
+1:52:57.239,1:53:06.159
+Voyons donc comment cette fonction de notation que nous avons créée, ce STDM score, fonctionne quand on fait varier α.
+
+1:53:06.159,1:53:11.159
+Vous pouvez voir que la relation est assez linéaire, ce qui est ce que nous voulons.
+
+1:53:11.159,1:53:18.840
+Donc il semble que la fonction de notation que nous avons créée fonctionne plutôt bien, voyons comment elle fonctionne sur d’autres jeux de données.
+
+1:53:18.840,1:53:29.040
+Donc si vous utilisez WMT, un jeu de données qui est très précis vous avez une inadéquation très faible entre les domaines sources et cibles.
+
+1:53:29.040,1:53:32.960
+Sauf pour le chinois-anglais et si vous regardez les données,
+
+1:53:32.960,1:53:36.560
+les traductions, vous réalisez que la façon dont ils ont construit le jeu de données
+
+1:53:36.560,1:53:45.280
+est que les actualités chinoises sont beaucoup plus locales et c'est pourquoi vous voyez une baisse du score STDM.
+
+1:53:45.280,1:53:49.119
+En bas nous avons les données de Facebook, pour anglais-népalais
+
+1:53:49.119,1:53:54.239
+ou anglais-japonais, on a un score plus bas que anglais-allemand.
+
+1:53:54.239,1:53:58.960
+Ce qu’on peut attendre. Donc nous sommes bons.
+
+1:53:58.960,1:54:05.599
+Comment le STDM affecte l’entraînement ? Sur l'axe x nous avons la valeur de α
+
+1:54:05.599,1:54:09.599
+où α = 1 indique que le domaine cible correspond au domaine source
+
+1:54:09.599,1:54:14.719
+et α = 0 est le domaine cible est totalement différent du domaine source.
+
+1:54:14.719,1:54:21.119
+A nouveau la quantité de données parallèles et la quantité de données monolingues est la même, ce qui change c'est le domaine.
+
+1:54:21.119,1:54:24.880
+Comme vous pouvez le voir ici, en rendant le côté cible beaucoup plus
+
+1:54:24.880,1:54:30.639
+dans le domaine, les performances s'améliorent. La ligne pointillée est 
+en bleue est l'apprentissage supervisé.
+
+1:54:30.639,1:54:37.440
+La ligne verte est la rétrotraduction. Comme vous pouvez le voir, elle souffre beaucoup quand
+
+1:54:37.440,1:54:41.000
+il y a beaucoup d'incompatibilité entre les domaines.
+
+1:54:41.000,1:54:45.760
+Tandis que l'auto-entraînement est beaucoup plus robuste. Et si vous combinez les deux,
+
+1:54:45.760,1:54:52.560
+vous avez la ligne noire en haut. Donc notre hypothèse était correcte. Dans ce contexte de contrôle,
+
+1:54:52.560,1:54:56.360
+nous voyons que la rétrotraduction souffre dans ce domaine.
+
+1:54:56.360,1:55:01.280
+Mais si vous augmentez la quantité de données monolingues, ce que vous voyez ici sur l'axe des x,
+
+1:55:01.280,1:55:06.280
+vous trouvez que la rétrotraduction peut rattraper l’auto-entraînement. 
+
+1:55:06.280,1:55:12.719
+Donc si vous utilisez trois fois plus de données monolingues du côté cible vous obtenez les mêmes performances qu'un auto-entraînement.
+
+1:55:12.719,1:55:16.000
+Donc, c'est un peu ce que je voulais vous dire.
+
+1:55:16.000,1:55:24.239
+Et puis il y a des applications pratiques mais laissons plutôt du temps pour des questions.
+
+1:55:24.239,1:55:29.999
+Laissez-moi récapituler avant ça. Donc nous avons parlé de la traduction automatique à faibles ressources
+
+1:55:29.999,1:55:35.719
+comme une application pratique où vous n'avez pas beaucoup de données étiquetées.
+
+1:55:35.719,1:55:43.999
+Hormis la modélisation, il existe deux choses importantes : les données et les analyses. Elles ne doivent pas être ignorées.
+
+1:55:43.999,1:55:45.440
+Et une chose en aide une autre.
+
+1:55:45.440,1:55:54.320
+En termes de modélisation, je pense que tout se résume à trouver un moyen efficace de faire de l’augmentation de données.
+
+1:55:54.320,1:56:04.480
+Je pense qu’en général beaucoup des techniques que nous avons décrites sont applicables également à d'autres domaines.
+
+1:56:04.480,1:56:15.000
+Et l'autre message à retenir est que, vraiment, quand on fait un entraînement avec peu de données parallèles,
+
+1:56:15.000,1:56:20.480
+c’est un entraînement à grande échelle car vous devez compenser le manque de données.
+
+1:56:20.480,1:56:42.159
+Donc c’est tout. Je serais heureux de répondre à vos questions si vous en avez.
+
+1:56:42.159,1:56:45.040
+[Alfredo : il semble qu'il n'y ait pas de questions].
+
+1:56:45.040,1:56:53.920
+Les gens doivent être épuisés. [Alfredo : non, non, je pense que c'était très très clair et c'était un sujet très intéressant.
+
+1:56:53.920,1:56:56.960
+Nous avons tous réussi à suivre, je pense.
+
+1:56:56.960,1:57:02.239
+Au moins, j'ai réussi à suivre ce que tu disais]. Je tiens à mentionner
+
+1:57:02.239,1:57:07.199
+que sentez-vous libre de m'envoyer un e-mail si vous avez des questions ou si vous avez besoin de ressources.
+
+1:57:07.199,1:57:12.000
+Il y a vraiment beaucoup de littérature pertinente si vous êtes intéressé par certains
+
+1:57:12.000,1:57:20.000
+de ces sujets. Je serais heureux de les faire suivre et si vous souhaitez discuter de quoi que ce soit, je serai heureux de le faire.
+
+1:57:20.000,1:57:23.199
+[Alfredo : ok, ton email est sur le diaporama ?]
+
+1:57:23.199,1:57:29.199
+Comment ? [Alfredo : l'email est sur la diapositive ou dois-je les donner à l'étudiant plus tard ?]
+
+1:57:29.199,1:57:36.000
+Tu peux donner mon email.
+
+1:57:36.000,1:57:40.560
+[Alfredo : je suppose que c'est tout]. Merci de votre participation.
+
+1:57:40.560,1:57:43.760
+[Alfredo : c'était vraiment un plaisir de t’avoir avec nous aujourd'hui.
+
+1:57:43.760,1:57:46.960
+Passez une merveilleuse journée]. Vous aussi, au revoir.
+
+1:57:46.960,1:57:50.080
+[Yann : Bye Marc'Aurelio, merci encore]. Bye merci.

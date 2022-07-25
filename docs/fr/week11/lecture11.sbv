@@ -1,0 +1,2732 @@
+0:00:00,0:00:05								                          [Alfredo : bienvenue au cours. Mercredi, 9h30 du matin, New York.
+0:00:05,0:00:10
+Aujourd'hui, nous avons un conférencier invité : Awni Hannun.
+
+0:00:10,0:00:16
+Awni est chercheur au FAIR et se concentre sur l'apprentissage automatique à faibles ressources pour
+
+0:00:16,0:00:22
+la reconnaissance vocale et la confidentialité. Il a obtenu un doctorat en informatique à l'université de Stanford.
+
+0:00:22,0:00:30
+Avant de rejoindre Facebook, il a travaillé en tant que chercheur au sein du laboratoire d’intelligence artificielle de Baidu dans la Silicon Valley  
+
+0:00:30,0:00:35
+où il a codirigé le « deep speech project ». Merci encore une fois Awni 
+
+0:00:35,0:00:43
+de nous rejoindre aujourd'hui. Je suis impatient d'écouter ta superbe conférence. Je rappelle que les étudiants
+
+0:00:43,0:00:48
+peuvent poser des questions dans le chat pendant le cours et je lirais en
+
+0:00:48,0:00:53
+en direct toutes ces questions afin que nous soyons tous sur la même longueur d'onde.
+
+0:00:53,0:01:04
+C'est bon pour toi ?] Oui ok. [Donc je m’éclipse d'ici et ne reste que via l’audio.] Ok parfait.
+
+0:01:05,0:01:11
+Très bien, je vais commencer. Merci de m'avoir invité. Je vais donc parler de reconnaissance vocale
+
+0:01:11,0:01:19
+Et des « Graph Transformer Networks » [GTN dans la suite]. Donc voici un aperçu rapide de ce que je voudrais couvrir aujourd’hui.
+
+0:01:19,0:01:23
+Nous allons d'abord commencer par une introduction de haut niveau à la reconnaissance vocale et
+
+0:01:23,0:01:29
+en particulier la reconnaissance vocale moderne. Pourquoi elle est devenue si bonne bien que certains
+
+0:01:29,0:01:36
+problèmes persistent encore. Puis je voudrais faire un plongeon assez profond dans la « connectionist temporal classification »
+
+0:01:36,0:01:42
+[CTC dans la suite] qui est l'un des principaux critères que nous utilisons pour entraîner des systèmes de reconnaissance vocale de pointe.
+
+0:01:42,0:01:49
+J'aimerais vraiment qu’à l’issue de cette présentation les gens partent avec une bonne compréhension de la façon dont ça fonctionne.
+
+0:01:49,0:01:57
+Puis on aura une discussion sur le décodage de recherche en faisceau. Donc comment produire une bonne transcription étant donné que nous avons
+
+0:01:57,0:02:07
+entraîné notre système vocal. Et enfin j'aimerais vous laisser avec une sorte de revivification passionnante des GTNs
+
+0:02:07,0:02:13
+sur lesquels j'ai travaillé moi-même, comme Yann et d'autres à FAIR comme Léon Bottou.
+
+0:02:13,0:02:19
+Des travaux remontant aux années 80 et 90. Je parlerai de ces projets, de ce que nous faisons avec
+
+0:02:19,0:02:25
+et comment ils fonctionnent. Si vous avez des questions, n'hésitez pas à les poser.
+
+0:02:25,0:02:34
+surtout quand nous entrons dans le contenu technique. Je veux vraiment que les gens se sentent libres de poser des questions.
+
+0:02:34,0:02:37
+Donc la reconnaissance vocale moderne.
+
+0:02:37,0:02:44
+Juste pour que tout le monde soit sur la même longueur d'onde, notre but est de commencer avec un bout d'audio, un discours puis de le donner
+
+0:02:44,0:02:50
+à notre outil de reconnaissance vocale pour obtenir une transcription. Donc dans ce cas la transcription serait :
+
+0:02:50,0:02:55
+« Le renard brun rapide saute par-dessus le chien paresseux ».
+
+0:02:55,0:03:02
+Juste un petit truc amusant, la raison pour laquelle vous voyez cette phrase si souvent est parce que c'est en fait un pangramme.
+
+0:03:02,0:03:10
+Ce qui signifie que c’est une phrase utilisant toutes les lettres de l'alphabet anglais. Ce n'est pas le plus court
+
+0:03:10,0:03:16
+mais c’est un pangramme. Alors pourquoi la reconnaissance automatique de la parole [ASR dans la suite]
+
+0:03:16,0:03:22
+est devenue si bonne ? Elle s'est vraiment améliorée depuis un certain temps.
+
+0:03:22,0:03:28
+Mais en particulier depuis 2012, cela a continué à s'améliorer rapidement.
+
+0:03:28,0:03:34
+Et dans certains repères académiques, si nous comparons les performances à celles d'un niveau humain,
+
+0:03:34,0:03:40
+c’est-à-dire si je demandais à des humains de transcrire le même discours, nous verrions que la machine
+
+0:03:40,0:03:46
+obtient des performances aussi bonnes voire meilleures. Donc c’est devenu vraiment bon sur certains de ces benchmarks.
+
+0:03:46,0:03:54
+Mais ce n'est pas résolu. Il y a encore des endroits où la reconnaissance vocale a du mal, notamment dans les conversations.
+
+0:03:54,0:03:59
+Si vous et votre ami avez une conversation très animée,
+
+0:03:59,0:04:05
+ça va être difficile pour une machine de bien transcrire. De même, s’il y a beaucoup de bruit de fond.
+
+0:04:05,0:04:10
+Et un point important, lorsqu'il y a des groupes sous-représentés…
+
+0:04:10,0:04:16
+par sous-représentation, j'entends par là certains accents ou certaines caractéristiques mal représentées
+
+0:04:16,0:04:21
+dans les données d’entraînement… la reconnaissance vocale ne fonctionne pas bien.
+
+0:04:21,0:04:32
+Et c'est réel, je veux dire, c'est récent. Vous trouverez des articles sur les biais en reconnaissance vocale datant d'il y a à peine quelques semaines.
+
+0:04:32,0:04:38
+Et l’affirmation des auteurs est qu'il y a toujours un biais considérable dans la reconnaissance vocale.
+
+0:04:38,0:04:45
+Les modèles à l’état de l’art luttent contre des choses comme le sexe, l'âge, les troubles de la parole
+
+0:04:45,0:04:50
+ou encore les accents pour n'en citer que quelques-uns. Donc à Facebook et d'autres endroits,
+
+0:04:50,0:04:58
+nous nous efforçons vraiment d'avoir une reconnaissance vocale qui fonctionne dans de nombreuses langues, des centaines de langues,
+
+0:04:58,0:05:04
+dans de nombreux contextes, pour tous types de personnes et types de discours.
+
+0:05:04,0:05:09
+Donc nous sommes loin d'avoir des solutions pour cela.
+
+0:05:09,0:05:16
+Donc j'ai posé la question : « pourquoi l’ASR s’est tellement améliorée ? ». Ce n'est pas résolu mais
+
+0:05:16,0:05:23
+ça s'est indéniablement amélioré. Alors expliquons pourquoi.
+
+0:05:23,0:05:30
+Avant 2012, il y avait des problèmes avec les systèmes d’ASR que je qualifierai de systèmes traditionnels.
+
+0:05:30,0:05:41
+L'un des problèmes était qu’ils étaient constitués d'un grand nombre de composants conçus à la main. J'appelle cela la « soupe à l'alphabet » car vous y trouvez
+
+0:05:41,0:05:48
+juste des acronymes qui jonchent les systèmes vocaux d'avant 2012.
+
+0:05:48,0:05:54
+A cause du nombre superflu de composants fabriqués à la main,
+
+0:05:54,0:06:00
+lorsqu'on ajoute davantage de données, par exemple, cela n’aide pas
+
+0:06:00,0:06:05
+vraiment car les modèles. Ils sont trop conçus à la main et ne peuvent pas
+
+0:06:05,0:06:12
+apprendre à partir des données. Donc les jeux de données sont restés petits car en faire des plus grands était inutile.
+
+0:06:12,0:06:19
+La combinaison de ces modules uniquement au moment de l'inférence au lieu de les apprendre ensemble
+
+0:06:19,0:06:23
+entraînait des cascades d’erreurs. Ils n'ont pas appris à bien travailler ensemble.
+
+0:06:23,0:06:29
+Et puis, ce qui est important et souvent sous-estimé, c'est que lorsque vous avez un système vraiment complexe comme celui-ci,
+
+0:06:29,0:06:35
+c'est difficile pour les chercheurs de savoir comment l'améliorer. Quand j'ai commencé mon doctorat,
+
+0:06:35,0:06:42
+je ne savais pas vraiment ce qu'il fallait faire pour améliorer un système d’ASR. Et nous avons travaillé sur des parties aléatoires de celui-ci.
+
+0:06:42,0:06:47
+C'était amusant d'apprendre, mais nous avons en quelque sorte tiré dans le noir, surtout au début.
+
+0:06:47,0:06:53
+La courbe d’apprentissage était assez raide. Donc c'était difficile.
+
+0:06:53,0:07:00
+Donc pourquoi l'ASR s'est améliorée ? Vous avez probablement vu des figures comme celle-ci pour de nombreuses applications différentes.
+
+0:07:00,0:07:07
+L’idée est la même. Nous remplaçons beaucoup de composants traditionnels par de l'apprentissage profond. Merci Yann.
+
+0:07:07,0:07:14
+Et plus de données. Les deux travaillent ensemble dans un cycle vertueux.
+
+0:07:14,0:07:20
+Si nous ajoutons des données, les modèles profonds peuvent s'améliorer, ce qui rend les données plus utiles.
+
+0:07:20,0:07:26
+Et ainsi de suite. Donc ce n'est pas censé être compris [à l’issue de la vidéo].
+
+0:07:26,0:07:31
+C'est une sorte d'image de ce à quoi ressemble la reconnaissance vocale.
+
+0:07:31,0:07:42
+Avant-2012 cela se composait de ces nombreux éléments différents. Vous commencez par votre l’audio à gauche et vous le déplacez à travers tous ces
+composants : featurisation, adaptation du locuteur, etc.
+
+0:07:42,0:07:48
+Le tout est passé à travers ce décodeur qui prend en compte un tas de modèles différents, c'est donc complexe.
+
+0:07:48,0:07:55
+Et lentement, nous avons compris que nous pouvions nous débarrasser de certaines de ces choses en les remplaçant par de l'apprentissage profond. 
+
+0:07:55,0:08:01
+On peut remplacer l'adaptation du locuteur et certains des petits modèles avec juste un gros modèle acoustique.
+
+0:08:01,0:08:09
+On peut continuer, en se débarrassant de certains des éléments qui précisent comment la transcription est traitée.
+
+0:08:09,0:08:13
+Et simplifier davantage le pipeline.
+
+0:08:13,0:08:22
+On peut continuer, nous pouvons simplifier encore plus et regardons à quoi ressemble un système d’ASR en production aujourd’hui.
+
+0:08:22,0:08:27
+C'est en fait assez simple. Il y a une certaine featurisation de l’audio,
+
+0:08:27,0:08:35
+il y a un modèle acoustique qui peut être assez complexe mais être un unique réseau de neurones profond.
+
+0:08:35,0:08:41
+Celui-ci produit des morceaux de mots ou des lettres qui vont dans un décodeur
+
+0:08:41,0:08:46
+Qui essaie de trouver la meilleure transcription. Donc ça semble déjà un peu plus simple.
+
+0:08:46,0:08:52
+Et c'est en production. En recherche nous allons encore plus loin. Nous n'avons pas tout à fait atterri au sens que
+
+0:08:52,0:09:00
+je ne peux pas encore dire que ce soit en production mais nous sommes sur la bonne voie. Donc des choses comme retirer entièrement le décodeur.
+
+0:09:00,0:09:05
+Pourquoi avons-nous besoin de ce décodeur complexe ? Pouvons-nous simplement produire une transcription directement ?
+
+0:09:05,0:09:11
+Pourquoi avons-nous besoin de caractéristiques ? On peut juste apprendre directement à partir de l'audio brut.
+
+0:09:11,0:09:18
+Ce sont des choses que nous faisons en recherche mais qui sont encore trop chères ou pas assez efficaces, qui ne sont pas encore assez utiles,
+
+0:09:18,0:09:26
+ou demandent encore trop de temps afin de les mettre en production. Mais c’est pour indiquer vers où les choses se dirigent.
+
+0:09:26,0:09:30
+Parlons de la classification temporelle connexionniste. 
+
+0:09:30,0:09:39
+Comme je l'ai dit plus tôt, la CTC est l'une des fonctions de perte les plus couramment utilisées de nos jours pour l’entraînement de
+
+0:09:39,0:09:46
+systèmes de reconnaissance vocale à l’état de l’art. J'aimerais donc que tout le monde comprenne comment cela fonctionne et
+
+0:09:46,0:09:55
+pourquoi ça marche comme ça. Comme nous l'avons dit plus tôt, on nous donne
+
+0:09:55,0:10:00
+un certain audio en entrée et dans ce cas, ce sera cet énoncé x
+
+0:10:00,0:10:07
+qui consiste en des trames de l'audio. Donc x a t trames : de x1 à xt.
+
+0:10:07,0:10:13
+Habituellement en reconnaissance de la parole chaque trame dure environ 20 millisecondes.
+
+0:10:13,0:10:18
+Donc on prend un bout de phrase donné et on le découpe en tranches de 20 millisecondes.
+
+0:10:18,0:10:25
+Elles se chevauchent un peu et ce seront les caractéristiques qui iront dans le modèle.
+
+0:10:25,0:10:32
+Puis nous voulons produire une transcription que j'appelle y ici.
+
+0:10:32,0:10:40
+Nous penserons à notre transcription comme constituée en les lettres d'une phrase. Donc y1 est la première lettre et
+
+0:10:40,0:10:47
+yU est la dernière lettre. Donc ce dont j'ai besoin pour entraîner un modèle c’est d’être
+
+0:10:47,0:10:56
+capable de calculer une perte. J'ai besoin de savoir à quel point une transcription donnée est bonne
+
+0:10:56,0:11:02
+pour un morceau donné. Quelle est la qualité de la transcription en fonction de l'audio en entrée. Je dois calculer
+
+0:11:02,0:11:13
+un score pour cela. Et ensuite si je suis capable de calculer ce score, je peux le différencier par rapport à des paramètres.
+
+0:11:13,0:11:26
+Puis appliquer toutes nos méthodes d'optimisation standard pour améliorer le score en réglant les paramètres.
+
+0:11:26,0:11:38
+Donc pour récapituler, nous devons calculer cette probabilité conditionnelle, la probabilité d'une transcription étant donné un extrait audio.
+
+0:11:38,0:11:46
+Et, idéalement, cela devrait être différentiable par rapport aux paramètres du modèle, de sorte que ces derniers ressemblent aux paramètres d'un réseau neuronal profond.
+
+0:11:46,0:11:52
+Puis nous pouvons entraîner le réseau neuronal profond pour maximiser cette probabilité pour notre ensemble d'entraînement.
+
+0:11:52,0:11:58
+Donc on nous donne un ensemble d'apprentissage de paires y et x et nous voulons maximiser la probabilité
+
+0:11:58,0:12:05
+de toutes ces paires y de x en changeant les paramètres pour que ces scores soient élevés.
+
+0:12:05,0:12:19
+Donc comment calculer ce score ? C'est ce que la CTC va faire pour nous. Nous allons voir la CTC dans une séquence d'étapes et cela nous montrera comment obtenir ce score.
+
+0:12:19,0:12:30
+[Alfredo : première question, quelle est la représentation de l'entrée ? Que sont x1 à xt ? Tu as dit qu'il y a des morceaux de 20 millisecondes mais comment les encoder ?]
+
+0:12:30,0:12:36
+Bonne question. Généralement dans les systèmes vocaux à l’état de l’art
+
+0:12:36,0:12:42
+en production, les 20 ms sont encodées en tant que ce qu’on appelle
+
+0:12:42,0:12:49
+des « Mel filter banks » [banques de filtres Mel]. Donc vous pouvez penser à ça…
+
+0:12:49,0:12:56
+La façon dont cela fonctionne est que je prends un segment de 20 ms d’audio.
+
+0:12:56,0:13:03
+Je calcule la transformée de Fourier de ces 20 millisecondes.
+
+0:13:03,0:13:15
+Mais au lieu de répartir les fréquences de manière égale, je les plie de manière à ce qu'ils correspondent à la façon dont l'humain perçoit réellement la parole.
+
+0:13:15,0:13:23
+Car il s'avère que les humains perçoivent de plus grandes différences dans les basses fréquences que dans les fréquences plus élevées.
+
+0:13:22,0:13:33
+Donc les bins vont en quelque sorte changer de taille afin de refléter ce phénomène et c'est ce qu'est l'échelle de Mel.
+
+0:13:33,0:13:47
+C'est en fait comme une courte transformation de Fourier sur 20 ms et ensuite on ajuste les coefficients de Fourier en fonction de la façon dont les humains perçoivent la parole.
+
+0:13:47,0:13:55
+[Alfredo : et d’où vient le choix de 20 millisecondes ?]
+
+0:13:55,0:14:00
+C'est une excellente question. C’est ce qui est utilisé depuis très longtemps.
+
+0:14:00,0:14:07
+Cela a été validée par recoupement mais c'est surtout empirique.
+
+0:14:07,0:14:15
+Nous avons constaté que cela fonctionne bien et qu'il s'agit d'un bon compromis entre le type de résolution temporelle et la fréquence de résolution.
+
+0:14:15,0:14:19
+Si vous augmentez la taille de la fenêtre, vous pouvez obtenir une meilleure fréquence de résolution
+
+0:14:19,0:14:26
+mais vous perdez la résolution temporelle. Vous perdez la capacité de distinguer entre les changements
+
+0:14:26,0:14:31
+à une échelle de temps très fine. Et vous devez donc faire un compromis.
+
+0:14:31,0:14:38
+Pour avoir de bonnes performances et 20 millisecondes semble fonctionner assez bien.
+
+0:14:38,0:14:45
+[Alfredo : Ok, ça a du sens]. Super. Alors où en étions-nous ?
+
+0:14:45,0:14:51
+Ok, nous allons donc calculer ce score. Voyons un exemple rapide.
+
+0:14:51,0:14:57
+Commençons par un exemple très simple. Disons que vous avez un fichier audio et que vous avez trois trames.
+
+0:14:57,0:15:04
+Ce serait comme 60 millisecondes d'audio. En pratique, on n’a jamais un audio aussi court.
+
+0:15:04,0:15:09
+Donc vous avez trois trames : x1, x2, x3
+
+0:15:09,0:15:16
+et vous avez votre transcription de sortie qui est le mot « cat » : c, a, t.
+
+0:15:16,0:15:21
+Vous remarquerez qu'il y a trois trames d'entrée et trois lettres de sortie, donc nous pouvons faire quelque chose de très simple ici.
+
+0:15:21,0:15:27
+Si je veux calculer le score, je peux juste dire que la première lettre correspond à la première trame d’entrée,
+
+0:15:27,0:15:34
+la deuxième lettre correspond à la deuxième trame d'entrée et la troisième lettre correspond à la troisième trame d'entrée.
+
+0:15:34,0:15:40
+Pour calculer le score dans l'espace logarithmique, je les additionnerai et j'obtiendrai ma probabilité logarithmique.
+
+0:15:40,0:15:47
+C’est simple et cela fonctionne bien lorsque le nombre de trames d'entrée
+
+0:15:47,0:15:55
+correspond au nombre d'images de sortie. Donc vous pouvez voir ici que nous avons…
+
+0:15:55,0:16:01
+une seconde…
+
+0:16:01,0:16:13
+notre correspondance entre les entrées et les sorties x1, x2, x3 et ensuite les lettres « c », « a » et « t ».
+
+0:16:13,0:16:22
+Ok alors qu'est ce qui se passe si on a une quatrième trame d'entrée ? Que mettons là ?
+
+0:16:22,0:16:41
+Je veux dire il y a ce problème maintenant où je dois décider que mettre dans cette quatrième cadre d'entrée à la place du point d’interrogation.
+
+0:16:41,0:16:56
+Et donc quelque chose que ce que je pourrais peut-être faire est ceci où je peux décider de permettre à plusieurs entrées de correspondre à une ou plusieurs sorties.
+
+0:16:56,0:17:03
+Donc, dans cet exemple, j'ai quatre trames d'entrée. Les deux dernières entrées correspondent toutes deux à t dans la sortie.
+
+0:17:03,0:17:09
+Donc peut-être que c'est ce que je veux faire. J'appellerai ça un alignement entre l'entrée et la sortie.
+
+0:17:09,0:17:14
+Donc je peux permettre à ce t de se répéter une ou plusieurs fois.
+
+0:17:14,0:17:20
+En d'autres mots, je peux faire en sorte que chaque entrée soit associée à une ou plusieurs sorties.
+
+0:17:20,0:17:27
+Ou plutôt chaque entrée correspond à une sortie plus d'une fois. Donc il y a de multiples manières possibles pour cet exemple.
+
+0:17:27,0:17:32
+Je peux faire ça de trois façons différentes.
+
+0:17:32,0:17:38
+Je pourrais avoir le « a » répété deux fois au milieu. Je pourrais avoir le « c » répété deux fois au début.
+
+0:17:38,0:17:45
+Ou je pourrais faire répéter le « t » comme dans le premier cas. Il y a donc trois alignements possibles pour ce cas.
+
+0:17:45,0:17:51
+Dans d'autres cas, il y en aura beaucoup plus, mais dans ce cas, il n'y en a que trois. Mais il y a toujours la question de savoir :
+
+0:17:51,0:17:58
+quel alignement dois-je utiliser pour calculer le score ? Si je n'avais qu'un seul alignement,
+
+0:17:58,0:18:06
+ce serait facile, je n'utiliserais que celui-là. Mais comme j'ai trois possibilités, ce n'est pas évident de savoir lequel je dois choisir.
+
+0:18:06,0:18:11
+Et à l'avance, nous ne savons pas lequel est le meilleur car nous ne savons pas comment la
+
+0:18:11,0:18:18
+transcription s'aligne sur l'entrée. On nous donne juste « c », « a », « t » et que l'entrée fait quatre trames.
+
+0:18:18,0:18:23
+Le modèle peut préférer l'un à l'autre au départ, mais ce sera juste arbitraire.
+
+0:18:23,0:18:29
+Donc nous ne voulons pas vraiment laisser le modèle choisir dès le début.
+
+0:18:29,0:18:37
+Donc en fait, ce que nous allons faire, c'est utiliser tous les alignements.
+
+0:18:37,0:18:43
+Et plutôt que d'en fixer un, nous allons essayer d'augmenter le score de tous.
+
+0:18:43,0:18:48	
+Et on espère que le modèle arrange les choses intérieurement.
+
+0:18:48,0:19:01
+Il peut en quelque sorte décider d'optimiser ces différents alignements et les pondérer en conséquence pour savoir lequel est le meilleur.
+
+0:19:01,0:19:07
+Mais nous n'allons pas lui dire à l'avance lequel utiliser, nous allons juste le laisser les utiliser tous.
+
+0:19:07,0:19:20
+Donc ici ce que je montre c'est que si l'on veut calculer le score de y en fonction de x, on peut prendre la somme des probabilités de tous les alignements possibles pour y à x.
+
+0:19:20,0:19:26
+Et si vous vous rappelez, quand j'ai calculé le score d'un alignement individuel quelques diapositives avant,
+
+0:19:26,0:19:32
+c'était dans l'espace logarithmique. Donc j'ai obtenu le logarithme de la probabilité de l'alignement.
+
+0:19:32,0:19:41
+Donc il s'avère que quand on fait ça, c'est important pour la suite, on reçoit des scores d'alignements qui sont dans l'espace logarithmique.
+
+0:19:41,0:19:46
+Et nous devons en fait calculer le logarithme de la somme des probabilités.
+
+0:19:46,0:19:56
+Je pense que vous êtes familiers avec cette opération que vous appelez « SoftMax réelle » que j'aime bien, donc je vais l'appeler SoftMax réelle aussi. 
+
+0:19:56,0:20:08
+Et nous allons l’utiliser pour calculer les scores logarithmiques des alignements.
+
+0:20:08,0:20:16
+Donc concrètement, si on me donne deux probabilités dans un espace logarithmique, j'aimerais calculer le logarithme de la somme de ces deux probabilités.
+
+0:20:16,0:20:22
+Et ensuite la fonction SoftMax réelle me permet de le faire.
+
+0:20:22,0:20:28
+Et si vous vous rappelez aussi, je pense que vous l'avez appris dans un cours précédent, il y a une manière stable
+
+0:20:28,0:20:36
+pour faire cela. Et c’est très important que vous utilisiez cette façon stable car sinon, les choses ne fonctionneront pas.
+
+0:20:36,0:20:45
+C'est l'un des trucs les plus importants pour les données séquentielles et surtout de données séquentielles longues en apprentissage automatique.
+
+0:20:45,0:20:52
+C'est l'astuce « log one plus » pour enlever le maximum. Donc je pense vous avez tous vu cela avant.
+
+0:20:52,0:20:58
+Mais c'est important ici. C’est important que nous fassions tout dans l'espace logarithmique pour la stabilité numérique pour aussi utiliser cette astuce.
+
+0:20:58,0:21:08
+Ok donc nous allons utiliser la SoftMax réelle plus tard.
+
+0:21:08,0:21:14
+Donc on va utiliser tous les alignements possibles. Dans ce cas on a « cat »
+
+0:21:14,0:21:21
+pour quatre trames, nous avons trois alignements. Nous allons calculer la SoftMax réelle de ces trois alignements.
+
+0:21:21,0:21:30
+Et cela va nous donner notre score : le logarithme de la probabilité de notre transcription étant donné x.
+
+0:21:30,0:21:44
+En aparté, j'aimerais vous montrer comment on peut encoder sous la forme d’un graphe, l'ensemble des alignements possibles de la transcription de 
+
+0:21:44,0:21:49
+« cat » à une entrée de longueur arbitraire. Donc ceci est un graphe
+
+0:21:49,0:21:56
+qui représente l'ensemble des alignements possibles du mot « cat » sur une entrée de longueur arbitraire.
+
+0:21:56,0:22:03
+Et je veux l'expliquer car cela sera utile quand nous commencerons à parler des GTNs.
+
+0:22:03,0:22:12
+Donc ce graphe, vous pouvez parfois l’entendre appeler « accepteur d'état fini pondéré » ou WFSA [pour « Weighted Finite State Acceptor »],
+
+0:22:12,0:22:28
+prend un état de départ qui est ici l'état en gras au début, zéro, et a un état acceptant qui est le cercle concentrique à l'extrémité, le trois.
+
+0:22:28,0:22:35
+Sur chaque arête, il y a une étiquette et un nombre à la droite de la barre oblique qui est un poids.
+
+0:22:35,0:22:47
+Ici tous les poids valent zéro donc nous ne nous en soucions. Dans certains cas nous nous soucierons mais ici, nous ne nous intéressons qu'aux étiquettes.
+
+0:22:47,0:22:53
+Donc ce graphe permet d’encoder un ensemble d'alignements, en gros.
+
+0:22:53,0:23:01
+Tout chemin à travers ce graphe est un alignement possible. Donc je peux traverser le « c » une ou plusieurs fois
+
+0:23:01,0:23:07
+et ensuite j'arrive à l'état de 0 à 1. Je peux traverser l’arc « a »
+
+0:23:07,0:23:14
+à l'état 1 autant de fois que je le souhaite, mais je dois ensuite traverser « a » au moins une fois pour obtenir l'état suivant 2.
+
+0:23:14,0:23:21
+Et je peux parcourir « t » dans sa boucle un nombre illimité de fois mais je dois
+
+0:23:21,0:23:28
+le traverser au moins fois pour arriver à l'état 3 qui est mon état d'acceptation.
+
+0:23:28,0:23:36
+Donc le graphe dit que tout alignement doit sortir au moins une fois « c », « a », « t » mais que
+
+0:23:36,0:23:44
+chacun d'entre eux peut aussi sortir plus d'une fois à la suite. Ceci ne résout pas le problème de longueur.
+
+0:23:44,0:23:54
+Cela encode toutes les longueurs possibles et le fait que vous devez sortir la lettre dans la transcription une ou plusieurs fois.
+
+0:23:54,0:24:01
+Donc on reviendra à ce type de graphes quand nous parlerons des GTNs.
+
+0:24:01,0:24:12
+Ok, revenons à la CTC. Nous disions que nous allions utiliser tous les alignements possibles et c'est très bien. Nous allons le faire, mais il y a un problème.
+
+0:24:12,0:24:18
+C’est que l'entrée audio x peut avoir beaucoup de trames. Vous pouvez avoir beaucoup d’étapes temporelles.
+
+0:24:18,0:24:25
+En pratique, cela peut aller jusqu'à un millier. Une transcription large peut avoir beaucoup de lettres.
+
+0:24:25,0:24:34
+Dans la pratique, cela peut être 100 ou plus. Si vous calculez les chiffres, c'est un nombre astronomique d'alignements.
+
+0:24:34,0:24:42
+Donc on ne peut pas faire ce que j'ai fait plus tôt à savoir tous les délimiter et à calculer le score de chacun d'entre eux puis
+
+0:24:42,0:24:48
+additionner toutes ces scores en utilisant notre SoftMax réelle. Cela ne marchera pas dans la pratique.
+
+0:24:48,0:25:01
+Comme un petit exercice amusant, je vous encourage à faire les maths combinatoires pour calculer le nombre d'alignements que vous pouvez produire
+
+0:25:01,0:25:09
+étant donné une entrée de longueur T et une sortie de longueur U. C'est beaucoup, alors qu'allons-nous faire ?
+
+0:25:09,0:25:18
+Heureusement, il y a un algorithme qui nous permet de calculer la somme de toutes les alignements possibles de manière efficace.
+
+0:25:18,0:25:22
+C'est ce qu'on appelle l'algorithme « forward » en reconnaissance vocale.
+
+0:25:22,0:25:28
+C'est en fait un simple algorithme de programmation dynamique.
+
+0:25:28,0:25:35
+Je crois que vous avez de l'expérience avec l'algorithme de Viterbi vu dans
+
+0:25:35,0:25:41
+un devoir ou un cours précédent. L'algorithme « forward » est en fait très similaire.
+
+0:25:41,0:25:55
+La différence principale est opération que nous utilisons : au lieu de chercher le plus grand score ou le chemin le plus court, nous cherchons la somme de tous les chemins possibles.
+
+0:25:55,0:26:03
+Nous allons donc utilisez une somme au lieu d'un maximum ou d'un minimum, comme vous l'avez fait dans votre devoir.
+
+0:26:03,0:26:15
+Alors, comment fonctionne l'algorithme « forward » ? Nous allons l’appliquer à la version simple des alignements que je vous ai montrés plus tôt.
+
+0:26:15,0:26:30
+Alors on commence par spécifier cette variable avant et on l'appelle αₜᵘ où t est l'endroit où nous nous trouvons dans l'entrée et u est l'endroit où nous sommes dans la sortie.
+
+0:26:30,0:26:42
+Et ce que cette variable représente est le score pour tous les alignements de longueur qui aboutissent à la sortie yu.
+
+0:26:42,0:27:00
+Rendons cela plus concret avec un exemple. Supposons que j'ai en entrée quatre trames : X = [x1, x2, x3, x4] et en sortie Y = [c,a,t].
+
+0:27:00,0:27:10
+Et je veux calculer la variable α₂ᶜ, c’est-à-dire le score de tous les alignements possibles de longueur 2
+
+0:27:10,0:27:17
+jusqu'aux deux premières trames qui se terminent par « c » dans la première sortie de ma transcription.
+
+0:27:17,0:27:32
+Et donc il n'y a qu'un seul alignement possible qui satisfait à ceci, c'est l'alignement « c c ». La première trame obtient « c » et la deuxième obtient « c ».
+
+0:27:32,0:27:44
+Donc cet exemple est simple à calculer. C'est juste la somme des scores des deux premières trames : log(P(c|x1)) + log((P(c|x2)).
+	
+0:27:44,0:28:00
+De manière similaire, je peux calculer la variable α₂ᵃ, c’est-à-dire le score de tous les alignements possibles de longueur 2
+
+0:28:00,0:28:08
+qui aboutissent à la deuxième sortie « a ». Et encore une fois il n'y a qu'une seule possibilité ici.
+
+0:28:08,0:28:21
+Il y a la première entrée qui s'aligne sur « c » et la deuxième entrée s'aligne sur « a ». Donc je peux faire la même chose et calculer le score de α₂ᵃ
+
+0:28:21,0:28:28
+Ok, maintenant les choses deviennent un peu plus compliquées quand je veux calculer α3ᵃ.
+
+0:28:28,0:28:36
+On veut calculer la somme de tous les alignements possibles de longueur 3 qui se terminent par la deuxième sortie « a ».
+
+0:28:36,0:28:49
+Si vous y réfléchissez bien, il y a deux alignements possibles. Il y a « c c a » et « c a a ». Tous deux de longueur trois qui se terminent par « a ».
+
+0:28:49,0:28:55
+Donc je peux délimiter ces deux alignements et calculer leurs scores individuels en
+
+0:28:55,0:29:04
+espace logarithmique comme je le montre ci-dessous : log(P(A1)) et log(P(A2)).
+
+0:29:04,0:29:10
+Puis je les combine en utilisant ma SoftMax réelle pour obtenir α3ᵃ.
+
+0:29:10,0:29:17
+Ce serait donc l'approche naïve pour calculer α3ᵃ.
+
+0:29:17,0:29:37
+Mais si nous nous reportons aux deux diapositives précédentes, vous remarquerez que la première partie de chaque équation est quelque chose que nous avons déjà calculée.
+
+0:29:37,0:29:52
+Donc l'équation log(P(A1)) correspond à α₂ᶜ + le score et log(P(A2)) correspond à α₂ᵃ + le score.
+
+0:29:52,0:30:04
+Donc nous pouvons réutiliser les alphas que nous avons déjà calculés rendant ainsi les choses plus simples et plus efficaces.
+
+0:30:04,0:30:18
+C'est le genre de récursion que l'on va construire. Donc nous pouvons les réutiliser et au lieu de recalculer le préfixe,
+
+0:30:18,0:30:29
+nous pouvons calculer le nouveau score juste en ajoutant le score de troisième trame de « a » étant la troisième trame.
+
+0:30:29,0:30:36
+Il y a une autre astuce que nous pouvons utiliser. Si nous branchons ces
+
+0:30:36,0:30:42
+deux scores dans notre SoftMax réelle, les choses se factorisent assez bien.
+
+0:30:42,0:30:56
+Et il s'avère que actual-softmax[α₂ᶜ, α₂ᵃ] + log(P(a|x3) = α3ᵃ.
+
+0:30:56,0:31:16
+Donc vous voyez ici que je peux calculer α3ᵃ, juste en ajoutant le score de a à la troisième trame aux alphas des deux pas de temps précédents.
+
+0:31:16,0:31:23
+Ce qui nous conduit à une récursion générale pour calculer les variables α.
+
+0:31:23,0:31:32
+Et cette récursion générale, c'est une sorte de cas simple pour les alignements que nous avons spécifiés. Elle ressemble à ça.
+
+0:31:32,0:31:37
+Décompressons ça un peu quelques secondes.
+
+0:31:37,0:31:51
+Si j'essaie de calculer la variable αₜᵘ je prends les deux variables α au pas de temps précédent,
+
+0:31:51,0:32:00
+une qui correspond à la sortie u et une qui correspond à la sortie u-1, et ajoute le score de la sortie u.
+
+0:32:00,0:32:21
+Donc je prends la SoftMax réelle de ces deux variables α précédentes et je vais simplement y ajouter le log de la sortie u dans ma transcription étant donné la trame t.
+
+0:32:21,0:32:27
+C'est donc l'algorithme « forward » et comme nous l'avons dit plus tôt, il est très similaire à l'algorithme de Viterbi.
+
+0:32:27,0:32:35
+La principale différence est la façon dont je combine ces variables α et la façon dont nous les définissons.
+
+0:32:35,0:32:39
+Ainsi, pour Viterbi, au lieu d'utiliser une SoftMax réelle et une somme,
+
+0:32:39,0:32:46
+j'utiliserais quelque chose comme un maximum. Un maximum et une somme ou quelque chose comme ça.
+
+0:32:46,0:32:52
+Mais sinon l'idée est la même. Et le score final, le score de P(X|Y) sur tous les alignements possibles,
+
+0:32:52,0:33:00
+rappelez-vous que c'est ce que nous voulions calculer en premier lieu, sont juste donnés par la variable forward : 
+
+0:33:00,0:33:10
+αTᵁ, le nombre de trames d'entrée et le nombre de trames de sortie.
+
+0:33:11,0:33:19
+Alors regardons ce à quoi cela ressemble plus visuellement. C'est un graphe en 2D qui encode sur y.
+
+0:33:19,0:33:31
+Sur la verticale, c’est la transcription « c-a-t » et à l’horizontal, c’est le nombre de trames d'entrée, disons qu'il y en a cinq.
+
+0:33:31,0:33:38
+Et à chaque étape, nous allons calculer la ou les variables α pour cette étape
+
+0:33:38,0:33:44
+en se basant sur les quatre variables de l'étape précédente. Donc vous pouvez avoir une idée visuelle de la façon dont cet algorithme procède.
+
+0:33:44,0:33:55
+Le commencement est simple, la variable α de longueur 1 pour la sortie « c », est juste le score de c étant donné x1.
+
+0:33:55,0:34:00
+Donc nous pouvons le lire directement à partir de la sortie du réseau.
+
+0:34:00,0:34:09
+Pour l'étape suivante, je peux calculer les deux variables α correspondant à des alignements de longueur 2.
+
+0:34:09,0:34:13
+Il y en a une pour la sortie « a » et une pour la sortie « c ».
+
+0:34:13,0:34:26
+Et pour les calculer, il suffit d'ajouter dans les scores de p de a étant donné la deuxième trame et de p de c étant donné la deuxième trame.
+
+0:34:26,0:34:40
+Pour la première et la deuxième respectivement. Donc je continue de cette façon et je construis mes variables α et avec le temps, j'arrive à la fin. 
+
+0:34:40,0:34:54
+Et je sais qu’à la fin, α est égal à la SoftMax réelle des deux α des deux pas de temps précédents plus le score de la sortie à ce niveau.
+
+0:34:54,0:35:15
+Donc α₅ᵗ est la somme de la SoftMax réelle de α₄ᶜ et α₄ᵃ, et du score de t 
+étant donné la cinquième trame.
+
+0:35:15,0:35:27
+[Alfredo : il y a une question. Pourquoi faisons-nous cela où nous sommons plusieurs chemins plutôt que de prendre le chemin le plus probable avec Viterbi].
+
+0:35:27,0:35:33
+C'est une bonne question en fait. La réponse est que vous pouvez prendre le meilleur chemin.
+
+0:35:33,0:35:39
+La réponse la plus simple que je puisse donner est qu'il est plus efficace 
+
+0:35:39,0:35:51
+de le faire de cette façon. Plutôt que de choisir le meilleur chemin au départ dans ce graphe, calculer la somme de tous les chemins possibles conduit à
+
+0:35:51,0:35:58
+de meilleurs modèles, qui sont plus précis en général. Je peux donner une idée du pourquoi.
+
+0:35:58,0:36:21
+L'intuition est en quelque sorte que, initialement le modèle ne sait pas ce qu'est un bon alignement entre « cat » et la séquence d'entrée, les cinq trames x1 à x5.
+
+0:36:21,0:36:30
+Si j'utilise la méthode de Viterbi pour commencer, alors je dis essentiellement que...
+
+0:36:30,0:36:40
+Je vais forcer le modèle à choisir très tôt quel alignement prendre et donc quel alignement pour lequel augmenter le score pour.
+
+0:36:40,0:36:49
+Et je vais seulement en choisir un. Et peut-être que ce n'est pas le bon. Peut-être que l'initialisation de mon modèle
+
+0:36:49,0:36:55
+choisit un alignement dégénéré, dont il essaie ensuite d'optimiser le score.
+
+0:36:55,0:37:09
+Cela serait mauvais. Donc plutôt que laisser quelque chose comme ça se produire, ce que l'algorithme de Viterbi peut faire, on va plutôt essayer
+
+0:37:09,0:37:16
+la somme de tous les alignements possibles. Et de cette façon le modèle a la liberté
+
+0:37:16,0:37:23
+de distribuer cette masse de probabilité lorsqu'il choisit entre différents alignements.
+
+0:37:23,0:37:30
+Et si on lui donne cette liberté et suffisamment de données, il s'avère qu'il
+
+0:37:30,0:37:36
+commence en fait à choisir le bon alignement. Donc même si on lui donne la liberté
+
+0:37:36,0:37:43
+d'augmenter le score sur tous les alignements possibles, au fur et à mesure que nous entraînons le modèle, il commence réellement à
+
+0:37:43,0:37:50
+déterminer ce qui est un bon alignement. Et vous verrez que l'un de ces chemins,
+
+0:37:50,0:37:55
+au fur et à mesure que le modèle apprend, commence à obtenir la plus grande probabilité.
+
+0:37:55,0:38:02
+Et donc l'algorithme « forward » devient en quelque sorte un algorithme de Viterbi au fur et à mesure que nous entraînons. Même si nous ne changeons pas
+
+0:38:02,0:38:11
+explicitement, quand on entraîne le modèle, il commence à choisir le meilleur chemin tout seul et à donner la plus grande partie de la masse à ce chemin.
+
+0:38:11,0:38:15
+Donc vous pourriez faire quelque chose comme ça et cela fonctionnerait probablement très bien en pratique.
+
+0:38:15,0:38:21
+Vous pourriez commencer par l'algorithme « forward » et passer à l'algorithme de Viterbi après avoir convergé un peu.
+
+0:38:21,0:38:27
+Et ce serait bien. Mais il est vraiment tôt pour savoir quel alignement utiliser. C'est très important.
+
+0:38:27,0:38:35
+C'est une intuition. Vous pouvez probablement penser à d'autres hypothèses sur la raison pour laquelle c'est une bonne chose à faire.
+
+0:38:35,0:38:38
+D'autres questions ? [Alfredo : c'est logique.
+
+0:38:38,0:38:50
+La dernière fois, dans les devoirs, on a pré-entraîné le réseau pour qu'il fasse de classification afin d'obtenir des points de départ déjà assez bons 
+
+0:38:50,0:38:54
+pour reconnaître différents phonèmes ou caractères.]
+
+0:38:54,0:39:01
+C'est cool, c'est logique, c'est bien.
+
+0:39:01,0:39:08
+Ce que j'ai décrit jusqu'à présent, c'est un algorithme assez simple. Ce n'est pas la CTC dans son entièreté.
+
+0:39:08,0:39:14
+C'est un algorithme qui fonctionnerait probablement en pratique.
+
+0:39:14,0:39:22
+Mais ça ne fonctionne pas si bien que ça, donc les gens ne l'utilisent pas vraiment pour la reconnaissance vocale. Une des raisons pour laquelle ça ne
+
+0:39:22,0:39:30
+fonctionne pas aussi bien pour les audios, et parce que quand vous me donnez un extrait d'audio, il n'y a pas que de la parole humaine.
+
+0:39:30,0:39:39
+Il peut y avoir des trames de 20 ms de silence, où il n’y aura rien.
+
+0:39:39,0:39:50
+Il peut y avoir du bruit, des rires, etc. Je ne veux pas forcer le modèle à sortir un jeton de ma transcription pour ces trames-là.
+
+0:39:50,0:39:59
+S’il y a du silence, disons à la troisième trame, que puis-je mettre au lieu d’une des lettres de ma transcription ?
+
+0:39:59,0:40:05
+Donc une des choses que la CTC fait différemment de ce que j'ai décrit
+
+0:40:05,0:40:13
+jusqu'à présent est qu'elle a cette notion de jeton poubelle ou jeton vide.
+
+0:40:13,0:40:20
+Le jeton vide dit juste qu'il n'y a rien ici. Rien qui m'intéresse.
+
+0:40:20,0:40:25
+Si je transcris, si j'aligne le jeton vide sur cette troisième trame,
+
+0:40:25,0:40:31
+après avoir produit mes prédictions finales pour chaque trame, j'enlèverai tous ces jetons vides car
+
+0:40:31,0:40:36
+on ne s’en soucient pas. Et cela me donnera la transcription finale.
+
+0:40:36,0:40:44
+Dans la CTC, le jeton vide est en fait optionnel. Nous n'avons pas à l'utiliser mais nous pouvons.
+
+0:40:44,0:40:55
+Le modèle peut l'utiliser une ou plusieurs fois entre n'importe laquelle des sorties que ce soit avant ou après.
+
+0:40:55,0:41:02
+Donc, nous allons nous familiariser avec ce que ce jeton vide nous permet de faire.
+
+0:41:02,0:41:12
+Comme je l'ai dit, le jeton vide est facultatif. Disons que nous avons une entrée avec cinq trames.
+
+0:41:12,0:41:18
+Comme avant, on a la sortie « c-a-t ». Donc ici on montre un ensemble
+
+0:41:18,0:41:23
+de trois alignements possibles. Le premier alignement a le jeton vide
+
+0:41:23,0:41:29
+au milieu. C'est autorisé car quand je l'enlève et fusionne les t répétés,
+
+0:41:29,0:41:35
+j'obtiens bien « cat ». C'est bien, c'est ce que je veux. Le deuxième alignement est aussi autorisé
+
+0:41:35,0:41:41
+car comme nous l'avons dit le jeton vide est facultatif. Il n'y en a pas dans cet alignement, c'est ok, nous n'en avons pas besoin.
+
+0:41:41,0:41:48
+Et quand je fusionne les « a » et les « t », je récupère bien « cat ». C’est ce que nous voulons.
+
+0:41:48,0:41:54
+Et enfin le dernier alignement est aussi valide car il produit aussi « cat »
+
+0:41:54,0:42:01
+pour les mêmes raisons. Qu’en est-il de celui-là, est-il autorisé ?
+
+0:42:01,0:42:09
+« c a t <b> t ». Pensez-y une seconde. Est-ce que cet alignement a du sens
+
+0:42:09,0:42:17
+si j'enlève le jeton vide, est-ce que je vais obtenir « cat » ?
+
+0:42:17,0:42:37
+Cet alignement n'est pas autorisé car quand vous supprimez le jeton vide,
+il vous reste deux « t » et non un, ce qui correspondrait à la transcription « c a t t » qui n'est pas « c a t » donc ça ne marche pas.
+
+0:42:37,0:42:44
+Cela nous amène à un autre aspect subtil de la CTC qui est que
+
+0:42:44,0:42:49
+si j'ai des jetons répétés dans ma transcription,
+
+0:42:49,0:43:00
+je dois incorporer un blanc entre eux. Sinon il n'y a aucun moyen de désambiguïser les répétitions des non-répétitions.
+
+0:43:00,0:43:04
+Donc en général un blanc est optionnel entre n'importe quelles lettres de ma sortie.
+
+0:43:04,0:43:10
+Le modèle peut toujours produire un blanc entre deux lettres ou non. Comme il le souhaite. 
+
+0:43:10,0:43:18
+Mais lorsqu'il y a des jetons répétés, des répétitions consécutives, il doit produire au moins un blanc.
+
+0:43:18,0:43:30
+Et donc si les blancs n'étaient pas là quand nous construisons la version finale de la transcription, nous obtenons juste « f o d » et non pas « f o o d » qui est ce que nous voulons.
+
+0:43:30,0:43:36
+[Aldredo : J’ai une question ici. Le double o en anglais a son propre phonème,
+
+0:43:36,0:43:44
+ce qui va être le son « ou » comme « foud » et non « fod ». Donc comment 
+
+0:43:44,0:43:52
+on connecte la parole, aux phonèmes réels / au texte réel. Ce n'est pas clair pour moi].
+
+0:43:52,0:44:03
+Bonne question. La première réponse est qu'il y a aucun concept de phonème dans ce système. Vous pouvez vous débarrasser de ce concept
+
+0:44:03,0:44:09
+comme quoi c’est une unité de modélisation que nous allons utiliser.
+
+0:44:09,0:44:14
+Lorsque nous avons décidé de rendre notre système de bout en bout,
+
+0:44:14,0:44:20
+nous nous sommes débarrassés de ce concept de phonème. Notre modèle prédit les lettres directement.
+
+0:44:20,0:44:31
+Donc on ne se soucie pas vraiment des phonèmes. Ils ne nous sont pas utiles en tant qu'unité de modélisation explicite.
+
+0:44:31,0:44:38
+Implicitement le réseau peut choisir de représenter les choses en interne.
+
+0:44:38,0:44:45
+Cela dépend du réseau. Et probablement qu'il fait quelque chose comme ça.
+
+0:44:45,0:44:52
+Et peut-être que dans certains cas, il serait judicieux d'essayer de choisir les représentations de vos lettres au lieu d'utiliser des lettres,
+
+0:44:52,0:45:05
+des jetons de plus haut niveau, comme des morceaux de mots ou des syllabes qui sont plus fidèles aux sons que nous faisons.
+
+0:45:05,0:45:14
+Mais en pratique, nous laissons le réseau décider des lettres à produire à partir des données et il peut le découvrir par lui-même. Ai-je répondu à ta question ?
+
+0:45:14,0:45:25
+[Alfredo : je pense. Tu as dit que chacun de ces x1, x2, x3 prennent 20 ms. Donc dans le mot « food », il n'y a pas de silence / de vide entre les « o »,
+
+0:45:25,0:45:39
+comme si c'était juste le même son. Le « ou » de « foud ». Je ne vois pas comment on peut avoir « ou », « blanc », « ouh »].
+
+0:45:39,0:45:48
+C'est vrai, ouais, ouais. Donc le réseau doit comprendre que quand…  Ok, donc j'ai survolé certaines choses ici.
+
+0:45:48,0:45:54
+Donc tout d'abord je montre que chaque lettre correspond à une entrée,
+
+0:45:54,0:46:00
+mais dans la pratique, le chevauchement est en fait très important.
+
+0:46:00,0:46:08
+Même si x1 et x2 diffèrent de quelques ms d’où elles sont sélectionnées, comme leur
+
+0:46:08,0:46:16
+point central de l'audio, elles se chevauchent considérablement. Donc pour produire une lettre donnée,
+
+0:46:16,0:46:24
+le modèle a en fait une très grande fenêtre dans l'entrée. [Alf : ok, je vois].
+
+0:46:24,0:46:37
+C'est la chose principale. Donc on peut commencer à comprendre que ça ressemble à la séquence « f o o » et si je vois cette séquence, je sais que je dois mettre un blanc
+
+0:46:37,0:46:42
+à ce genre de position. Car il a accès à suffisamment de contexte pour faire ça.
+
+0:46:42,0:46:50
+Donc c'est surtout comme apprendre à le faire même s'il n'y a rien dans l'audio.
+
+0:46:50,0:46:57
+Il faut vraiment se baser sur le contexte que nous lui donnons afin d'arriver à mettre un blanc ici.
+
+0:46:57,0:47:07
+Ce n'est pas possible si vous utilisez juste une infime partie de l’entrée. Cela ne marcherait pas.
+
+0:47:07,0:47:12
+[Alfredo : ok. Il y a une question ici qui demande des liens entre ce que
+
+0:47:12,0:47:24
+tu viens d'expliquer avec le blanc et leurs devoirs. Donc dans les devoirs on applique un espace / une pause après chaque caractère.
+
+0:47:24,0:47:31
+Donc en gros, on a « f », « vide », « o », « vide », « o », « vide », « d » « vide ».
+
+0:47:31,0:47:38
+Et ici tu mentionnes que ces blancs sont facultatifs, nous ne sommes pas obligés de passer par eux.]
+
+0:47:38,0:47:43
+C'est exact, le blanc est facultatif ici. La seule fois où il ne l'est pas c'est quand
+
+0:47:43,0:47:51
+il y a des répétitions dans la sortie. Mais qu’elle était la question ?
+
+0:47:51,0:47:57
+[Alfredo : je suppose que c'est plus technique, peut-être qu'on devrait s'en occuper de notre côté, c’est plus pour faire un lien
+
+0:47:57,0:48:03
+avec les devoirs où nous appliquons une pause après chaque caractères.]
+
+0:48:03,0:48:09
+Ok, je vois. Ici nous n'imposons pas une pause après chaque caractère. Nous avons un caractère d'espace qui,
+
+0:48:09,0:48:16
+je ne l'ai pas montré ici, mais le modèle devrait sortir un espace entre les mots.
+
+0:48:16,0:48:23
+On peut demander au modèle de segmenter les mots pour nous. Le blanc [le jeton vide], est différent de ça.
+
+0:48:23,0:48:31
+Il e peut apparaître n'importe où dans la sortie et il est optionnel. [Alfredo : je vois].
+
+0:48:31,0:48:37
+Ok alors, je passe à autre chose. [Alfredo : ouais.]
+
+0:48:37,0:48:45
+Donc dans la CTC, comme nous l'avons dit, le blanc est optionnel. Donc cela signifie que la récursion a trois cas au lieu du
+
+0:48:45,0:48:51
+simple cas que j'ai montré plus tôt où vous pouvez calculer la variable α à partir
+
+0:48:51,0:48:59
+des deux variables α précédentes. Dans la CTC, il y a trois cas. Le cas simple
+
+0:48:59,0:49:06
+où le blanc se trouve entre deux lettres distinctes, auquel cas il est facultatif, 
+
+0:49:06,0:49:13
+pour faire la transition entre la lettre précédente et le pas de temps précédent. Vous pouvez faire la
+
+0:49:13,0:49:20
+transition du blanc au pas de temps précédent ou vous pouvez faire la transition de la lettre actuelle au pas de temps précédent.
+
+0:49:20,0:49:25
+Donc en gros cela veut dire que je peux calculer mes alignements de longueur t+1
+
+0:49:25,0:49:34
+à partir d'alignements de longueur t, soit en étendant tous les alignements qui se terminent par la lettre précédente de la sortie « a »,
+
+0:49:34,0:49:38
+soit en étendant tous les alignements qui se terminent par le blanc,
+
+0:49:38,0:49:44
+soit en étendant tous les alignements qui se terminent par la sortie actuelle « b ».
+
+0:49:44,0:49:52
+C'est le premier cas où le blanc est optionnel. Le second cas est que la sortie n'est pas optionnelle.
+
+0:49:52,0:49:57
+Vous devez sortir tout ce qui est dans la transcription au moins une fois.
+
+0:49:57,0:50:03
+Donc je n'ai pas le droit d'aller de blanc à blanc en sautant des sorties. Je ne peux pas
+
+0:50:03,0:50:09
+faire de transition à partir d'alignements de longueur t qui sont terminés par un blanc…
+
+0:50:09,0:50:15
+avant le « a », deux alignements de longueur t qui se terminent par un
+
+0:50:15,0:50:25
+blanc après le « a ». Je dois sortir un « a » entre les deux. Donc je suis seulement autorisé à faire la transition entre ces deux notes précédentes.
+
+0:50:25,0:50:32
+Et le troisième cas qui ressemble au deuxième cas, en pratique les calculs sont les mêmes, est que le blanc
+
+0:50:32,0:50:38
+n'est pas facultatif lorsqu'il y a des répétitions dans la sortie. Ainsi, si j'ai « a » et « a » entourant le blanc,
+
+0:50:38,0:50:46
+je ne suis pas autorisé à inclure les alignements pour le premier « a ».
+
+0:50:46,0:50:55
+Je suis seulement autorisé à inclure les blancs, les alignements se terminant par un blanc et les alignements se terminant dans le deuxième « a ».
+
+0:50:55,0:51:04
+Donc ce sont les trois cas pour la récursion CTC. Vous pouvez construire votre algorithme forward
+
+0:51:04,0:51:10
+de ces trois cas. Et nous avons atteint notre objectif initial qui
+
+0:51:10,0:51:15
+consistait à calculer le score de la transcription et de le faire
+
+0:51:15,0:51:21
+de manière efficace. Et, surtout, de le faire de manière différentiable.
+
+0:51:21,0:51:32
+Si vous vous souvenez, tous ces scores sont faits en utilisant notre SoftMax réelle. Cette fonction est une combinaison de logs et d'exponentielles.
+
+0:51:32,0:51:42
+Donc tout est différentiable. Nous pouvons différencier à travers ce graphe
+
+0:51:42,0:51:47
+et comme d'habitude rétropropager pour obtenir les gradients par rapport aux paramètres et
+
+0:51:47,0:51:54
+apprendre un modèle qui optimise la transcription compte tenu de notre entrée.
+
+0:51:54,0:52:02
+Donc si vous vous rappelez, je vous ai montré ce graphe plus tôt qui était pour un ensemble simple d’alignements
+
+0:52:02,0:52:10
+où l'on avait un « c » une ou plusieurs fois, un « a » une ou plusieurs fois et un « t » une ou plusieurs fois.
+
+0:52:10,0:52:16
+Vous pouvez dessiner le même graphe pour la CTC. Cela semble plus compliqué. C'est plus compliqué en fait.
+
+0:52:16,0:52:24
+C’est certainement beaucoup moins ordinaire, ce qui rend la CTC plus complexe à implémenter en pratique
+
+0:52:24,0:52:36
+mais voir cet algorithme sous forme d’un graphe est en fait très utile. Et quand vous commencez à acquérir cette compétence
+
+0:52:36,0:52:41
+de regarder ces calculs, d'envisager le tout sous la forme d’un graphe,
+
+0:52:41,0:52:47
+nous pouvons alors commencer à les considérer comme des opérations sur les graphes.
+
+0:52:47,0:52:56
+Ce sera important pour plus tard quand nous parlerons des GTNs. Donc je vais commenter cette diapositive très brièvement.
+
+0:52:56,0:53:05
+Juste pour s’exercer à regarder et considérer l'ensemble des alignements comme un graphe.
+
+0:53:05,0:53:12
+Donc comme nous l'avons dit, nous avons un état de départ qui est en gras ici.
+
+0:53:12,0:53:18
+Et dans ce graphe, il y a deux états d'acceptation. Les deux états concentriques encerclés à la fin.
+
+0:53:18,0:53:24
+Sur chaque arête, il y a une étiquette. Sur la première boucle c’est le jeton vide
+
+0:53:24,0:53:31
+puis la barre oblique et une valeur de poids. Ici nous n'avons pas de poids. Nous ne nous soucions pas des poids.
+
+0:53:31,0:53:38
+Mais dans la suite ce sera le cas. Donc, ce que ce graphe encode :
+
+0:53:38,0:53:45
+si vous regardez l'état zéro, vous pouvez sortir zéro ou plus de blancs. Le blanc est facultatif au début.
+
+0:53:45,0:53:53
+Mais vous devez sortir un « c », autant que vous voulez.
+
+0:53:53,0:54:03
+Une fois que vous avez sorti vos « c », vous avez le choix : vous pouvez soit sortir votre « a » directement en allant de la transition 1 à 3,
+
+0:54:03,0:54:13
+ou vous pouvez sortir un blanc ou plusieurs en passant de 1 à 2, puis de 2 à 3 pour sortir le « a ». De toute façon, vous devez produire un « a ».
+
+0:54:13,0:54:17
+On ne peut jamais omettre de produire un « a ».
+
+0:54:17,0:54:23
+Mais vous pouvez optionnellement choisir de produire un ou plusieurs blancs. Nous continuons à parcourir ce graphe
+
+0:54:23,0:54:29
+et ce que nous obtenons est un ensemble d'alignements possibles qui incluent le blanc optionnel
+
+0:54:29,0:54:37
+de longueur arbitraire pour la transcription « c a t ».
+
+0:54:37,0:54:43
+C'était donc l'introduction à la perte CTC. Pour récapituler,
+
+0:54:43,0:54:52
+nous avons passé en revue la reconnaissance vocale moderne, comment elle est passée de quelque chose de complexe à un système de bout en bout.
+
+0:54:52,0:54:57
+Nous avons parlé de la perte CTC qui est l'une des plus utilisées mais pas la seule
+
+0:54:57,0:55:04
+fonction de perte utilisée pour entraîner ces systèmes vocaux de bout en bout. Et donc maintenant que nous avons ces modèles entraînés,
+
+0:55:04,0:55:10
+que nous savons comment calculer le score d'une transcription en fonction d'un signal audio d'entrée, 
+
+0:55:10,0:55:16
+que nous savons calculer sa probabilité conditionnelle, nous aimerions pouvoir résoudre le problème :
+
+0:55:16,0:55:24
+« ok, étant donné une nouvelle entrée audio, comment trouver la meilleure transcription d’après mon modèle entraîné ».
+
+0:55:24,0:55:31
+Et c'est ce que le décodage avec la recherche en faisceau va faire. Donc comme je l'ai dit,
+
+0:55:31,0:55:38
+le but est de trouver la meilleure transcription à audio X donné.
+
+0:55:38,0:55:43
+Donc nous supposons que nous avons deux modèles qui ont déjà été entraînés.
+
+0:55:43,0:55:50
+L'un est le modèle qui nous donne le score de n'importe quelle transcription donnée par une entrée audio.
+
+0:55:50,0:55:59
+Et le second est un modèle de langage qui donne le score, seulement la transcription, non conditionnée par la parole.
+
+0:55:59,0:56:09
+Donc le but du modèle de langage est d'attribuer une forte probabilité à des séquences de mots ou de lettres qui sont susceptibles d'être utilisées 
+
+0:56:09,0:56:14
+dans le langage humain et une faible probabilité sinon.
+
+0:56:14,0:56:24
+Je veux parler un peu d'où vient ce modèle de langage et pourquoi nous l'utilisons toujours autant.
+
+0:56:24,0:56:32
+La principale raison pour laquelle nous utilisons toujours un modèle de langage est car il peut être entraîné sur une base beaucoup plus large de
+
+0:56:32,0:56:37
+corpus de texte que celle qui nous permet d'entraîner le modèle acoustique.
+
+0:56:37,0:56:43
+Donc si vous y pensez, pour que le modèle acoustique s'entraîne, nous avons besoin de paires, de
+
+0:56:43,0:56:49
+données dites appariées. Nous avons besoin de données audio et de leurs transcriptions correspondantes.
+
+0:56:49,0:57:01
+Et typiquement si vous êtes une entreprise comme Facebook, vous pouvez payer des gens pour transcrire des vidéos publiques.
+
+0:57:01,0:57:13
+Mais c'est cher. Payer quelqu'un pour transcrire ce qui est dit dans une vidéo est coûteux, ce qui limite vraiment la taille des jeux de données
+
+0:57:13,0:57:20
+appariées où nous avons des transcriptions. Mais c’est très facile de collecter d'énormes corpus
+
+0:57:20,0:57:25
+de texte qui n'ont pas d'audio apparié. Il suffit de parcourir le web.
+
+0:57:25,0:57:32
+Cela nous permet d'entraîner un modèle de langue sur un énorme corpus de textes, puis d'utiliser ce modèle de langue
+
+0:57:32,0:57:38
+pour aider à déterminer quelle est la bonne transcription. Vous pouvez imaginer que si je produis une transcription qui est
+
+0:57:38,0:57:45
+sémantiquement ou syntaxiquement étrange, le modèle de langage devrait être capable de dire « Non, ne faites pas cela, préférez ceci ».
+
+0:57:45,0:57:59
+Une autre caractéristique vraiment sympa du modèle de langue est qu’il nous permet d'adapter rapidement un système à une application donnée
+
+0:57:59,0:58:06
+ou même à un utilisateur. Donc quand vous utilisez votre téléphone et
+
+0:58:06,0:58:12
+dites « Appelle x, y et z », « Appelle Alfredo », il s'avère que le téléphone
+
+0:58:12,0:58:18
+fait en fait quelque chose de très sophistiqué. Il construit à la volée 
+
+0:58:18,0:58:25
+une sorte de modèle de langage de tous les noms et contacts de votre téléphone et puis il utilise ce
+
+0:58:25,0:58:33
+modèle de langage pour savoir ce que vous avez dit, qui vous avez l'intention d'appeler.
+
+0:58:33,0:58:42
+Car les noms sur les téléphones de différentes personnes sont si différents et parfois assez distincts ou inhabituels
+
+0:58:42,0:58:51
+que biaiser ce modèle de langage aide vraiment à comprendre quel contact vous avez dit.
+
+0:58:51,0:59:00
+Cette fonctionnalité marcherait beaucoup moins bien si nous n'utilisions pas ce genre de modèle de langue spécifique à l'utilisateur.
+
+0:59:00,0:59:10
+Donc typiquement ces modèles de langage sont des n-grammes basés sur le nombre de co-occurrences 
+
+0:59:10,0:59:15
+de mots de longueur trois, parfois cinq, tout dépend du cas d'utilisation.
+
+0:59:15,0:59:21
+Mais de plus en plus ces jours-ci, surtout dans la recherche, nous gravitons vers des choses comme des
+
+0:59:21,0:59:28
+modèles de langage basés sur un réseau neuronal récurrent et même des modèles de langage basés sur un transformer.
+
+0:59:28,0:59:35
+Mais typiquement, dans les systèmes en production, ce sont toujours des modèles de langage basés sur des n-grammes qui sont utilisés.
+
+0:59:35,0:59:41
+Ils sont efficaces et peuvent être entraînés sur des gigaoctets, parfois même des téraoctets de données textuelles.
+
+0:59:41,0:59:55
+Donc, nous avons dit qu’étant donné notre modèle acoustique et notre modèle de langue, nous aimerions calculer la transcription qui
+
+0:59:55,1:00:03
+maximise la somme des scores de ces deux modèles. Donc vous me donnez un discours que je n'ai jamais vu avant et je dois trouver une
+
+1:00:03,1:00:07
+transcription qui maximise la somme du score de ces deux modèles.
+
+1:00:07,1:00:12
+Vous pouvez imaginer rechercher dans l'espace de toutes les transcriptions possibles.
+
+1:00:12,1:00:19
+Chaque transcription est passé par ces deux modèles, je regarde la somme des scores, puis je prends celle qui où c’est le plus élevé.
+
+1:00:19,1:00:27
+Bien sûr, nous ne pouvons pas le faire explicitement car il y a un grand nombre de transcriptions.
+
+1:00:27,1:00:31
+Donc nous avons besoin d'un moyen de le faire efficacement.
+
+1:00:31,1:00:36
+Dans la pratique, nous n'allons pas non plus le faire exactement mais approximativement. 
+
+1:00:36,1:00:45
+Donc Y*, qui est la meilleure transcription, ne maximisera pas parfaitement ces scores mais les maximisera approximativement.
+
+1:00:50,1:01:00
+Donc la première chose que vous pourriez penser à essayer est…
+
+1:01:00,1:01:06
+En fait, trouver cette meilleure transcription se résume à une recherche dans un graphe.
+
+1:01:06,1:01:12
+Je cherche le chemin ayant le plus faible score dans un graphe.
+
+1:01:12,1:01:20
+A chaque point dans mon graphe, je peux étendre le nœud où je me trouve actuellement par toutes les lettres suivantes possibles.
+
+1:01:20,1:01:30
+Vous pouvez dire au premier nœud, « Je peux afficher toutes les lettres possibles ». Disons que l'alphabet est « a, b, c » pour simplifier.
+
+1:01:30,1:01:42
+Si je sors un « a » à mon premier nœud, ce sera la première lettre de ma transcription. Et le score indiqué à la droite de la barre oblique du « a » est 3.
+
+1:01:42,1:01:53
+Et quand j'arrive au nœud suivant, je peux considérer toutes les extensions possibles, toutes les lettres possibles pour le deuxième pas de temps.
+
+1:01:53,1:01:59
+Donc ce serait « a, b, c » pour le deuxième pas de temps. Juste une petite parenthèse ici.
+
+1:01:59,1:02:08
+Je suis passé de la recherche du score le plus élevé au score le plus bas. Donc il faut interpréter ça comme le négatif des logarithmes des probabilités.
+
+1:02:08,1:02:16
+Désolé si c'est confus, mais faites le changement dans votre tête rapidement. Nous cherchons le chemin le plus faible dans ce graphe.
+
+1:02:16,1:02:23
+Donc la première chose à laquelle penser est la recherche gloutonne. Vous pourriez vous dire « ok, à la première
+
+1:02:23,1:02:29
+étape temporelle, je choisis la lettre qui a le score le plus bas d’après le modèle »
+
+1:02:29,1:02:34
+et que dans ce cas, ce serait « c » qui a un score de 1.
+
+1:02:34,1:02:39
+Et donc ce serait la première lettre de ma transcription.
+
+1:02:39,1:02:47
+A la deuxième étape, j'examinerai toutes les extensions possibles depuis la première lettre « c »,
+
+1:02:47,1:02:53
+je regarde les scores et prends le meilleur. Donc je regarde cet ensemble
+
+1:02:53,1:02:58
+d'extensions possibles et le meilleur cas est « b » avec un score de 2.
+
+1:02:58,1:03:04
+Cela me donne un score total de 3 et ma transcription est « cb ».
+
+1:03:04,1:03:12
+A la troisième étape je fais la même chose. Je considère toutes les extensions possibles de « cb ». Je prends celle qui a le
+
+1:03:12,1:03:19
+score le plus bas, qui est à nouveau un « b » avec un score de 8. Cela me donne un score final de 11.
+
+1:03:19,1:03:26
+Et donc le meilleur chemin jusqu'ici est la séquence « cbb » qui a un score de 11.
+
+1:03:26,1:03:33
+Et disons que notre entrée n'a que trois étapes. Donc à ce stade nous aurions terminé
+
+1:03:33,1:03:38
+car notre sortie « cbb » a traité les trois étapes de l'entrée.
+
+1:03:38,1:03:48
+Mais il s'avère que ce processus glouton m’a en faites fait un bien meilleur chemin.
+
+1:03:48,1:03:57
+Il y avait ce chemin « aba » que j'ai manqué car je n'ai pas considéré « a » comme une possibilité au début.
+
+1:03:57,1:04:11
+La recherche gloutonne peut rapidement manquer de très bons chemins, surtout
+
+1:04:11,1:04:19
+si vous avez une sorte d'incertitude au début de votre recherche, ce qui a lieu assez souvent.
+
+1:04:19,1:04:25
+La recherche gloutonne n'est pas une solution pour nous, nous voulons quelque chose de mieux.
+
+1:04:25,1:04:35
+Donc à la place nous allons utiliser une recherche en faisceau. C’est un algorithme très simple et très important dans les systèmes de reconnaissance vocale. 
+
+1:04:35,1:04:44
+La façon dont il fonctionne, c'est qu’il répète juste ces deux étapes. La première étape est qu’à n'importe quelle étape donnée de l'algorithme,
+
+1:04:44,1:04:50
+j'aurai un ensemble de candidats de taille N.
+
+1:04:50,1:04:56
+Donc j'ai actuellement un ensemble de N transcriptions candidates possibles.
+
+1:04:56,1:05:04
+Je vais envisager d'étendre chacun de ces N candidats par toutes les possibilités de mon alphabet « abc ».
+
+1:05:04,1:05:09
+Donc je vais obtenir N fois la taille des candidats de l'alphabet.
+
+1:05:09,1:05:21
+Et dans la deuxième étape de mon algorithme, je vais trier tous ces nouveaux candidats par leur score et je vais tout couper et garder que le top N.
+
+1:05:21,1:05:29
+Puis je vais répéter ça. Et ce qui est invariant est que lorsque je commence cette boucle, j'ai un ensemble de N
+
+1:05:29,1:05:34
+candidats et quand je répète, j'ai toujours cet ensemble de taille N.
+
+1:05:34,1:05:39
+Donc j'envisage d'étendre cet ensemble puis je le tronque au meilleur N.
+
+1:05:39,1:05:49
+J'envisage d'étendre, je tronque et ainsi de suite jusqu'à ce que j'aie consommé toutes les entrées.
+
+1:05:49,1:05:55
+Donc regardons un exemple rapide de ce à quoi ça ressemble.
+
+1:05:55,1:06:00
+Disons que je commence au premier nœud. Si j’ai N=3, cela signifie que je vais
+
+1:06:00,1:06:06
+garder un ensemble de trois candidats à chaque instant. Donc nous allons juste prendre les trois premiers candidats
+
+1:06:06,1:06:15
+car notre alphabet est aussi de taille 3. Donc nous avons « a », « b » et « c » comme possibilités et les scores correspondants dans les nœuds.
+
+1:06:15,1:06:20
+A la deuxième étape, nous l'avons dit, nous étendons chaque nœud pour
+
+1:06:20,1:06:26
+toutes les lettres possibles. Il y a donc neuf lettres candidates au total.
+
+1:06:26,1:06:31
+Je regarde les scores de ces neuf candidats
+
+1:06:31,1:06:36
+et je garde les trois meilleurs. Dans ce cas, les trois meilleurs
+
+1:06:36,1:06:44
+sont les trois visibles ici. « ab » a un score de 6, « ca » a un score de 4 et « cc » a un score de 5.
+
+1:06:44,1:06:50
+Donc c'est ma nouvelle et meilleure liste. Mon nouvel ensemble de candidats.
+
+1:06:50,1:06:58
+Et je refais la même chose. Je prolonge les nœuds par leurs trois possibilités et je les trie
+
+1:06:58,1:07:05
+par leurs scores. Je prends les trois premiers et il me reste ce
+
+1:07:05,1:07:10
+nouvel ensemble de candidats. Donc disons qu'à ce stade, si mon entrée
+
+1:07:10,1:07:16
+est de longueur 3, alors j'ai fini. J'ai regardé les trois étapes de l'entrée
+
+1:07:16,1:07:22
+et j'ai trois candidats. Et ce que je vais renvoyer de cet algorithme, c'est juste ces
+
+1:07:22,1:07:28
+trois candidats triés par score. Nous appellerons cela une liste des N meilleurs.
+
+1:07:28,1:07:36
+Et donc, le meilleur score qui sera la transcription ultime que nous utiliserons est « ccb ».
+
+1:07:36,1:07:42
+Puis nous renverrons les deux autres au cas où. Parfois, c'est utile.
+
+1:07:42,1:07:47
+Donc ceci est la recherche en faisceau.
+
+1:07:47,1:07:54
+Une chose que vous vous demandez peut-être, c’est d'où viennent ces scores sur les arêtes. Et bien ils viennent de la
+
+1:07:54,1:08:01
+combinaison du modèle de langage et du modèle acoustique. C'est là que nous intégrons les deux
+
+1:08:01,1:08:06
+modèles que nous avons utilisés et qui nous ont été donnés plus tôt.
+
+1:08:06,1:08:14
+Donc à chaque étape, nous devons interroger le modèle de langage et le modèle acoustique pour produire le score pour un arc donné.
+
+1:08:14,1:08:20
+Mais sinon, c'est tout le processus de décodage. La recherche de faisceau garde la trace d'un meilleur résultat
+
+1:08:20,1:08:29
+et consomme l'entrée. Quand vous avez fini vous retournez le meilleur chemin.
+
+1:08:29,1:08:36
+Comme nous l'avons dit, nous pouvons utiliser cette recherche en faisceau pour trouver approximativement la transcription
+
+1:08:36,1:08:42
+qui est optimale sous le modèle acoustique et le modèle de langue.
+
+1:08:42,1:08:48
+Et donc c'est comme ça que l'inférence fonctionne. C'est assez simple à un haut niveau,
+
+1:08:48,1:08:53
+en pratique il y a beaucoup de choses que l'on doit faire.
+
+1:08:53,1:09:00
+pour rendre ça efficace. Notamment car ces modèles de langage et modèles acoustiques peuvent
+
+1:09:00,1:09:08
+être très grands et nécessitent beaucoup de contexte pour l’évaluation. Mais ce sont les idées principales.
+
+1:09:08,1:09:15
+Nous avons donc parlé de… [Alfredo : il y a une question que j'ai manqué.
+
+1:09:15,1:09:24
+Y a-t-il eu des recherches sur la différenciation de la recherche en faisceau afin que nous puissions directement optimiser ce que nous faisons dans l'inférence ?]
+
+1:09:24,1:09:31
+Oui, il y en a.
+
+1:09:31,1:09:39
+J'ai moi-même participé à de telles recherches.
+
+1:09:39,1:09:45
+En fait, je veux dire que la réponse est oui.
+
+1:09:45,1:09:51
+Il y a plusieurs bonnes raisons d'essayer de rendre différentiable une recherche en faisceau.
+
+1:09:51,1:09:57
+L'une des raisons est que nous pouvons alors rendre les conditions d’entraînement davantage
+
+1:09:57,1:10:03
+similaires aux conditions de test. Vous remarquez qu'il y a un décalage entre le temps d’entraînement et de test.
+
+1:10:03,1:10:09
+Lors de l’entraînement, nous utilisons la CTC et marginalisons sur tous les alignements possibles.
+
+1:10:09,1:10:15
+Lors du test, nous faisons cette recherche en faisceau en utilisant un modèle de langue.
+
+1:10:15,1:10:21
+Ce sont deux processus très différents. Si je rends ma recherche en faisceau différentiable,
+
+1:10:21,1:10:27
+je peux en fait l'utiliser directement au moment de l’entraînement comme fonction de perte.
+
+1:10:27,1:10:33
+Donc c'est une bonne chose d'essayer de rendre ces deux-là cohérents l'un par rapport à l'autre.
+
+1:10:33,1:10:41
+[Yann : dans une certaine mesure on pourrait dire qu'un GTN dont tu vas parler est en fait une tentative de différencier à travers
+
+1:10:41,1:10:46
+une recherche en faisceau même si la recherche en faisceau en elle-même n'est pas différentiable.] C'est exactement ça.
+
+1:10:46,1:10:53
+C’est ce que j'allais dire ensuite. C'est une des motivations principales des GTNs. [Yann : désolé d’avoir gâché.]
+
+1:10:53,1:11:00
+Non, je suis content que tu aies dit la même chose. [Alfredo : Ok, alors voyons
+
+1:11:00,1:11:07
+que sont les GTNS et aussi comment ils se différencient des autres réseaux pour graphes que nous allons bientôt apprendre.]
+
+1:11:07,1:11:14
+Oui, oui. Ok donc parlons dans le temps restant des « Graph Transformer Networks ».
+
+1:11:14,1:11:22
+Et donc je vais commencer en réintroduisant cette structure de données dont nous avons parlé un peu.
+
+1:11:22,1:11:33
+Puis j'aimerais avoir une sorte de discussion de haut niveau sur les GTNs. Un peu d'histoire, d'où ils viennent, à quoi ils servent,
+
+1:11:33,1:11:39
+et ensuite entrer dans certains détails de bas niveau.
+
+1:11:39,1:11:48
+La façon dont nous pouvons construire ces graphes, les opérations faisables avec eux et ensuite quelques exemples.
+
+1:11:48,1:11:52
+Donc pour commencer, afin d'orienter tout le monde,
+
+1:11:52,1:11:58
+les GTNs, du moins ceux que nous utilisons dans nos recherches chez Facebook, sont
+
+1:11:58,1:12:06
+construits au-dessus de cette structure de données que nous appelons un état fini pondéré [WFSA dans la suite].
+
+1:12:06,1:12:17
+C'est le même graphe que je vous ai montré plus tôt. Il encode l'ensemble d'alignements pour la transcription Y = [c,a,t].
+
+1:12:17,1:12:23
+Et que sont et comment utiliser les GTNs sur ces graphes pour
+
+1:12:23,1:12:35
+effectuer des opérations dessus, couplés à, dans notre cas, la différenciation automatique à travers ces opérations ?
+
+1:12:35,1:12:43
+Dans les GTNs, au lieu d’avoir des tenseurs, vous avez des graphes comme celui que je vous ai montré.
+
+1:12:43,1:12:50
+Et au lieu d’avoir des multiplications de matrices, de la convolution, procéder élément par élément,
+
+1:12:50,1:12:56
+vous avez de nouvelles, intéressantes et différentes opérations sur graphe.
+
+1:12:56,1:13:01
+Et tout comme les opérations que vous pouvez faire sur les tenseurs comme la
+
+1:13:01,1:13:08
+multiplication matricielle et la convolution, ces opérations sur graphe sont différentiables. Et quand je dis différentiables,
+
+1:13:08,1:13:13
+je veux dire que vous pouvez différencier la sortie de l'opération par rapport à l’entrée,
+
+1:13:13,1:13:19
+spécifiquement les arcs d'entrée du graphe, les poids sur les arcs d'entrée du graphe.
+
+1:13:19,1:13:26
+Nous allons parler un peu de ce que sont ces opérations, ce que sont les poids et d'où ils viennent. 
+
+1:13:26,1:13:32
+Mais d'abord je vais parler un peu de l'histoire des GTNs.
+
+1:13:32,1:13:42
+Comme je l'ai dit plus tôt, ces modèles ont été développés par des gens comme Léon Bottou qui est à présent à FAIR, 
+
+1:13:42,1:13:52
+Yann et d'autres à AT&T au début des années 90. Yann corrige-moi si je me trompe dans cette histoire.
+
+1:13:52,1:14:07
+Et l'une de ses premières applications qui a été déployé en pratique, était un système de lecteur de chèques [NDT : en France au Crédit Mutuel]
+
+1:14:07,1:14:13
+Et c'est donc l'une des premières réussites d’une utilisation pratique de l'IA.
+
+1:14:13,1:14:21
+Et je trouve ça très cool. Au début des années 90, ces choses étaient déjà déployées.
+
+1:14:21,1:14:31
+Donc si vous revenez en arrière et que vous suivez l'explosion de l'apprentissage profond au cours de la dernière décennie,
+
+1:14:31,1:14:40
+l'un des papiers les plus cités est ce papier de Yann et compagnie.
+
+1:14:40,1:14:50
+Il introduit les ConvNets et l'apprentissage profond moderne avec des constructions en blocs appliquées au traitement d'images.
+
+1:14:50,1:15:05
+C'est en fait un long papier d’une quarantaine de pages et la partie spécifique consacrée aux ConvNets est en fait juste la première moitié. Plutôt le premier tiers, 16 pages.
+
+1:15:05,1:15:15
+Mais il s’avère que toute la seconde moitié de ce papier est consacré aux GTNs et est moins souvent lue.
+
+1:15:15,1:15:22
+Malheureusement car elle est en réalité très intéressante, et je dirais même plus intéressante dans la première moitié.
+
+1:15:22,1:15:32
+Alors faites-vous une faveur et si vous avez le temps lisez-la. Et d’une manière générale, pour moi, ce papier est remarquablement prémonitoire
+
+1:15:32,1:15:39
+en termes de ce que nous faisons dans l'apprentissage profond moderne. Tout était déjà là, bien qu'à une échelle plus basse.
+
+1:15:39,1:15:48
+Et, espérons-le, que ce soit un signe avant-coureur de ce que nous ferons
+avec les GTNs. 
+
+1:15:48,1:15:53
+Ce que nous commençons à faire maintenant et que j'espère les gens adopteront davantage dans le futur.
+
+1:15:53,1:16:09
+Donc à droite, ici, vous pouvez voir une petite figure provenant du papier et qui résume vraiment le parallèle entre les GTNs et ce que je vais l'appeler l'apprentissage profond traditionnel.
+
+1:16:09,1:16:14
+Ce qui est assez drôle car il n'y a rien de traditionnel dans l'apprentissage profond.
+
+1:16:14,1:16:21
+Mais peut-être que les GTNs les rendront traditionnels.
+
+1:16:21,1:16:28
+La principale distinction est que vous travaillez sur une structure de données différente qui est un graphe. 
+
+1:16:28,1:16:31
+Et les opérations seront bien sûr différentes.
+
+1:16:31,1:16:41
+Donc pour pousser ce parallèle encore plus loin, avec l'apprentissage profond et les réseaux neuronaux, notre structure de données de base est un tenseur.
+
+1:16:41,1:16:46
+Cela peut être un tenseur 1D ou ND. 
+
+1:16:46,1:16:53
+Avec les GTNs, notre structure de données de base est un graphe, typiquement un WFSA comme celui que j'ai montré plus tôt.
+
+1:16:53,1:16:58
+Bien qu'il y ait des variations de cette structure de données en graphe.
+
+1:16:58,1:17:05
+Je vais donner une autre variante plus tard. Et les opérations que nous faisons ont toutes des parallèles intéressants.
+
+1:17:05,1:17:13
+Donc pour la multiplication matricielle, le parallèle dans les GTNs est quelque chose comme la composition ou l'intersection de deux graphes.
+
+1:17:13,1:17:18
+Les opérations de réduction ont comme parallèles les opérations de calcul de la distance la plus courte
+
+1:17:18,1:17:23
+comprenant l'algorithme forward et l'algorithme de Viterbi. Mais sur les graphes en général
+
+1:17:23,1:17:28
+au lieu de ces graphes très finement structurés dont nous avons parlé.
+
+1:17:28,1:17:43
+Et de la même façon, les opérations unaires et binaires prennent un ou deux graphes et calculent un nouveau graphe. Il y a des parallèles là aussi.
+
+1:17:43,1:17:50
+Alors où sont utilisés ces graphes aujourd'hui ? Car ils sont effectivement utilisés aujourd'hui
+
+1:17:50,1:17:54
+et l’ont été pendant un certain temps, en particulier en reconnaissance vocale.
+
+1:17:57,1:18:03
+Les WFSTs et WFSAs ne sont pas nouveaux et ont été beaucoup utilisés et le sont toujours actuellement.
+
+1:18:03,1:18:11
+Mais la principale distinction entre la manière dont ils sont utilisés aujourd'hui et celle dont Yann et Léon
+
+1:18:11,1:18:20
+les utilisaient ou ce qu’ils essayaient de faire avec les GTNs, est qu’aujourd'hui ils ne sont utilisés que pour l'inférence.
+
+1:18:20,1:18:25
+Vous pouvez voir la sortie de votre modèle comme un graphe ou voir
+
+1:18:25,1:18:31
+le modèle lui-même comme un graphe, mais si vous ne les utilisez que pour le décodage
+
+1:18:31,1:18:36
+vous limitez vraiment ce que vous pouvez faire avec ces modèles. Car ils peuvent être utilisés
+
+1:18:36,1:18:41
+au moment de l’entraînement également. Et c'est l'une des choses auxquelles nous avons fait allusion plus tôt, à savoir
+
+1:18:41,1:18:47
+si vous les utilisez au moment de l’entraînement, vous pouvez commencer à combler le fossé entre ce que nous faisons au niveau du décodage et ce
+
+1:18:47,1:18:57
+que nous faisons à l'entraînement, comme mettre à notre disposition une recherche en faisceau au moment de l'entraînement.
+
+1:18:57,1:19:08
+Donc plus concrètement pourquoi s’intéresser aux GTNs, pourquoi s’intéresser aux WFSA à différenciation automatique ?
+
+1:19:08,1:19:21
+D'une part il est beaucoup plus facile d’encoder les connaissances sur le monde dans l'un de ces graphes que dans un tenseur générique.
+
+1:19:21,1:19:31
+Si j'ai un certain savoir comme quoi un mot est composé de lettres ou de morceaux de mots, il n'est pas évident de savoir comment encoder ça dans un tenseur.
+
+1:19:31,1:19:36
+Mais on peut encoder ça dans un graphe assez facilement en fait.
+
+1:19:36,1:19:46
+Si j'ai des connaissances sur l'ensemble des alignements autorisé par un modèle, comme par exemple qu’un blanc est facultatif, 
+
+1:19:46,1:19:50
+je peux encoder cela dans un graphe, comme je l'ai montré plus tôt.
+
+1:19:50,1:19:55
+Mais pour l'encodage dans un tenseur, ce n'est pas clair comment faire.
+
+1:19:55,1:20:01
+Donc c'est beaucoup plus facile d'encoder les a priori dans ces graphes.
+
+1:20:01,1:20:08
+La deuxième raison est essentiellement ce que nous disions plus tôt. Utiliser ces graphes permet
+
+1:20:08,1:20:14
+de créer un pont, de réunir les conditions du temps d’entraînement et de test
+
+1:20:14,1:20:21
+et alors éviter les problèmes communs résultant lorsque nous traitons ces deux choses comme des processus distincts.
+
+1:20:21,1:20:28
+Et la troisième, qui est vraiment l'un de mes aspects préférés de cette approche,
+
+1:20:28,1:20:34
+est qu'elle facilite la recherche. Donc quand vous séparez les données du
+
+1:20:34,1:20:41
+code, chaque fois que vous faites cela, cela rend beaucoup plus simple de développer.
+
+1:20:41,1:20:48
+Dans notre cas, le graphe sera les données et le code sera les opérations faisables sur les graphes.
+
+1:20:48,1:20:53
+Quand nous traitons ces deux choses de manière distinctes plutôt que d'essayer d’encoder
+
+1:20:53,1:21:01
+les données dans le code lui-même, le graphe et le code lui-même, cela permet d'explorer beaucoup plus facilement des idées différentes.
+
+1:21:01,1:21:05
+Car tout ce que nous avons à faire est de changer le graphe
+
+1:21:05,1:21:15
+et nous pouvons tout d'un coup avoir un nouvel algorithme intéressant. Je donnerai un exemple plus tard.
+
+1:21:15,1:21:25
+Donc il s'avère que beaucoup de critères de séquences, comme la Classification Temporelle Connectioniste, CTC,
+
+1:21:25,1:21:34
+peuvent être spécifiées comme la différence entre le score forward de deux WFSTs.
+
+1:21:34,1:21:42
+Le premier graphe est une fonction à la fois de la sortie et de l'entrée. Nous l'appelons le graphe A.
+
+1:21:42,1:21:50
+Il est contraint par la transcription ainsi que l'entrée. Et le second graphe est juste une fonction de l’entrée.
+
+1:21:50,1:21:55
+Nous l'appelons graphe Z. Ce graphe z sert de graphe de normalisation.
+
+1:21:55,1:22:00
+Donc ce que nous essayons de faire, c'est d’augmenter le score du graphe 
+
+1:22:00,1:22:06
+qui est contraint par la cible Y car il encode tous les chemins
+
+1:22:06,1:22:13
+que nous aimons, que nous pensons être bons. Le graphe Z, qui n'est pas contraint par la cible,
+
+1:22:13,1:22:21
+encode pour sa part tous les chemins possibles. Y compris ceux que nous pensons être bons mais aussi beaucoup d'autres.
+
+1:22:21,1:22:25
+Et donc nous voulons diminuer le score de ces chemins car
+
+1:22:25,1:22:32
+relativement parlant, le score de ceux qui nous intéressent doivent être plus élevés. [Plus bas à la place ?]
+
+1:22:32,1:22:38
+Ce genre d'intuition est semblable aux modèles à base d’énergie, que je pense, vous avez tous appris.
+
+1:22:38,1:22:44
+C'est une façon de combiner les graphes et les critères de calcul.
+
+1:22:44,1:22:50
+Ce n'est pas la seule façon, mais ce serait comme utiliser une SoftMax dans le dénominateur
+
+1:22:50,1:22:58
+où vous encodez toutes les possibilités et vous auriez la vérité terrain dans le numérateur.
+
+1:22:58,1:23:04
+Donc comme je l'ai dit, il y a beaucoup de critères que nous pouvons
+
+1:23:04,1:23:12
+spécifier avec ces graphes, comme la CTC, mais aussi d'autres qui sont couramment utilisées
+
+1:23:12,1:23:21
+en reconnaissance de la parole ou si nous considérons d'autres applications autres que la parole.
+
+1:23:21,1:23:26
+Donc juste pour vous donner un petit aperçu, si vous commencez à implémenter
+
+1:23:26,1:23:43
+des choses, comme par exemple la CTC, voici des implémentations communes basées sur des frameworks de graphes : Warp-CTC, wav2letter de FAIR, PyTorch.
+
+1:23:43,1:23:53
+Si vous regardez le nombre de lignes de code nécessaire pour la CTC, cela se compte en milliers.
+
+1:23:53,1:23:58
+Si vous faites la même chose en utilisant GTN, cela ne prend que 30 lignes de code.
+
+1:23:58,1:24:04
+Bien sûr le travail est toujours fait, il l’est juste d'une manière plus générique
+
+1:24:04,1:24:09
+et d'une manière qui peut être appliquée à de nombreux algorithmes différents.
+
+1:24:09,1:24:16
+Donc le code lui-même est dans les opérations qui sont générales. Et pour construire la CTC, j'ai seulement besoin
+
+1:24:16,1:24:21
+d’enchaîner quelques-unes de ces opérations, c'est pourquoi c'est tellement plus simple.
+
+1:24:21,1:24:31
+Et les mêmes graphes peuvent être utilisés lors du décodage. Je n'ai plus besoin de réimplémenter ou d'implémenter un décodage customisé séparé.
+
+1:24:31,1:24:40
+C'est donc une grande victoire en termes de développement qui se traduit par la possibilité d’explorer rapidement des choses pour la recherche.
+
+1:24:40,1:24:48
+Ok donc c'était une discussion de haut niveau sur les GTNs, les WFSAs, etc.
+
+1:24:48,1:24:58
+Je vais maintenant parler plus en détails de certains des graphes et de certaines des opérations que nous pouvons faire sur eux.
+
+1:24:58,1:25:04
+Et je montrerais quelques exemples.
+
+1:25:04,1:25:11
+Donc voici un graphe très simple. Nous avons dit plus tôt que l'état en gras au
+
+1:25:11,1:25:17
+début est l'état de départ et l'état d'acceptation est celui avec des cercles concentriques à la fin.
+
+1:25:17,1:25:24
+Donc ce graphe dira qu'il reconnaît deux séquences. La première est « aa » et la seconde est « ba ».
+
+1:25:24,1:25:29
+Donc le premier est « a » de 0 à 2 et « a » de 2 à 1.
+
+1:25:29,1:25:37
+Le second est « b » de 0 à 2 et « a » de 2 à 1. Pour le score, on lit les poids de chaque arête et on les additionne.
+
+1:25:37,1:25:41
+Le score de « aa » est 0 + 2, ce qui fait 2.
+
+1:25:41,1:25:48
+Le score de « ba » est 1 + 2, ce qui fait 3. Donc en résumé ce graphe reconnaît deux séquences
+
+1:25:48,1:25:58
+et nous pouvons obtenir le score de ces séquences comme la somme des poids sur les arêtes.
+
+1:25:58,1:26:03
+Donc nous appelons ce type de graphe un accepteur car il accepte des séquences.
+
+1:26:03,1:26:11
+Il y a un autre type de graphe que nous appelons un transducteur car il transforme des séquences d'entrée en séquences de sortie.
+
+1:26:11,1:26:20
+C’est donc un concept très similaire, la principale différence étant qu'au lieu d'avoir une simple étiquette sur chaque arête, nous avons une
+
+1:26:20,1:26:24
+étiquette d'entrée deux-points l'étiquette de sortie, slash un poids.
+
+1:26:24,1:26:30
+L'étiquette d'entrée est essentiellement l'entrée puis l'étiquette de sortie.
+
+1:26:30,1:26:38
+L'étiquette de sortie est ce à quoi elle correspond. Donc dans ce graphe nous transductions deux séquences.
+
+1:26:38,1:26:42
+La première séquence transduit ab en xz car « a » se transforme en « x » et
+
+1:26:42,1:26:49
+« b » en « z ». Et comme dans le premier graphe, on obtient les scores en additionnant les poids sur les arêtes.
+
+1:26:49,1:26:58
+Donc c'est un transducteur. Transformant des séquences en des séquences au lieu de juste accepter des séquences.
+
+1:26:58,1:27:08
+Il y a différents types de graphes, il y a différentes structures. Les cycles sont autorisés : vous pouvez aller de 0 à 1, de 1 à 2 puis de 2 à 0.
+
+1:27:08,1:27:12
+Les boucles vers soit même sont autorisées.
+
+1:27:12,1:27:18
+Toutes les opérations ne supportent pas les boucles et les cycles mais en général nous les autorisons.
+
+1:27:18,1:27:29
+Vous pouvez avoir plusieurs nœuds de départ, ici le 0 et le 1 sont tous les deux en gras. De même, vous pouvez avoir plusieurs nœuds d'acceptation comme le 3 et le 4 ici.
+
+1:27:29,1:27:37
+Vous trouverez différentes saveurs et implémentations de ça mais en général, ces choses sont autorisées.
+
+1:27:37,1:27:50
+L'une des plus subtiles et utiles propriétés de ces graphes est la transition epsilon.
+
+1:27:50,1:28:01
+C'est vraiment subtile et il faut s'y habituer, mais l'idée de base est que
+epsilon est synonyme de rien.
+
+1:28:01,1:28:10
+La façon la plus simple de penser à ce graphe est qu’il accepte deux séquences. L'une est « ab » et l'autre est juste « b ».
+
+1:28:10,1:28:23
+Car je peux passer de 0 à 1 sans accepter, sans utiliser de jeton, juste en passant par epsilon. Et puis je dois utiliser le « b » pour passer de 1 à 2.
+
+1:28:23,1:28:27
+Donc ce graphe accepte deux séquences : « ab » et juste « b »
+
+1:28:27,1:28:36
+car l'epsilon dit que je peux faire cette transition sans consommer de jetons.
+
+1:28:36,1:28:44
+Et tout comme dans les accepteurs, les epsilons sont autorisés dans les transducteurs.
+
+1:28:44,1:28:57
+Le graphe transpose la séquence « aba » en suivant la boucle puis l'arc de 0 à 1 et l'arc de 1 à 2, mais la sortie ne serait qu'un x.
+
+1:28:57,1:29:03
+Car les sorties sur les deux premières arêtes sont des epsilons et ils ne correspondent à rien.
+
+1:29:03,1:29:10
+Donc la sortie finale est juste un x. Vous voyez ce que l'epsilon nous apporte ici.
+
+1:29:10,1:29:18
+La capacité de faire correspondre des entrées de longueur variable à des sorties de longueur variable.
+
+1:29:18,1:29:23
+Donc au lieu de faire correspondre « aba » à quelque chose de longueur 3, je peux faire correspondre « aba » à quelque chose de longueur 1.
+
+1:29:23,1:29:29
+Je peux aussi avoir des epsilons en entrée pour faire correspondre des entrées plus courtes à des sorties plus longues.
+
+1:29:29,1:29:37
+Ok alors parlons de quelques opérations différentes, je vais juste en aborder quelques une.
+
+1:29:37,1:29:41
+Ce n'est pas exhaustif, mais juste pour en avoir une idée.
+
+1:29:41,1:29:47
+Il y a quelques opérations très simples que nous pouvons faire comme l'union et il y a des un peu plus
+
+1:29:47,1:29:54
+complexes et compliquées qui sont en fait les principaux chevaux de bataille.
+
+1:29:54,1:30:05
+Donc l'union de graphes est le graphe qui accepte tous les chemins qui sont acceptés par n'importe lequel des graphes d'entrée.
+
+1:30:05,1:30:12
+Par exemple g1, g2, g3, sont les graphes d'entrée à gauche. Ils acceptent chacun un certain nombre de séquences.
+
+1:30:12,1:30:20
+Le graphe de sortie sur la droite, ressemble à l’entrée, mais la distinction est que c'est une structure de données unique.
+
+1:30:20,1:30:28
+Au lieu de trois structures de données distinctes, il s'agit d'un seul graphe avec trois nœuds de départ au lieu de trois fois un nœud de départ.
+
+1:30:28,1:30:38
+C’est l'union de ces trois graphes. Vous voyez qu'il est très simple de construire ce graphe car je les ai en quelque sorte assemblés.
+
+1:30:38,1:30:42
+On a un nouveau graphe qui a trois nœuds de départs et trois d'acceptation
+
+1:30:42,1:30:49
+et qui reconnait toutes les séquences qui sont reconnues par les trois graphes d'entrée de base.
+
+1:30:49,1:30:56
+Il existe une autre opération appelée l'étoile de Kleene, qui calcule la fermeture d'un graphe d’entrée.
+
+1:30:56,1:31:05
+Donc la fermeture est un nombre quelconque…  Donc si le graphe d'entrée
+
+1:31:05,1:31:13
+accepte une séquence, la fermeture du graphe d'entrée accepte 0 ou plusieurs répétitions de cette séquence.
+
+1:31:13,1:31:22
+Donc notre graphe d'entrée ici accepte « aba », le graphe fermé accepte
+la séquence vide ou une ou plusieurs copies « aba ».
+
+1:31:22,1:31:31
+Donc la façon de construire ce graphe est assez simple. Cela peut être fait de manière très efficace, simplement en assemblant
+
+1:31:31,1:31:38
+la sortie, le nœud d'acceptation, au nœud d'entrée avec une transition epsilon.
+
+1:31:38,1:31:44
+Et en faisant que le nœud d'entrée accepte la chaîne vide.
+
+1:31:44,1:31:51
+Ok donc la prochaine opération est l’intersection. Elle est plus sophistiquée.
+
+1:31:51,1:31:58
+Je vais vous expliquer comment l’effectuer. Je pense que c'est peut-être l’opération la plus important.
+
+1:31:58,1:32:05
+C'est un peu comme la multiplication de matrices ou la convolution pour les WFSTs ou les WFSAs.
+
+1:32:05,1:32:12
+Donc c'est bien de s’y familiariser. L’idée de ce que cela calcule est simple.
+
+1:32:12,1:32:23
+Donc si j'ai deux graphes d'entrée et que je veux calculer leur intersection, alors je veux le graphe qui
+
+1:32:23,1:32:31
+encode/accepte toute séquence qui est acceptée par les deux graphes d'entrée.
+
+1:32:31,1:32:36
+Donc c'est juste comme l'intersection et l'union d'ensembles. 
+
+1:32:36,1:32:46
+L'intersection de deux graphes est le graphe qui accepte toute séquence
+qui est accepté par les deux graphes d'entrée.
+
+1:32:46,1:32:56
+Et le poids de ces séquences sera la somme des poids des graphes d'entrée.
+
+1:32:56,1:33:10
+Donc si le graphe 1 accepte une séquence x et le graphe 2 accepte la séquence x alors la sortie du graphe d’intersection acceptera également cette séquence x. 
+
+1:33:10,1:33:20
+Et le poids sera la somme des poids des deux graphes d'entrée ont assigné à x.
+
+1:33:20,1:33:29
+Donc comment fonctionne cette opération ? Disons que nous avons ces deux graphes d'entrée et que je veux calculer leur intersection.
+
+1:33:29,1:33:49
+Donc vous pouvez dire que le graphe de droite accepte la séquence « ab », le graphe de gauche accepte aussi la séquence « ab », donc elle devrait être dans l'intersection.
+
+1:33:49,1:33:52
+Il y en a d’autres ? Je ne pense pas.
+
+1:33:52,1:34:00
+Je pense que c'est tout. Donc l'intersection va être un graphe simple qui n'accepte que la séquence « ab ».
+
+1:34:00,1:34:10
+Donc on cherche un graphe avec trois nœuds où entre les deux premiers, il y a une transition sur « a » et entre les deux derniers il y a une transition sur « b ».
+
+1:34:10,1:34:15
+Donc c'est vraiment simple. Vous pouvez avoir la réponse juste en regardant.
+
+1:34:15,1:34:22
+En pratique, quand les graphes deviennent plus compliqués l'intersection n’est alors pas calculable de tête comme ça.
+
+1:34:22,1:34:28
+Alors passons en revue un algorithme pour voir comment cela fonctionne pour ces deux graphes.
+
+1:34:28,1:34:34
+Donc nous commençons en considérant l'ensemble des états de départ dans les deux graphes.
+
+1:34:34,1:34:41
+Nous construisons notre graphe d’intersection avec un état de départ combiné. 
+
+1:34:41,1:34:47
+Donc notre graphe d’intersection a un état de départ qui combine les états de départs des deux graphes.
+
+1:34:47,1:34:55
+Puis, pour chacun de ces états de départ, nous explorons toutes les transitions sortantes possibles.
+
+1:34:55,1:35:00
+Et nous nous posons la question de savoir si ces transitions ont la même étiquette.
+
+1:35:00,1:35:08
+Nous pourrions considérer la transition sortante sur « a » qui a la même étiquette.
+
+1:35:08,1:35:13
+Donc, selon cette hypothèse, ajouter cette arête à notre graphe d’intersection.
+
+1:35:13,1:35:21
+Et nous ajoutons également la paire de nœuds conduisant à chacun des graphes d'entrée.
+
+1:35:21,1:35:26
+Donc, dans le graphe d'entrée de gauche, cela conduit à 0 via la boucle.
+
+1:35:26,1:35:35
+Dans le graphe de droite, cela mène à 1. Donc nous allons construire ce nouvel état dans notre graphe d’intersection, c’est-à-dire (0,1).
+
+1:35:35,1:35:43
+Cet état encode juste la combinaison des états 0 à 1 des deux entrées.
+
+1:35:43,1:35:53
+Donc je continue d’explorer les paires de tous les arcs possibles sortant des deux états dans le graphe d'entrée.
+
+1:35:53,1:36:00
+Je regarde donc les paires « bb ». Elles ont le même label, donc j’ajoute
+
+1:36:00,1:36:10
+cet arc à mon graphe d'intersection. Et cela mène à un nouvel état dans mon graphe d'intersection que je n'ai pas vu avant.
+
+1:36:10,1:36:18
+C’est la paire, l’état combiné (1,1). Puis je considère le « c » sortant
+
+1:36:18,1:36:25
+de l'état 0 dans le deuxième graphe. Et il n'y a pas de correspondance avec le premier graphe.
+
+1:36:25,1:36:32
+Le premier graphe n'a pas de transition sortante sur « c ». Donc cette arête est abandonnée, nous ne l'utilisons pas.
+
+1:36:32,1:36:43
+Ok et une fois que j'ai fini d'explorer cette paire d'états, je passe à la prochaine paire que j'ai ajoutée à mon graphe d’intersection.
+
+1:36:43,1:36:57
+Donc ce serait la paire (0,1). Et je pose la même question : quels sont
+les arcs sortants, les transitions, de ces deux états qui correspondent ?
+
+1:36:57,1:37:03
+Je vois qu'ils correspondent sur le « a », donc j'ajoute ce « a » comme une transition sortante dans le graphe d’intersection.
+
+1:37:03,1:37:15
+Et j'ai en fait atteint un nouveau nœud dans mon graphe d'intersection qui est l'état combiné (0,2). Donc j'ajoute aussi ce nouveau nœud.
+
+1:37:15,1:37:25
+Je regarde le « b ». Le « b » correspond donc j'ajoute qu’il est une transition sortante dans le graphe d'intersection.
+
+1:37:25,1:37:29
+Et en fait quelque chose d'intéressant s'est produit ici qui est que
+
+1:37:29,1:37:38
+si je suis les transitions « b » dans les deux graphes d'entrée, cela me conduit à un état acceptant.
+
+1:37:38,1:37:46
+Et donc cela signifie que ça devrait être un état d'acceptation dans le graphe d'intersection. Ce que j'ai marqué.
+
+1:37:46,1:37:54
+Donc nous avons maintenant un état d'acceptation dans notre graphe d’intersection.
+
+1:37:54,1:37:59
+Encore une fois, il n'y a pas de correspondance pour le « c ». Donc il est ignoré.
+
+1:37:59,1:38:08
+On explore ensuite le prochain état que j'ai ajouté précédemment à mon graphe d’intersection qui était (1,1). Il s'avère que cet état est une impasse.
+
+1:38:08,1:38:13
+Il n'y a aucun moyen de quitter cet état dans les deux graphes d'entrée avec la même étiquette.
+
+1:38:13,1:38:22
+Nous avions ajouté ce chemin à notre graphe d’intersection, mais étant sans issue, nous pouvons le supprimer car n’a aucune utilité.
+
+1:38:22,1:38:30
+Puis nous explorons l'état suivant que nous avons ajouté à notre graphe d’intersection qui était l’état combiné (0,2).
+
+1:38:30,1:38:36
+Là encore cet état est une impasse, il n'y a aucun moyen de le quitter 
+
+1:38:36,1:38:41
+via des arcs qui ont la même étiquette dans nos graphes d'entrée.
+
+1:38:41,1:38:47
+Donc nous supprimons cet état. Enfin, nous regardons le dernier état que nous avions
+
+1:38:47,1:38:54
+ajouté à notre graphe d’intersection. Et de nouveau, il n'y a pas d'arcs à explorer ici, c'est une impasse.
+
+1:38:54,1:38:59
+Mais comme c'est un état acceptable, on ne le supprime pas, on le garde.
+
+1:38:59,1:39:04
+Il n'y a plus d'arcs à explorer et il n'y a plus de nouveaux nœuds.
+
+1:39:04,1:39:12
+Il n'y a pas de nœuds inexplorés dans notre graphe d’intersection donc à ce stade nous avons fini. Nous avons calculé le graphe d’intersection.
+
+1:39:12,1:39:18
+C'est exactement ce que nous voulions. Il encode la séquence « ab »
+
+1:39:18,1:39:29
+et le score correspondant est juste la somme des scores des graphes d'entrée.
+
+1:39:29,1:39:36
+C'est comme ça que fonctionne l'intersection. Si vous ne le comprenez pas du premier coup,
+
+1:39:36,1:39:42
+c’est tout à fait raisonnable car c'est un algorithme sophistiqué.
+
+1:39:42,1:39:52
+C'est l'une des opérations les plus importantes, si ce n'est la plus important, pour les GTNs et les WFSAs différentiables.
+
+1:39:52,1:40:01
+Je vous encourage à faire des exemples et étudier les étapes de cet algorithme pour en avoir une intuition.
+
+1:40:01,1:40:11
+[Alfredo : Il y a une question. Comment traiter les valeurs numériques à côté de « a » ou « b » quand on calcule l'intersection de graphes ?]
+
+1:40:11,1:40:17
+Regardons un exemple rapide comme au début quand j'ai ajouté la transition « a ».
+
+1:40:17,1:40:22
+En faites, ce n'est pas un bon exemple désolé.
+
+1:40:22,1:40:29
+Car le premier graphe n'a que des 0 mais quand j'ai ajouté le nouvel arc dans ce graphe d’intersection
+
+1:40:29,1:40:36
+j’ai ajouté son poids comme étant la somme des poids des arcs…
+
+1:40:36,1:40:42
+[Alf : Je vois]… venant des graphes d'entrée. Donc le 0,4, c’est 0 + 0,4.
+
+1:40:42,1:40:48
+Si sur le graphe de gauche, avait été 1, j’aurais eu 1 + 0,4 = 1,4.
+
+1:40:48,1:40:58
+Voici un autre exemple d’intersection que j'ai inclus dans les diapositives que vous pourrez utiliser pour tester votre compréhension.
+
+1:40:58,1:41:04
+L’intersection des deux graphes du haut, donne le graphe du bas.
+
+1:41:04,1:41:14
+La composition. C’est fondamentalement la même chose que l’intersection mais la distinction est
+
+1:41:14,1:41:23
+qu’au lieu d'opérer sur des accepteurs qui acceptent la séquence, elle opère sur des transducteurs qui sont
+
+1:41:23,1:41:27
+les graphes qui font correspondre une séquence à une autre séquence.
+
+1:41:27,1:41:38
+Donc au lieu de chercher les chemins qui correspondent à ce qu'ils acceptent, nous allons plutôt chercher ceux qui correspondent sur les
+
+1:41:38,1:41:42
+séquences internes des deux graphes.
+
+1:41:42,1:41:50
+Ce que je veux dire par là, c'est que si le graphe d'entrée transforme x en y
+
+1:41:50,1:42:00
+et que le second graphe d'entrée transforment y en z, alors nous voulons que notre graphe composé convertisse x en z.
+
+1:42:00,1:42:13
+Cela correspondra sur le y et ensuite transduira de x à z. Et c'est ce que nous voulons que notre graphe composé fasse.
+
+1:42:13,1:42:19
+Le score sera la somme des scores des chemins dans les graphes d’entrée.
+
+1:42:19,1:42:24
+Comme pour l’intersection. Et en fait l'algorithme que vous utilisez pour ça
+
+1:42:24,1:42:31
+est pratiquement le même chose. Au lieu de faire correspondre les étiquettes d'entrée, vous faites correspondre les étiquettes intérieures.
+
+1:42:31,1:42:38
+Donc je ne vais pas le répéter, mais voici un exemple analogue.
+
+1:42:38,1:42:48
+Vous pourrez le parcourir. Il montre que si l'on me donne les graphes d'entrée g1 et g2, je peux construire leur composition.
+
+1:42:48,1:42:57
+La chose principale à propos de la composition est qu'elle nous permet de faire des correspondances à partir de différents domaines.
+
+1:42:57,1:43:04
+Disons que j'ai un graphe qui relie les lettres aux mots et j'en ai un autre qui
+
+1:43:04,1:43:10
+permet de passer des mots aux phrases ou aux expressions. Si je compose ces 
+
+1:43:10,1:43:18
+deux graphes, mon graphe composé passera des lettres aux phrases. C’est un concept puissant.
+
+1:43:18,1:43:27
+Composer ces graphes à travers de multiples hiérarchies de représentation.
+
+1:43:27,1:43:33
+Donc comme l’algorithme forward que nous avons avec la CTC,
+
+1:43:33,1:43:37
+nous avons un algorithme forward général sur les graphes.
+
+1:43:37,1:43:45
+C'est virtuellement le même algorithme mais au lieu d'avoir un nombre fixe d'entrées à chaque nœud,
+
+1:43:45,1:43:53
+nous prenons juste toutes les entrées possibles. Et, au lieu d’être
+
+1:43:53,1:43:58
+utilisé pour un nombre fixe de sorties, peut être utilisé pour un nombre arbitraire de sorties.
+
+1:43:58,1:44:05
+Mais la façon dont nous combinons les scores à chaque nœud est la même.
+
+1:44:05,1:44:12
+L’algorithme forward suppose que le graphe est un DAG, c’est-à-dire qu’il est dirigé et n’a pas de boucles.
+
+1:44:12,1:44:20
+Donc cet algorithme forward, ce qu'il fait, c'est qu'il nous donne un moyen de calculer efficacement la somme
+
+1:44:20,1:44:25
+des scores de tous les chemins représentés par un graphe.
+
+1:44:25,1:44:37
+C'est une opération utile qui nous permet de dire quel est le score général de ce graphe.
+
+1:44:37,1:44:45
+Donc pour cet exemple, vous pouvez calculer explicitement le score forward
+
+1:44:45,1:44:51
+en traitant tous les chemins possibles. Ce graphe accepte trois séquences :
+
+1:44:51,1:44:57
+« aca » passe de 0 à 1 à 2 à 3. L'état 1 est aussi accepté comme état de départ.
+
+1:44:57,1:45:04
+Donc on peut commencer à 1 et le chemin « ca » est aussi autorisé.
+
+1:45:04,1:45:10
+Puis le chemin « ba ». Donc le score forward score sera la
+
+1:45:10,1:45:21
+somme de tous les SoftMax réelles de tous les scores de ces chemins.
+
+1:45:21,1:45:28
+Donc, comme nous l'avons dit plus tôt, nous pouvons construire des critères de séquence.
+
+1:45:28,1:45:34
+On peut construire des fonctions de perte à partir de ces graphes.
+
+1:45:34,1:45:41
+Souvenez-vous du graphe « cat » de tout à l'heure lorsque nous nous intéressions à la CTC.
+
+1:45:41,1:45:47
+Nous avons un graphe très similaire comme cible. Mais au lieu de « cat »,
+
+1:45:47,1:45:52
+c’est juste « ab ». Le graphe en haut à gauche.
+
+1:45:52,1:45:59
+Donc ce graphe ne fait qu’encoder l'ensemble des alignements autorisés
+
+1:45:59,1:46:05
+de la séquence « ab ». Le graphe de droite serait quelque chose comme
+
+1:46:05,1:46:12
+l'ensemble de toutes les séquences possibles de longueur 4.
+
+1:46:22,1:46:26
+L'alphabet étant « abc ».
+
+1:46:26,1:46:32
+La façon de penser à ce graphe en haut à droite, le graphe des émissions, 
+
+1:46:32,1:46:40
+entre deux nœuds, vous avez un ensemble de logits venant de votre réseau.
+
+1:46:40,1:46:50
+Ou une distribution normalisée sur votre alphabet à ce pas de temps. Donc c'est encodé par les poids.
+
+1:46:50,1:46:59
+Et si je regarde l’intersection de ces deux graphes, je calcule ce graphe cible-contrainte que j’appelle A.
+
+1:46:59,1:47:07
+Il représente tous les alignements possibles de longueur 4 pour la séquence « ab ».
+
+1:47:07,1:47:15
+Et si je calcule le score forward de ce graphe cible-contrainte, cela me donne
+
+1:47:15,1:47:22
+une somme sur tous les alignements possibles et je peux aussi normaliser 
+
+1:47:22,1:47:27
+par la somme de tous les alignements non contraints possibles.
+
+1:47:27,1:47:35
+Donc en résumé, j’ai la somme de tous les alignements possibles pour la cible qui m'intéresse et dont je veux augmenter le score.
+
+1:47:35,1:47:43
+J'ai la somme pour toutes les séquences possibles qui ne sont pas contraintes par la cible et dont je veux diminuer le score.
+
+1:47:43,1:47:48
+Donc je prends la différence de ces deux choses dans l'espace logarithmique.
+
+1:47:48,1:47:53
+C'est comme ça qu'on réalise une sorte de fonction de perte de séquence très simple en utilisant ces graphes.
+
+1:47:53,1:47:59
+Ce n'est pas une CTC mais ça s'en approche.
+
+1:47:59,1:48:07
+Ok, nous allons nous familiariser un peu avec du code. J'ai presque fini. Je vais donner quelques exemples en code et nous aurons terminé.
+
+1:48:07,1:48:11
+Mais s'il y a des questions, n'hésitez pas à les poser.
+
+1:48:11,1:48:20
+Donc nous avons ce framework appelé gtn qui nous permet de construire des graphes,
+
+1:48:20,1:48:30
+effectuer des calculs sur eux, faire des opérations et la différentiation automatique et donc apprendre des choses.
+
+1:48:30,1:48:36
+Pour vous donner une idée de la façon dont on construit un tel graphe dans ce framework,
+
+1:48:36,1:48:42
+je fais mon graphe initialement, vous pouvez voir la première ligne après l'importation de la base de données.
+
+1:48:42,1:48:51
+Pour ce graphe je ne veux pas de gradient donc j'ai spécifié que je ne veux pas de gradient avec le paramètre calc_grad.
+
+1:48:51,1:48:56
+Je peux ajouter des nœuds au graphe et indiquer s'ils doivent ou non démarrer ou accepter.
+
+1:48:56,1:49:03
+Donc j'ajoute le nœud 0 et j'en fais un nœud de départ. Le nœud 1 n’a aucun status et le nœud 2 est un nœud acceptant.
+
+1:49:03,1:49:12
+Puis j'ajoute des arcs. Pour cela je spécifie juste le nœud source, le nœud destination, l'étiquette et le poids si j’en ai.
+
+1:49:12,1:49:24
+Puis nous pouvons dessiner ce graphe en utilisant cette fonction, l’utilitaire permettant de dessiner.
+
+1:49:24,1:49:32
+Je dois spécifier l’attribut label_map pour savoir à quel chiffre correspondent les étiquettes.
+
+1:49:32,1:49:42
+Il y a des fonctions nous aidant à faire des graphes à partir de tableaux ou de tenseurs.
+
+1:49:42,1:49:55
+Prenons la sortie d'un réseau qui est un tableau 2D de logits où on a quatre pas de temps composé chacun de trois logits.
+
+1:49:55,1:50:07
+Ce tableau NumPy ici qui est le tableau des émissions. Je peux faire ce qu'on appelle un graphe linéaire en utilisant les logits pour chaque pas de temps.
+
+1:50:07,1:50:12
+Et ce graphe ressemble au graphe que vous voyez ci-dessous, c'est le graphe des émissions.
+
+1:50:12,1:50:17
+Il encode juste l'ensemble des logits entre deux nœuds de pas de temps.
+
+1:50:17,1:50:25
+Pour ce graphe nous voulons un gradient donc calc_grad=True. Je fixe les poids, je fais le graphe, il a la bonne structure.
+
+1:50:25,1:50:32
+Et je fais set_weights qui a comme entrée le tableau NumPy dans ce cas.
+
+1:50:32,1:50:40
+Maintenant je peux calculer cette fonction de perte que je vous montrais plus tôt. Dans gtn voici à quoi ressemble le code.
+
+1:50:40,1:50:47
+Je donne les graphes emissions et target. Je calcule l'intersection pour obtenir
+
+1:50:47,1:50:54
+le graphe contraint qui encode les alignements de la longueur qui nous intéresse.
+
+1:50:54,1:51:02
+J'ai mon graphe d'émissions qui est le graphe Z. Je n'ai pas besoin d'y faire quoi que ce soit. Je calcule leur score forward.
+
+1:51:02,1:51:09
+Dans gtn, il y a une opération qui permet de le faire. Je calcule la perte qui est la différence entre les
+
+1:51:09,1:51:14
+deux scores forward essentiellement. Et puis dans gtn ce que
+
+1:51:14,1:51:20
+ce qu'on peut aussi faire, c'est effacer le gradient stocké sur le graphe.
+
+1:51:20,1:51:26
+Puis on différencie automatiquement toutes les opérations que nous venons d'effectuer.
+
+1:51:26,1:51:31
+Quand j'appelle backward sur la perte, ce qui se passe sous le capot est une
+
+1:51:31,1:51:37
+chaîne de rétropropagation calculant les gradients à travers les opérations
+
+1:51:37,1:51:43
+sur les feuilles de l'arbre que nous avons construit.
+
+1:51:43,1:51:51
+Et c'est tout. Je peux retourner ma perte, retourner les ingrédients et les utiliser pour ce que je veux.
+
+1:51:51,1:51:58
+Donc c’est la fonction de perte complète. Comme vous pouvez le voir, il n'y a pas beaucoup de code. Le code principal était
+
+1:51:58,1:52:05
+de construire les graphes eux-mêmes et la fonction de perte elle-même est en fait très générique.
+
+1:52:05,1:52:11
+En fait cette fonction de perte, je peux la transformer en une CTC.
+
+1:52:11,1:52:16
+Qu'est-ce qui a changé ?
+
+1:52:16,1:52:21
+Rien. Rien n'a changé. C'est exactement le même code.
+
+1:52:21,1:52:30
+La seule différence est la façon dont je spécifie le graphe aligné cible. Au lieu d'utiliser cette structure simple,
+
+1:52:30,1:52:37
+j'ai utilisé le graphe que je vous ai montré plus tôt qui encode le fait qu'il peut y avoir des blancs optionnels.
+
+1:52:37,1:52:42
+Mais la façon dont j'écris le code pour calculer la perte, est identique.
+
+1:52:42,1:52:57
+C'est un des grands avantages d'opérer sur des graphes. Cela permet d'essayer facilement différents algorithmes.
+
+1:52:57,1:53:02
+L'autre chose que je veux souligner avant de conclure est que ce code est vraiment destiné à
+
+1:53:02,1:53:07
+vous donner une idée de la façon dont les choses fonctionnent dans gtn.
+
+1:53:07,1:53:12
+Les parallèles entre ce framework et quelque chose comme PyTorch.
+
+1:53:12,1:53:18
+Si vous ne saviez pas que c’était gtn, vous pouviez penser que c'était PyTorch. 
+
+1:53:18,1:53:28
+On calcule une perte, un peu de structures de données, on calcule des gradients, on appelle backward pour faire une différenciation automatique.
+
+1:53:28,1:53:35
+La seule différence est la structure de données et bien sûr les opérations que l'on peut utiliser sur cette structure de données.
+
+1:53:35,1:53:41
+Mais sinon, c’est très similaire. Il y a pas mal de parallèles entre le fait de travailler sur des graphes et le fait de travailler sur tenseurs.
+
+1:53:41,1:53:47
+Donc c'est tout ce que j'ai à propos de gtn et du reste.
+
+1:53:47,1:53:54
+Merci à tous de m'avoir écouté et de m'avoir invité pour le cours d'aujourd'hui.
+
+1:53:54,1:54:01
+[Alfredo : c’était génial Awni. Je pense que cette leçon était absolument magnifique.]
+
+1:54:01,1:54:06
+Merci. [Yann : oui, merci beaucoup Awni pour la conférence.] Avec plaisir.
+
+1:54:06,1:54:11
+[Yann : il y a un certain nombre de questions auxquelles nous avons répondu
+
+1:54:11,1:54:17
+dans le chat pendant que tu parlais.] Super, merci de l'avoir fait. 
+
+1:54:17,1:54:23
+Ravi de partager les diapositives et j'ai inclus des références pour des lectures supplémentaires, 
+
+1:54:23,1:54:27
+pour les personnes qui seraient intéressées à en savoir plus.
+
+1:54:27,1:54:33
+[Alfredo : ok et si les étudiants sont intéressés par communiquer avec toi, t’écrire quelque chose,
+
+1:54:33,1:54:41
+comment peuvent-ils te contacter ?] Mon email est sur la première diapositive, en fb.com.
+
+1:54:41,1:54:47
+Mais si vous tapez mon nom sur Google, vous serez redirigé vers mon site web où se trouve aussi mon email.
+
+1:54:47,1:54:52
+Ok c'est super. Donc encore une fois merci d'avoir été avec nous.
+
+1:54:52,1:55:03
+Passez une bonne fin de journée et de semaine, prenez soin de vous.

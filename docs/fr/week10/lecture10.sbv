@@ -59,13 +59,13 @@ Il est clair que l'étiquetage ne passe pas bien à l’échelle.
 Ainsi, au cours des dernières années, de nombreuses recherches ont déjà été menées pour obtenir des étiquettes de manière semi-automatique ou automatique.
 
 00:02:22,00:02:29
-Par exemple, il y a l'apprentissage semi-supervisé qui prend des images ou des vidéos et leurs métadonnées associées. 
+Par exemple, il y a l'apprentissage semi-supervisé qui prend des images ou des vidéos et leurs métadonnées associées.
 
 00:02:29,00:02:37
 Par exemple des mots-dièse, des légendes ou des emplacements GPS associés à ces images.
 
 00:02:37,00:02:44
-Et puis il y a un autre paradigme qui dit que les données ont assez de structure en elles-mêmes pour être vraiment importantes 
+Et puis il y a un autre paradigme qui dit que les données ont assez de structure en elles-mêmes pour être vraiment importantes
 
 00:02:44,00:02:51
 et que nous pouvons alors simplement utiliser les données elles-mêmes pour apprendre des représentations de caractéristiques puissantes.
@@ -74,7 +74,7 @@ et que nous pouvons alors simplement utiliser les données elles-mêmes pour app
 Ce qui nous amène à l'apprentissage autosupervisé que nous définissons. Donc vous avez des données observées que vous divisez en 2 groupes.
 
 00:02:59,00:03:09
-Vous observez une partie des données puis vous essayez de prédire une certaine propriété sur une partie cachée des données à partir de ces observations. 
+Vous observez une partie des données puis vous essayez de prédire une certaine propriété sur une partie cachée des données à partir de ces observations.
 
 00:03:09,00:03:16
 En mettant en place cette sorte de problème de prédiction, nous sommes capables d'apprendre des caractéristiques assez significatives.
@@ -86,7 +86,7 @@ Donc regardons l'apprentissage autosupervisé dans le contexte de la vision par 
 L'apprentissage autosupervisé en vision par ordinateur a commencé à se développer il y a quelques années et est basé sur le concept des tâches de prétextes.
 
 00:03:31,00:03:38
-Une tâche de prétexte est essentiellement une tâche à résoudre, juste pour apprendre une représentation des caractéristiques. Souvent, il ne s'agit pas d'une tâche réelle. 
+Une tâche de prétexte est essentiellement une tâche à résoudre, juste pour apprendre une représentation des caractéristiques. Souvent, il ne s'agit pas d'une tâche réelle.
 
 00:03:38,00:03:44
 Donc une tâche de prétexte consiste simplement à prendre les données observées et à en prédire des propriétés.
@@ -139,7 +139,7 @@ Donc vous dites simplement qu’on a qu'un ensemble fixe de 1000 permutations.
 00:05:27,00:05:32
 Et je ne vais échantillonner qu'une permutation parmi elles.
 00:05:32,00:05:36
-Une autre tâche assez populaire consiste à prédire les rotations. 
+Une autre tâche assez populaire consiste à prédire les rotations.
 
 00:05:36,00:05:42
 Donc vous prenez une image et vous appliquez des rotations. Généralement : 0 degré, 90 degrés, 180 degrés et 270 degrés.
@@ -238,7 +238,7 @@ Il s'agit du même concept. Et si j’ai photo supplémentaire d'un chat, je doi
 Et la deuxième propriété est d’être robuste aux facteurs de nuisance. Si j'ai un arbre, je dois être en mesure de le reconnaître
 
 00:09:31,00:09:38
-dans des conditions d'éclairage différentes, dans des conditions météorologiques différentes au cours de l'année, avec peut-être un nombre différent de feuilles. 
+dans des conditions d'éclairage différentes, dans des conditions météorologiques différentes au cours de l'année, avec peut-être un nombre différent de feuilles.
 
 00:09:38,00:09:44
 Il y a donc beaucoup de facteurs de nuisance et la fonction doit être robuste à tout ça.
@@ -250,7 +250,7 @@ Donc ces dernières années, le principe populaire et commun à la plupart des m
 Donc l'idée ici est que vous apprenez une fonction f de θ paramètres pouvant être apprise via un ConvNet.
 
 00:10:10,00:10:19
-Et ce que vous voulez, c'est que la caractéristique produite par ce réseau pour une image I, soit stable pour les différents types d'augmentations d'images que nous avons appliquées. 
+Et ce que vous voulez, c'est que la caractéristique produite par ce réseau pour une image I, soit stable pour les différents types d'augmentations d'images que nous avons appliquées.
 
 00:10:19,00:10:24
 Donc, si j'augmente l'image I, je dois toujours obtenir cette même caractéristique.
@@ -346,7 +346,7 @@ Alors regardons la première classe de méthodes qui sont les contrastives.
 Avant de commencer à parler des détails, laissez-moi vous donner une idée de la manière d’évaluer ces méthodes.
 
 00:14:30,00:14:45
-Donc pour la plupart de ces méthodes, nous effectuons un pré-entraînement autosupervisé sur ImageNet pour avoir des comparaisons équitables. Donc on prend la version d’ImageNet avec 1000 classes et supprimons les étiquettes. 
+Donc pour la plupart de ces méthodes, nous effectuons un pré-entraînement autosupervisé sur ImageNet pour avoir des comparaisons équitables. Donc on prend la version d’ImageNet avec 1000 classes et supprimons les étiquettes.
 
 00:14:45,00:14:48
 Donc on obtient environ 1,3 millions d'images sans étiquettes.
@@ -376,7 +376,7 @@ Je pense que vous avez déjà vu l’apprentissage contrastif de manière détai
 Mais si quelqu'un a des questions, arrêtez-moi.
 
 00:15:42,00:15:54
-Donc dans l’apprentissage constrastif vous avez des groupes d'images liées et non liées : le bleu clair et le bleu foncé sont liés, le vert clair et le vert foncé sont liées et le violet clair et le violet sont liés. 
+Donc dans l’apprentissage constrastif vous avez des groupes d'images liées et non liées : le bleu clair et le bleu foncé sont liés, le vert clair et le vert foncé sont liées et le violet clair et le violet sont liés.
 
 00:15:54,00:16:04
 Et ce qu'on fait d'abord, c'est qu'on prend un réseau partagé, un réseau siamois, et on calcule les enchâssements pour chacun de ces éléments. Donc nous obtenons tous les enchâssements sur le côté droit.
@@ -403,7 +403,7 @@ Donc, cette transformation d'image est une tâche de prétexte. Par exemple, une
 Et en appliquant ce genre d'augmentation des données, nous apprenons un réseau qui va être invariant à la tâche de prétexte.
 
 00:16:59,00:17:05
-Donc, pour la fonction de perte, vous avez les caractéristiques de l'image et les caractéristiques des patchs qui sont comparées. 
+Donc, pour la fonction de perte, vous avez les caractéristiques de l'image et les caractéristiques des patchs qui sont comparées.
 
 00:16:05,00:17:14
 Et vous voulez que les deux soient similaires mais en même temps éloignées de toute image aléatoire ou de toute autre image dans le jeu de données.
@@ -427,7 +427,7 @@ Donc on a deux réseaux : un entraîné avec Jigsaw et l’autre entraîné avec
 Jigsaw essaye de prédire la permutation et PIRL essaie d’être invariant à la permutation.
 
 00:18:02,00:18:15
-Et ce qu’on observe c’est que la performance de PIRL continue d'augmenter à mesure que l'on s'enfonce dans le réseau, ce qui suggère que la caractéristique est de plus en plus alignée sur la tâche de classification en aval 
+Et ce qu’on observe c’est que la performance de PIRL continue d'augmenter à mesure que l'on s'enfonce dans le réseau, ce qui suggère que la caractéristique est de plus en plus alignée sur la tâche de classification en aval
 
 00:18:15,00:18:20
 à comparer avec Jigsaw qui a une performance qui chute brusquement après res4.
@@ -475,7 +475,7 @@ Et en faisant cela, vous créez vos paires liées et non liées, faites votre ap
 Ce système a également été utilisé pour des applications telles que le tracking. Donc vous prenez un objet dans une vidéo et pouvez le suivre sur plusieurs images.
 
 00:20:24,00:20:31
-Et les patchs que vous obtenez à partir de ce suivi sont les patchs liés et les patchs qui proviennent d'une vidéo différente ne sont pas liés. 
+Et les patchs que vous obtenez à partir de ce suivi sont les patchs liés et les patchs qui proviennent d'une vidéo différente ne sont pas liés.
 
 00:20:31,00:20:43
 Et à nouveau avec ces paires de patchs liés et non liés, vous pouvez résoudre le problème d’apprentissage contrastif et apprendre la représentation des caractéristiques.
@@ -521,7 +521,7 @@ Si vous avez un batch de 1000, vous obtenez beaucoup de négatifs venant de diff
 
 00:22:36,00:22:49
 Il s'agit donc d'un moyen assez simple de construire des négatifs, car il suffit d’augmenter la taille de batch jusqu'à un très grand nombre, et de collecter les enchâssements en répartissant cette taille de lot sur plusieurs GPUs.
- 
+
 00:22:49,00:22:51
 C'est donc assez simple à mettre en œuvre.
 
@@ -550,7 +550,7 @@ Mais l'inconvénient majeur de cette méthode est qu'elle n'est pas « en ligne 
 nous ne les mettons à jour qu'une fois par époque. Cela signifie qu'elles deviennent très vite obsolètes. Et cela nécessite également une
 
 00:24:07,00:24:18
-mémoire vive importante pour le GPU car si votre jeu de données passe de 1 000 échantillons à 1 000 000, vous devez stocker des caractéristiques pour 1 000 000 d’images. 
+mémoire vive importante pour le GPU car si votre jeu de données passe de 1 000 échantillons à 1 000 000, vous devez stocker des caractéristiques pour 1 000 000 d’images.
 
 00:24:18,00:24:25
 Et, à partir d'un certain point, cela devient de plus en plus difficile de stocker en mémoire de très grands jeux de données.
@@ -598,7 +598,7 @@ Donc, dans l'apprentissage contrastif, nous avons ces échantillons positifs et 
 Et nous répétons ça pour chaque paire de positifs.
 
 00:26:29,00:26:34
-Donc ce que nous faisons c'est que nous créons des groupes dans l'espace des caractéristiques. 
+Donc ce que nous faisons c'est que nous créons des groupes dans l'espace des caractéristiques.
 
 00:26:34,00:26:44
 Donc tous les enchâssements bleus sont issus d’un seul échantillon où j’ai effectué différentes augmentations. De même pour les verts et les violets.
@@ -691,7 +691,7 @@ Donc le premier changement apporté est qu'au lieu de calculer une assignation d
 Donc plutôt que de dire qu'un échantillon ne peut appartenir qu'à un seul prototype, nous disons qu'il appartient à chaque prototype selon une distribution.
 
 00:31:15,00:31:25
-Par exemple le premier enchâssement a un score de 0,8 pour le premier prototype [vert clair], de 0,1 pour le deuxième [vert foncé], et de 0,1 pour le troisième [violet]. 
+Par exemple le premier enchâssement a un score de 0,8 pour le premier prototype [vert clair], de 0,1 pour le deuxième [vert foncé], et de 0,1 pour le troisième [violet].
 
 00:31:25,00:31:33
 La somme des similarités est de 1 et on a donc une affectation douce qui indique pour chaque enchâssement à quel prototype il est attribué.
@@ -727,7 +727,7 @@ Parce que les deux doivent fondamentalement tomber dans le même groupe/cluster.
 Donc, une fois que j'ai résolu ce genre de problème de prédiction,
 
 00:32:43,00:32:51
-je peux simplement calculer les gradients et rétropropager. Et dans ce cas, je rétropropage dans l’encodeur mais je peux également dans les prototypes. 
+je peux simplement calculer les gradients et rétropropager. Et dans ce cas, je rétropropage dans l’encodeur mais je peux également dans les prototypes.
 
 00:32:51,00:32:57
 Les prototypes/centres des clusters sont donc mis à jour en ligne via la rétropropagation.
@@ -772,7 +772,7 @@ Si vous essayez de faire quelque chose comme les K-means, très rapidement vous 
 Donc c'est la raison pour laquelle on utilise Sinkhorn, la méthode de transport optimale, afin d’avoir cette de contrainte de partition égale.
 
 00:34:23,00:34:27
-[Alfredo : Peux-tu nous remontrer comment s’écrit le nom de l'algorithme ?] 
+[Alfredo : Peux-tu nous remontrer comment s’écrit le nom de l'algorithme ?]
 
 00:34:27,00:34:30
 Sinkhorn-Knoop
@@ -784,10 +784,10 @@ Sinkhorn-Knoop est juste un moyen efficace de faire du transport optimal, mais g
 [Alfredo : Ok]
 
 00:34:50,00:34:59
-Donc maintenant, nous sommes en mesure d'apprendre cet enchâssement de caractéristiques et voyons ce que cette méthode SwAV donne comme résultats. 
+Donc maintenant, nous sommes en mesure d'apprendre cet enchâssement de caractéristiques et voyons ce que cette méthode SwAV donne comme résultats.
 
 00:34:59,00:35:09
-Nous évaluons cette méthode en examinant les performances de transfert et, comme nous l'avons mentionné précédemment, l'apprentissage par transfert peut être évalué de deux manières différentes. 
+Nous évaluons cette méthode en examinant les performances de transfert et, comme nous l'avons mentionné précédemment, l'apprentissage par transfert peut être évalué de deux manières différentes.
 
 00:34:09,00:35:15
 Vous pouvez prendre un classifieur linéaire qui est entraîné sur des caractéristiques finales fixes ou vous pouvez finetuner le réseau complet.
@@ -832,7 +832,7 @@ les caractéristiques finissent par devenir spécifique aux classes d’ImageNet
 Et donc ça ne se transfert pas très bien au jeu de données Places.
 
 00:37:12,00:37:24
-Avec le pré-entraînement autosupervisé, vous apprenez des caractéristiques sans connaître les étiquettes d’ImageNet. Donc, cela vous facilite l'apprentissage de représentations de caractéristiques génériques. 
+Avec le pré-entraînement autosupervisé, vous apprenez des caractéristiques sans connaître les étiquettes d’ImageNet. Donc, cela vous facilite l'apprentissage de représentations de caractéristiques génériques.
 
 00:37:24,00:37:34
 Ainsi lorsque nous transférons sur Places, où il y a un chevauchement limité des concepts d’ImageNet, nous sommes en mesure d'obtenir de bien meilleures performances.
@@ -844,13 +844,13 @@ Ainsi lorsque nous transférons sur Places, où il y a un chevauchement limité 
 Comment analyser la fonction de coût lorsque nous avons de multiples clusters pour les enchâssements qui ne sont pas explicitement négatifs ?
 
 00:37:48,00:37:56
-Je veux dire, comment le modèle détermine-t-il quel est le cluster le plus approprié pour un enchâssement ? 
+Je veux dire, comment le modèle détermine-t-il quel est le cluster le plus approprié pour un enchâssement ?
 
 00:37:56,00:38:00
 Pouvez-vous expliquer un peu ?].
 
 00:38:00,00:38:06
-Il faut penser à ce qui se passe à l'initialisation. A l'initialisation, vous avez ces prototypes aléatoires, d'accord ? 
+Il faut penser à ce qui se passe à l'initialisation. A l'initialisation, vous avez ces prototypes aléatoires, d'accord ?
 
 00:38:06,00:38:20
 Donc, lorsque vous passez les enchâssements des 2 patchs, en raison de la nature des images, ils sont naturellement davantage liés qu’à un autre enchâssement venant d’un autre patch.
@@ -874,13 +874,13 @@ Donc vous prenez ce signal et le rendez de plus fort et plus fort. Donc à l'ini
 Et je veux que cela continue à avoir des signatures très, très différentes. Donc, au fur et à mesure de l'entraînement, je veux que les signatures deviennent de plus en plus différentes.
 
 00:39:17,00:39:29
-[Alfredo : Ok. Nous avons une autre question de la part de Raoul. Sa question est : si nous avons un grand déséquilibre entre les classes et avons K partitions, cela divise N par K. 
+[Alfredo : Ok. Nous avons une autre question de la part de Raoul. Sa question est : si nous avons un grand déséquilibre entre les classes et avons K partitions, cela divise N par K.
 
 00:39:29,00:39:39
 Est-ce que cela ne crée pas un problème dans l'apprentissage des caractéristiques puisque que beaucoup d'exemples négatifs pourraient se trouver dans un seul cluster].
 
 00:39:39,00:39:55
-C'est exactement pour ça qu'on utilise un code doux et non pas un dur. Avec le code dur c'est un problème qu’on peut rencontrer. Nous avons observé qu'avec le code dur nous obtenions des performances plus basses. 
+C'est exactement pour ça qu'on utilise un code doux et non pas un dur. Avec le code dur c'est un problème qu’on peut rencontrer. Nous avons observé qu'avec le code dur nous obtenions des performances plus basses.
 
 00:39:55,00:40:02
 Avec le code doux, vous dites en quelque sorte que ce n'est pas vraiment créer K classes dures mais en fait beaucoup plus.
@@ -889,7 +889,7 @@ Avec le code doux, vous dites en quelque sorte que ce n'est pas vraiment créer 
 Car plutôt que de dire que vous n'êtes semblable qu'au prototype numéro 1 et non au prototype numéro 2,
 
 00:40:08,00:40:16
-je peux en fait créer une classe consiste est similaire à 0,8 au prototype 1 et similaire à 0,2 au prototype 2 et rien de similaire au prototype 3. 
+je peux en fait créer une classe consiste est similaire à 0,8 au prototype 1 et similaire à 0,2 au prototype 2 et rien de similaire au prototype 3.
 
 00:40:16,00:40:26
 Donc je peux en fait créer beaucoup plus de classes que juste K. Donc, ce code doux vous donne une représentation beaucoup plus riche.
@@ -988,7 +988,7 @@ Je dis donc que l’enchâssement du réfrigérateur doit être très proche de 
 Ce qui n'est pas vraiment ce que nous voulons.
 
 00:44:15,00:44:30
-Nous voulons reconnaître un réfrigérateur et des augmentations d’images de ce réfrigérateur. Nous ne voulons pas que l’enchâssement du réfrigérateur soit similaire à l’enchâssement d’une chaise ou l’enchâssement d’une table. 
+Nous voulons reconnaître un réfrigérateur et des augmentations d’images de ce réfrigérateur. Nous ne voulons pas que l’enchâssement du réfrigérateur soit similaire à l’enchâssement d’une chaise ou l’enchâssement d’une table.
 
 00:44:30,00:44:39
 Les données du monde réel ont des distributions différentes. Elles peuvent ne pas être des photos mais par exemple des images de dessins animés.
@@ -1000,7 +1000,7 @@ De nos jours, il existe également de nombreux memes. Il est probable qu'il n'y 
 Les données du monde réel ont donc des propriétés très très différentes.
 
 00:44:52,00:44:59
-Maintenant pour vérifier si on tombe dans le piège d’un modèle fonctionnant sur ImageNet et pas sur des données du monde réel, 
+Maintenant pour vérifier si on tombe dans le piège d’un modèle fonctionnant sur ImageNet et pas sur des données du monde réel,
 
 00:44:57,00:45:09
 nous avons décidé d'essayer la méthode SwAV sur des données à grande échelle.
@@ -1044,7 +1044,7 @@ Et tout cela avec des images complètement aléatoires provenant d’internet sa
 00:46:38,00:46:47
 Nous avons ensuite voulu voir quelle était la différence entre les images sélectionnées et celles qui ne tiennent pas compte des métadonnées.
 00:46:47,00:46:50
-Donc, tout ceci est l’apprentissage autosupervisé. 
+Donc, tout ceci est l’apprentissage autosupervisé.
 
 00:46:50,00:46:58
 Les images disponibles sur internet ont des métadonnées qui leur sont associées. Alors que se passe-t-il si nous essayons d'utiliser ces métadonnées ?
@@ -1056,7 +1056,7 @@ Donc, dans la rangée du haut nous avons un modèle de prédictions de mots-diè
 Il a été pré-entraîné sur un milliard d'images qui ont été sélectionnées de sorte que les mots-dièse s'alignent sur les classes ImageNet.
 
 00:47:11,00:47:21
-Donc si j'ai un mot-dièse d'un concept qui n'est pas dans ImageNet, cette image n’est pas conservée. L'idée est que juste en faisant ce processus de filtrage simple, 
+Donc si j'ai un mot-dièse d'un concept qui n'est pas dans ImageNet, cette image n’est pas conservée. L'idée est que juste en faisant ce processus de filtrage simple,
 
 00:47:21,00:47:28
 vous créez un bel alignement entre votre jeu de données de pré-entraînement et votre jeu de données de transfert à savoir ImageNet.
@@ -1089,7 +1089,7 @@ Donc avant de passer à la partie suivante, y a-t-il des questions à ce sujet ?
 Ok, c’est bien. Même s’ils ne comprennent pas, ils ne le disent pas. [Alfredo : rires, je sais]
 
 00:48:27,00:48:35
-Ok passons à la partie suivante. Quand j'ai parlé de l'apprentissage contrastif et du clustering, je les ai présentés comme deux choses distinctes. 
+Ok passons à la partie suivante. Quand j'ai parlé de l'apprentissage contrastif et du clustering, je les ai présentés comme deux choses distinctes.
 
 00:48:35,00:48:39
 Mais en fait il y a une façon très simple de combiner ces méthodes.
@@ -1119,10 +1119,10 @@ provenant de n'importe quel autre échantillon. Ce qui revient à dire que pour 
 Donc c’est pour l’aspect constratif, il n’y a pas encore de clustering.
 
 00:49:44,00:49:49
-Pour introduire un type de clustering, nous avons étendu la notion de positif. 
+Pour introduire un type de clustering, nous avons étendu la notion de positif.
 
 00:49:49,00:49:59
-Quand je dis étendue, nous prenons un point de référence, celui en haut à droite sur l’image, et nous calculons sa similarité dans les caractéristiques/enchâssements vidéo 
+Quand je dis étendue, nous prenons un point de référence, celui en haut à droite sur l’image, et nous calculons sa similarité dans les caractéristiques/enchâssements vidéo
 
 00:49:59,00:50:05
 et les enchâssements audio par rapport à tous les autres échantillons dans le jeu de données.
@@ -1143,7 +1143,7 @@ Là où dans l’apprentissage contrastif on a un concept très limité de posit
 Ou dans le cas des images, c’est une même image et juste des perturbations différentes de celle-ci.
 
 00:50:40,00:50:45
-Dans ce cas, nous avons des positifs provenant d’échantillons de deux types différents. 
+Dans ce cas, nous avons des positifs provenant d’échantillons de deux types différents.
 
 00:50:45,00:50:52
 Et la façon dont nous avons calculé ces échantillons est simplement en regardant la similarité dans l'espace vidéo et dans l’espace audio.
@@ -1167,7 +1167,7 @@ Si vous ignorez complètement l'audio et vous contenter de regarder la similarit
 Et si vous regardez seulement l'audio, cela peut être complètement différent de quelqu'un qui danse. Une danseuse va danser sur une musique particulière.
 
 00:51:54,00:52:00
-De même quelqu’un faisant de l’exercice va le faire une un autre type de musique/audio. 
+De même quelqu’un faisant de l’exercice va le faire une un autre type de musique/audio.
 
 00:52:00,00:52:10
 Si vous regardez seulement la partie audio cela peut prêter encore plus à confusion car quelqu'un pourrait par exemple pêcher en utilisant la même musique de fond que la danseuse.
@@ -1203,7 +1203,7 @@ Et nous pouvons passer maintenant à la distillation sauf si quelqu'un a des que
 Je n’en vois pas.
 
 00:53:06,00:53:14
-Donc ces méthodes basées sur la distillation tombent à nouveau dans la catégorie de la maximisation de la similarité. 
+Donc ces méthodes basées sur la distillation tombent à nouveau dans la catégorie de la maximisation de la similarité.
 
 00:53:14,00:53:18
 On a donc fθ(I) qui doit être similaire à fθ(augment(I)).
@@ -1227,7 +1227,7 @@ Et bien sûr si l'étudiant et l'enseignant sont exactement identiques et tout e
 Nous empêchons ça par l'asymétrie. Cette dernière peut être réalisée de deux façons différentes.
 
 00:53:51,00:53:59
-Et les deux peuvent être utilisées conjointement. Il y a une asymétrie dans la règle d’apprentissage entre l'étudiant et l'enseignant. 
+Et les deux peuvent être utilisées conjointement. Il y a une asymétrie dans la règle d’apprentissage entre l'étudiant et l'enseignant.
 
 00:53:59,00:54:05
 Donc les poids de l'étudiant et les poids de l’enseignant poids peuvent ne pas être mis à jour exactement de la même façon lors de la rétropropagation.
@@ -1329,7 +1329,7 @@ Dans quelle méthode ?
 [Yann : je pense que c'est à propos de SimSiam. Nous ne mettons pas à jour l’enseignant mais il l’est automatiquement car il partage ses poids avec l’étudiant].
 
 00:57:41,00:57:46
-Oui. Donc, dans la passe avant, vous calculez ces enchâssements à travers l’étudiant et l’enseignant. 
+Oui. Donc, dans la passe avant, vous calculez ces enchâssements à travers l’étudiant et l’enseignant.
 
 00:57:46,00:57:52
 Donc dans la passe avant, les deux ont des poids identiques et dans la passe arrière, vous ne mettez à jour l’enseignant.
@@ -1349,7 +1349,7 @@ Je pense que nous allons avoir beaucoup de temps donc je vous encourage à poser
 00:58:17,00:58:23
 Je n'ai pas autant de matériel. Je pense qu'il nous reste environ une heure.
 00:58:23,00:58:36
-Très bien, alors, ce dernier ensemble de fonction objectif n'est pas vraiment axé sur la maximisation de la similarité, mais sur la réduction de la redondance. 
+Très bien, alors, ce dernier ensemble de fonction objectif n'est pas vraiment axé sur la maximisation de la similarité, mais sur la réduction de la redondance.
 
 00:58:36,00:58:40
 Et la méthode a été appelé Barlow Twins par ces gens extraordinaires.
@@ -1404,7 +1404,7 @@ Donc, peu importe l’augmentation de données appliquée,
 Le « spike » de la représentation qui est produite dans le neurone doit être
 
 01:00:45,01:00:50
-invariante à l’augmentation de données, invariante au stimulus en entrée. 
+invariante à l’augmentation de données, invariante au stimulus en entrée.
 
 01:00:50,01:00:54
 Et la seconde est que chaque neurone doit être indépendant des autres.
@@ -1422,7 +1422,7 @@ disons qu’on a fθ(I) qui produit cette représentation de dimension N avec en
 Donc ce que nous avons, c'est que fθ(I)[i] = fθ(augment(I))[i], c’est-à-dire que le neurone est fondamentalement le même qu’importe les différentes augmentations de données, donc c'est la propriété d’invariance.
 
 01:01:21,01:01:28
-Et dans la deuxième propriété nous voulons qu'ils soient indépendants. Donc on ne veut pas que cela produise la même sortie. 
+Et dans la deuxième propriété nous voulons qu'ils soient indépendants. Donc on ne veut pas que cela produise la même sortie.
 
 01:01:28,01:01:32
 Et ce n'est pas mathématiquement exactement bon.
@@ -1497,7 +1497,7 @@ Nous ne voulons pas qu'ils représentent tous la même chose. C'est pour éviter
 Donc, dans l’implémentation, la façon de procéder consiste à calculer la corrélation croisée entre ces matrices de caractéristiques.
 
 01:03:47,01:03:57
-Donc, si vous avez une matrice de caractéristiques de dimensions N fois D où D est cette taille et D est la dimension des caractéristiques, vous calculerez D fois D. 
+Donc, si vous avez une matrice de caractéristiques de dimensions N fois D où D est cette taille et D est la dimension des caractéristiques, vous calculerez D fois D.
 
 01:03:57,01:04:06
 Donc, une matrice dimension de caractéristique x dimension de caractéristique, qui sera la corrélation croisée ou simplement le produit exterieur.
@@ -1546,7 +1546,7 @@ La matrice Cᵢⱼ peut être calculée comme une corrélation croisée entre Z�
 01:05:46,01:05:50
 Et ceci est en fait une sorte de fonction pour trier tout ça.
 
-01:05:50,01:06 :01
+01:05:50,01:06:01
 Le calcul de la perte de similarité entre la matrice de corrélation croisée et la matrice d'identité peut être divisé en deux termes.
 
 01:06:01,01:06:08
@@ -1610,12 +1610,12 @@ Donc chaque neurone produit différents type de sortie mais est très, très sim
 Pour éviter cela, nous centrons les vecteurs ZA et ZB avant de calculer la corrélation croisée.
 
 01:08:23,01:08:28
-Quand je dis centrer, nous faisons une sorte de batch-normalisation. 
+Quand je dis centrer, nous faisons une sorte de batch-normalisation.
 
 01:08:28,01:08:36
 Donc on prend ZA, on soustrait sa moyenne et on divise par l'écart type. C'est une transformation de centrage assez standard.
 
-01:08:36,01:08:46=3
+01:08:36,01:08:46
 Et la raison pour laquelle cela empêche la solution triviale est que si vous produisez le même type de caractéristique en sortie à travers toutes les images,
 
 01:08:43,01:08:47
@@ -1631,7 +1631,7 @@ Ainsi, juste en effectuant ce type de centrage avant de calculer la corrélation
 Et centrer/réduire est super super standard quand on fait de la corrélation croisée en général.
 
 01:09:11,01:09:14
-Il y a donc deux façons d'empêcher. 
+Il y a donc deux façons d'empêcher.
 
 01:09:14,01:09:23
 La première est d'avoir les mêmes termes d'invariance et de réduction de la redondance empêchant la sortie constante à travers tous les neurones.
@@ -1649,7 +1649,7 @@ Donc tout au long de ce processus, nous avons empêché des solutions triviales 
 Car à chaque fois qu’on examine ces enchâssements, nous ne considérons que les tests positifs.
 
 01:09:51,01:09:57
-Et nous sommes capables de le faire sans apprentissage asymétrique. 
+Et nous sommes capables de le faire sans apprentissage asymétrique.
 
 01:09:57,01:10:05
 Dans SwAV, on a l'opérateur « Sinkhorn » non différentiable qui empêche les solutions triviales via la contrainte d’équipartition entre les clusters.
@@ -1700,7 +1700,7 @@ Donc on prend la représentation gelée on apprend un classifieur linéaire par 
 Et dans ce cas encore, nous avons transféré sur Places, VOC et iNat.
 
 01:11:57,01:12:02
-A nouveau vous pouvez voir que ses performances sont égales à celles des méthodes de pointe. 
+A nouveau vous pouvez voir que ses performances sont égales à celles des méthodes de pointe.
 
 01:12:02,01:12:07
 C'est légèrement moins bon pour certains jeux de données et légèrement meilleur sur d’autres.
@@ -1715,7 +1715,7 @@ Cela fait vraiment progresser notre compréhension de ce que cela signifie d'app
 Combien d'astuces nécessaire pour éviter ces solutions triviales.
 
 01:12:27,01:12:31
-Donc l'autre chose que nous voulions observer était… 
+Donc l'autre chose que nous voulions observer était…
 
 01:12:31,01:12:40
 [Alfredo : il y a des questions ici. Premièrement, pourquoi cela fait mieux que les autres méthodes dans un contexte où on a peu de données ?]
@@ -1787,7 +1787,7 @@ L'autre chose que nous voulions étudier était l'importance de l'augmentation d
 Est-ce que la baisse de précision pour les BT est due en faites à la batch-normalisation ?]
 
 01:15:54,01:15:59
-C'est la raison pour laquelle nous avons regardé avec une taille de batch de 128. 
+C'est la raison pour laquelle nous avons regardé avec une taille de batch de 128.
 
 01:15:59,01:16:09
 Avec une batch-normalisation de 128 la variance va être plus élevée, mais il s'avère la performance reste assez similaire à celle de BYOL.
@@ -1799,7 +1799,7 @@ Donc je ne soupçonne pas que c'est à cause de ça.
 Et à l'extrémité droite pour la grande baisse de performance à 4096, je soupçonne que c'est plus à cause de l'optimisation plutôt que les Barlow Twins eux-mêmes.
 
 01:16:22,01:16:33
-Quand vous changez la taille des batchs, vous devez adapter les paramètres d’apprentissage comme le taux d’apprentissage, le taux de décroissance des poids, etc.  
+Quand vous changez la taille des batchs, vous devez adapter les paramètres d’apprentissage comme le taux d’apprentissage, le taux de décroissance des poids, etc.
 
 01:16:33,01:16:42
 Donc je soupçonne que la baisse de performance à droite n’est pas à cause de l’algorithme mais des paramètres de la méthode d'optimisation que nous avons utilisée.
@@ -1895,7 +1895,7 @@ La chose suivante que nous avons voulu vérifier est de savoir si l'asymétrie e
 Jusqu'à présent, nous avons vu que sans asymétrie nous pouvons empêcher les solutions totales. Mais est-ce qu’en ajouter nous aide ?
 
 01:19:49,01:19:54
-Nous avons donc essayé les mêmes asymétries qui sont présentes dans SimSiam. 
+Nous avons donc essayé les mêmes asymétries qui sont présentes dans SimSiam.
 
 01:19:54,01:20:00
 C’est-à-dire arrêter le gradient dans une branche ou ajouter une sorte de tête prédictive.
@@ -1910,13 +1910,13 @@ En fait, en ajoutant les deux, cela nuit même aux performances.
 Nous suggérons donc que pour empêcher les solutions triviales, l’asymétrie n'est pas du tout nécessaire, et qu’en faites en ajouter n’apporte pas grand-chose de toute façon.
 
 01:20:25,01:20:30
-La troisième propriété à vérifier est le nombre de neurones non redondants. 
+La troisième propriété à vérifier est le nombre de neurones non redondants.
 
 01:20:30,01:20:38
 Cette discussion a commencé en disant que vous avez n neurones et vous voulez qu’ils soient tous différents.
 
 01:20:38,01:20:43
-Pour ce faire, je vais vous parler d'une sorte de détail des Barlow Twins qu'il est important de comprendre. 
+Pour ce faire, je vais vous parler d'une sorte de détail des Barlow Twins qu'il est important de comprendre.
 
 01:20:43,01:20:48
 Quand vous donnez une image à l’encodeur, vous obtenez une dimension particulière pour la caractéristique.
@@ -1925,7 +1925,7 @@ Quand vous donnez une image à l’encodeur, vous obtenez une dimension particul
 Pour un ResNet-50 c’est 2048.
 
 01:20:51,01:20:57
-Et cette caractéristique est ensuite projetée dans un MLP avant d'appliquer la perte de réduction de la redondance. 
+Et cette caractéristique est ensuite projetée dans un MLP avant d'appliquer la perte de réduction de la redondance.
 
 01:20:57,01:21:09
 Et ceci est aussi standard en apprentissage contrastif. Vous avez une caractéristique de dimension 2048, vous la passez dans un MLP pour calculer un très petit enchâssement, puis vous faites l’apprentissage contrastif.
@@ -1976,13 +1976,13 @@ Pour SimCLR, c'est beaucoup plus robuste, vous pouvez réduire ou augmenter la d
 Alors pourquoi avons-nous ces différentes tendances pour ces trois méthodes ?
 
 01:23:02,01:23:10
-Dans les Barlow Twins, quand nous appliquons la perte de réduction de la redondance, nous encourageons vraiment une sorte de représentation éparse. 
+Dans les Barlow Twins, quand nous appliquons la perte de réduction de la redondance, nous encourageons vraiment une sorte de représentation éparse.
 
 01:23:10,01:23:14
 Nous disons que tous les neurones doivent encoder quelque chose de très différent.
 
 01:23:14,01:23:22
-Supposons que nous ayons 10 concepts représentant une image. Cela signifie que nous disons que tous les neurones doivent capturer différents aspects de l'image. 
+Supposons que nous ayons 10 concepts représentant une image. Cela signifie que nous disons que tous les neurones doivent capturer différents aspects de l'image.
 
 01:23:22,01:23:28
 Donc, nous avons besoin d'un nombre légèrement plus élevé de neurones car nous renforçons cette représentation éparse.
@@ -1996,7 +1996,7 @@ Alors que pour SimCLR ou BYOL, nous prenons en fait des vecteurs très denses su
 01:23:41,01:23:51
 C’est la raison que nous suspectons pour expliquer qu’une plus grande dimensionnalité du prédicteur bénéficie aux Barlow Twins par rapport aux autres méthodes.
 
-01:23:51,01:23:54 
+01:23:51,01:23:54
 Et ça m'amène à la fin de ma conférence.
 
 01:23:54,01:24:00
@@ -2015,10 +2015,10 @@ La profondeur duquel ?
 Dans Barlow Twins ou BYOL ? En fait, dans Barlow Twins, il y a deux couches cachées et dans BYOL, par défaut, il y en a qu’une. Nous avons aussi essayé deux couches cachées mais cela ne fait pas une grande différence.
 
 01:24:30,01:24:40
-[Alfredo : question de Raul. Il y a tellement de développements dans ce domaine et vous venez de présenter différentes méthodes. Que devrait être 
+[Alfredo : question de Raul. Il y a tellement de développements dans ce domaine et vous venez de présenter différentes méthodes. Que devrait être
 
 01:24:40,01:24:50
-le plan à suivre si nous devons exécuter un modèle pour une tâche SSL dans le cadre d’un projet ?], 
+le plan à suivre si nous devons exécuter un modèle pour une tâche SSL dans le cadre d’un projet ?],
 
 01:24:50,01:24:57
 La question est de savoir quelle méthode de SSL il faut choisir ?
@@ -2054,7 +2054,7 @@ Si vous avez des modalités très différentes à comparer comme la vidéo et l'
 que l'apprentissage contrastif est généralement meilleur car vous avez deux types très très différents d'encodeurs.
 
 01:26:06,01:26:11
-et deux types très très différents d'architectures donc le problème d'optimisation est vraiment très difficile. 
+et deux types très très différents d'architectures donc le problème d'optimisation est vraiment très difficile.
 
 01:26:11,01:26:18
 Donc, dans ces cas, nous avons généralement trouvé que l'utilisation d’une perte contrastive est meilleure.
@@ -2090,10 +2090,10 @@ As-tu une intuition de qu’est-ce qui fait fonctionner BYOL ?]
 Je pense vraiment que c'est juste le fait que… Je veux dire qu'il y a bien sûr ce mode de calcul par batch, empêchant que cela s’effondre.
 
 01:28:05,01:28:13
-Mais je pense qu’interpréter cela comme une méthode contrastive cachée, est aller un peu trop loin. 
+Mais je pense qu’interpréter cela comme une méthode contrastive cachée, est aller un peu trop loin.
 
 01:28:13,01:28:22
-Donc oui, vous vous appuyez sur une statistique de batch pour éclaircir les données, ce que je considère comme un préconditionnement ou une sorte d'amélioration 
+Donc oui, vous vous appuyez sur une statistique de batch pour éclaircir les données, ce que je considère comme un préconditionnement ou une sorte d'amélioration
 
 01:28:22,01:28:26
 de l'optimisation plutôt que comme un apprentissage complètement contrastif.
@@ -2123,13 +2123,13 @@ quelque chose comme BYOL mais que dans ce cas, on n'utilise pas vraiment la batc
 Vous pouvez entraîner ces méthodes sans utiliser la batch-normalisation car l'architecture en elle-même le fait.
 
 01:29:13,01:29:22
-[Yann : le papier de DeepMind de Richemond et al. (2020) qui essaie d'analyser la suppression de la batch-normalisation à différents niveaux 
+[Yann : le papier de DeepMind de Richemond et al. (2020) qui essaie d'analyser la suppression de la batch-normalisation à différents niveaux
 
 01:29:22,01:29:26
 dans BYOL montre que si on enlève à la dernière couche, tout s’effondre].
 
 01:29:26,01:29:39
-Je pense donc qu'ils ont une astuce pour cela, où ils initialisent, utilisent une LayerNorm et essayent d'initialiser les paramètres légèrement différemment. Et dans ce cas, cela a tendance à fonctionner. 
+Je pense donc qu'ils ont une astuce pour cela, où ils initialisent, utilisent une LayerNorm et essayent d'initialiser les paramètres légèrement différemment. Et dans ce cas, cela a tendance à fonctionner.
 
 01:29:39,01:29:46
 Mais je pense que c'est probablement comme une difficulté d'optimisation plutôt que quelque chose dans la méthode.
@@ -2289,5 +2289,5 @@ Quoi qu'il en soit, merci encore d'avoir expliqué et répondu à toutes les que
 01:36:03,01:36:06
 Oui absolument, merci.
 
-01:36:06:01:36:12
+01:36:06,01:36:12
 [Alfredo, Ishan et Yann] : Merci à tous et au revoir.

@@ -1,4 +1,6 @@
-0:00:00,0:00:05								                          [Alfredo : bienvenue au cours. Mercredi, 9h30 du matin, New York.
+0:00:00,0:00:05
+[Alfredo : bienvenue au cours. Mercredi, 9h30 du matin, New York.
+
 0:00:05,0:00:10
 Aujourd'hui, nous avons un conférencier invité : Awni Hannun.
 
@@ -9,10 +11,10 @@ Awni est chercheur au FAIR et se concentre sur l'apprentissage automatique à fa
 la reconnaissance vocale et la confidentialité. Il a obtenu un doctorat en informatique à l'université de Stanford.
 
 0:00:22,0:00:30
-Avant de rejoindre Facebook, il a travaillé en tant que chercheur au sein du laboratoire d’intelligence artificielle de Baidu dans la Silicon Valley  
+Avant de rejoindre Facebook, il a travaillé en tant que chercheur au sein du laboratoire d’intelligence artificielle de Baidu dans la Silicon Valley
 
 0:00:30,0:00:35
-où il a codirigé le « deep speech project ». Merci encore une fois Awni 
+où il a codirigé le « deep speech project ». Merci encore une fois Awni
 
 0:00:35,0:00:43
 de nous rejoindre aujourd'hui. Je suis impatient d'écouter ta superbe conférence. Je rappelle que les étudiants
@@ -214,7 +216,7 @@ composants : featurisation, adaptation du locuteur, etc.
 Le tout est passé à travers ce décodeur qui prend en compte un tas de modèles différents, c'est donc complexe.
 
 0:07:48,0:07:55
-Et lentement, nous avons compris que nous pouvions nous débarrasser de certaines de ces choses en les remplaçant par de l'apprentissage profond. 
+Et lentement, nous avons compris que nous pouvions nous débarrasser de certaines de ces choses en les remplaçant par de l'apprentissage profond.
 
 0:07:55,0:08:01
 On peut remplacer l'adaptation du locuteur et certains des petits modèles avec juste un gros modèle acoustique.
@@ -259,7 +261,7 @@ Ce sont des choses que nous faisons en recherche mais qui sont encore trop chèr
 ou demandent encore trop de temps afin de les mettre en production. Mais c’est pour indiquer vers où les choses se dirigent.
 
 0:09:26,0:09:30
-Parlons de la classification temporelle connexionniste. 
+Parlons de la classification temporelle connexionniste.
 
 0:09:30,0:09:39
 Comme je l'ai dit plus tôt, la CTC est l'une des fonctions de perte les plus couramment utilisées de nos jours pour l’entraînement de
@@ -480,7 +482,7 @@ Donc en fait, ce que nous allons faire, c'est utiliser tous les alignements.
 0:18:37,0:18:43
 Et plutôt que d'en fixer un, nous allons essayer d'augmenter le score de tous.
 
-0:18:43,0:18:48	
+0:18:43,0:18:48
 Et on espère que le modèle arrange les choses intérieurement.
 
 0:18:48,0:19:01
@@ -505,7 +507,7 @@ Donc il s'avère que quand on fait ça, c'est important pour la suite, on reçoi
 Et nous devons en fait calculer le logarithme de la somme des probabilités.
 
 0:19:46,0:19:56
-Je pense que vous êtes familiers avec cette opération que vous appelez « SoftMax réelle » que j'aime bien, donc je vais l'appeler SoftMax réelle aussi. 
+Je pense que vous êtes familiers avec cette opération que vous appelez « SoftMax réelle » que j'aime bien, donc je vais l'appeler SoftMax réelle aussi.
 
 0:19:56,0:20:08
 Et nous allons l’utiliser pour calculer les scores logarithmiques des alignements.
@@ -544,7 +546,7 @@ pour quatre trames, nous avons trois alignements. Nous allons calculer la SoftMa
 Et cela va nous donner notre score : le logarithme de la probabilité de notre transcription étant donné x.
 
 0:21:30,0:21:44
-En aparté, j'aimerais vous montrer comment on peut encoder sous la forme d’un graphe, l'ensemble des alignements possibles de la transcription de 
+En aparté, j'aimerais vous montrer comment on peut encoder sous la forme d’un graphe, l'ensemble des alignements possibles de la transcription de
 
 0:21:44,0:21:49
 « cat » à une entrée de longueur arbitraire. Donc ceci est un graphe
@@ -665,7 +667,7 @@ Et donc il n'y a qu'un seul alignement possible qui satisfait à ceci, c'est l'a
 
 0:27:32,0:27:44
 Donc cet exemple est simple à calculer. C'est juste la somme des scores des deux premières trames : log(P(c|x1)) + log((P(c|x2)).
-	
+
 0:27:44,0:28:00
 De manière similaire, je peux calculer la variable α₂ᵃ, c’est-à-dire le score de tous les alignements possibles de longueur 2
 
@@ -757,7 +759,7 @@ j'utiliserais quelque chose comme un maximum. Un maximum et une somme ou quelque
 Mais sinon l'idée est la même. Et le score final, le score de P(X|Y) sur tous les alignements possibles,
 
 0:32:52,0:33:00
-rappelez-vous que c'est ce que nous voulions calculer en premier lieu, sont juste donnés par la variable forward : 
+rappelez-vous que c'est ce que nous voulions calculer en premier lieu, sont juste donnés par la variable forward :
 
 0:33:00,0:33:10
 αTᵁ, le nombre de trames d'entrée et le nombre de trames de sortie.
@@ -790,13 +792,13 @@ Il y en a une pour la sortie « a » et une pour la sortie « c ».
 Et pour les calculer, il suffit d'ajouter dans les scores de p de a étant donné la deuxième trame et de p de c étant donné la deuxième trame.
 
 0:34:26,0:34:40
-Pour la première et la deuxième respectivement. Donc je continue de cette façon et je construis mes variables α et avec le temps, j'arrive à la fin. 
+Pour la première et la deuxième respectivement. Donc je continue de cette façon et je construis mes variables α et avec le temps, j'arrive à la fin.
 
 0:34:40,0:34:54
 Et je sais qu’à la fin, α est égal à la SoftMax réelle des deux α des deux pas de temps précédents plus le score de la sortie à ce niveau.
 
 0:34:54,0:35:15
-Donc α₅ᵗ est la somme de la SoftMax réelle de α₄ᶜ et α₄ᵃ, et du score de t 
+Donc α₅ᵗ est la somme de la SoftMax réelle de α₄ᶜ et α₄ᵃ, et du score de t
 étant donné la cinquième trame.
 
 0:35:15,0:35:27
@@ -806,7 +808,7 @@ Donc α₅ᵗ est la somme de la SoftMax réelle de α₄ᶜ et α₄ᵃ, et du 
 C'est une bonne question en fait. La réponse est que vous pouvez prendre le meilleur chemin.
 
 0:35:33,0:35:39
-La réponse la plus simple que je puisse donner est qu'il est plus efficace 
+La réponse la plus simple que je puisse donner est qu'il est plus efficace
 
 0:35:39,0:35:51
 de le faire de cette façon. Plutôt que de choisir le meilleur chemin au départ dans ce graphe, calculer la somme de tous les chemins possibles conduit à
@@ -875,7 +877,7 @@ C'est une intuition. Vous pouvez probablement penser à d'autres hypothèses sur
 D'autres questions ? [Alfredo : c'est logique.
 
 0:38:38,0:38:50
-La dernière fois, dans les devoirs, on a pré-entraîné le réseau pour qu'il fasse de classification afin d'obtenir des points de départ déjà assez bons 
+La dernière fois, dans les devoirs, on a pré-entraîné le réseau pour qu'il fasse de classification afin d'obtenir des points de départ déjà assez bons
 
 0:38:50,0:38:54
 pour reconnaître différents phonèmes ou caractères.]
@@ -981,7 +983,7 @@ je dois incorporer un blanc entre eux. Sinon il n'y a aucun moyen de désambigu�
 Donc en général un blanc est optionnel entre n'importe quelles lettres de ma sortie.
 
 0:43:04,0:43:10
-Le modèle peut toujours produire un blanc entre deux lettres ou non. Comme il le souhaite. 
+Le modèle peut toujours produire un blanc entre deux lettres ou non. Comme il le souhaite.
 
 0:43:10,0:43:18
 Mais lorsqu'il y a des jetons répétés, des répétitions consécutives, il doit produire au moins un blanc.
@@ -993,7 +995,7 @@ Et donc si les blancs n'étaient pas là quand nous construisons la version fina
 [Aldredo : J’ai une question ici. Le double o en anglais a son propre phonème,
 
 0:43:36,0:43:44
-ce qui va être le son « ou » comme « foud » et non « fod ». Donc comment 
+ce qui va être le son « ou » comme « foud » et non « fod ». Donc comment
 
 0:43:44,0:43:52
 on connecte la parole, aux phonèmes réels / au texte réel. Ce n'est pas clair pour moi].
@@ -1116,7 +1118,7 @@ simple cas que j'ai montré plus tôt où vous pouvez calculer la variable α à
 des deux variables α précédentes. Dans la CTC, il y a trois cas. Le cas simple
 
 0:48:59,0:49:06
-où le blanc se trouve entre deux lettres distinctes, auquel cas il est facultatif, 
+où le blanc se trouve entre deux lettres distinctes, auquel cas il est facultatif,
 
 0:49:06,0:49:13
 pour faire la transition entre la lettre précédente et le pas de temps précédent. Vous pouvez faire la
@@ -1269,7 +1271,7 @@ Nous avons parlé de la perte CTC qui est l'une des plus utilisées mais pas la 
 fonction de perte utilisée pour entraîner ces systèmes vocaux de bout en bout. Et donc maintenant que nous avons ces modèles entraînés,
 
 0:55:04,0:55:10
-que nous savons comment calculer le score d'une transcription en fonction d'un signal audio d'entrée, 
+que nous savons comment calculer le score d'une transcription en fonction d'un signal audio d'entrée,
 
 0:55:10,0:55:16
 que nous savons calculer sa probabilité conditionnelle, nous aimerions pouvoir résoudre le problème :
@@ -1293,7 +1295,7 @@ L'un est le modèle qui nous donne le score de n'importe quelle transcription do
 Et le second est un modèle de langage qui donne le score, seulement la transcription, non conditionnée par la parole.
 
 0:55:59,0:56:09
-Donc le but du modèle de langage est d'attribuer une forte probabilité à des séquences de mots ou de lettres qui sont susceptibles d'être utilisées 
+Donc le but du modèle de langage est d'attribuer une forte probabilité à des séquences de mots ou de lettres qui sont susceptibles d'être utilisées
 
 0:56:09,0:56:14
 dans le langage humain et une faible probabilité sinon.
@@ -1344,7 +1346,7 @@ ou même à un utilisateur. Donc quand vous utilisez votre téléphone et
 dites « Appelle x, y et z », « Appelle Alfredo », il s'avère que le téléphone
 
 0:58:12,0:58:18
-fait en fait quelque chose de très sophistiqué. Il construit à la volée 
+fait en fait quelque chose de très sophistiqué. Il construit à la volée
 
 0:58:18,0:58:25
 une sorte de modèle de langage de tous les noms et contacts de votre téléphone et puis il utilise ce
@@ -1362,7 +1364,7 @@ que biaiser ce modèle de langage aide vraiment à comprendre quel contact vous 
 Cette fonctionnalité marcherait beaucoup moins bien si nous n'utilisions pas ce genre de modèle de langue spécifique à l'utilisateur.
 
 0:59:00,0:59:10
-Donc typiquement ces modèles de langage sont des n-grammes basés sur le nombre de co-occurrences 
+Donc typiquement ces modèles de langage sont des n-grammes basés sur le nombre de co-occurrences
 
 0:59:10,0:59:15
 de mots de longueur trois, parfois cinq, tout dépend du cas d'utilisation.
@@ -1401,7 +1403,7 @@ Bien sûr, nous ne pouvons pas le faire explicitement car il y a un grand nombre
 Donc nous avons besoin d'un moyen de le faire efficacement.
 
 1:00:31,1:00:36
-Dans la pratique, nous n'allons pas non plus le faire exactement mais approximativement. 
+Dans la pratique, nous n'allons pas non plus le faire exactement mais approximativement.
 
 1:00:36,1:00:45
 Donc Y*, qui est la meilleure transcription, ne maximisera pas parfaitement ces scores mais les maximisera approximativement.
@@ -1491,7 +1493,7 @@ si vous avez une sorte d'incertitude au début de votre recherche, ce qui a lieu
 La recherche gloutonne n'est pas une solution pour nous, nous voulons quelque chose de mieux.
 
 1:04:25,1:04:35
-Donc à la place nous allons utiliser une recherche en faisceau. C’est un algorithme très simple et très important dans les systèmes de reconnaissance vocale. 
+Donc à la place nous allons utiliser une recherche en faisceau. C’est un algorithme très simple et très important dans les systèmes de reconnaissance vocale.
 
 1:04:35,1:04:44
 La façon dont il fonctionne, c'est qu’il répète juste ces deux étapes. La première étape est qu’à n'importe quelle étape donnée de l'algorithme,
@@ -1725,13 +1727,13 @@ je veux dire que vous pouvez différencier la sortie de l'opération par rapport
 spécifiquement les arcs d'entrée du graphe, les poids sur les arcs d'entrée du graphe.
 
 1:13:19,1:13:26
-Nous allons parler un peu de ce que sont ces opérations, ce que sont les poids et d'où ils viennent. 
+Nous allons parler un peu de ce que sont ces opérations, ce que sont les poids et d'où ils viennent.
 
 1:13:26,1:13:32
 Mais d'abord je vais parler un peu de l'histoire des GTNs.
 
 1:13:32,1:13:42
-Comme je l'ai dit plus tôt, ces modèles ont été développés par des gens comme Léon Bottou qui est à présent à FAIR, 
+Comme je l'ai dit plus tôt, ces modèles ont été développés par des gens comme Léon Bottou qui est à présent à FAIR,
 
 1:13:42,1:13:52
 Yann et d'autres à AT&T au début des années 90. Yann corrige-moi si je me trompe dans cette histoire.
@@ -1771,7 +1773,7 @@ en termes de ce que nous faisons dans l'apprentissage profond moderne. Tout éta
 
 1:15:39,1:15:48
 Et, espérons-le, que ce soit un signe avant-coureur de ce que nous ferons
-avec les GTNs. 
+avec les GTNs.
 
 1:15:48,1:15:53
 Ce que nous commençons à faire maintenant et que j'espère les gens adopteront davantage dans le futur.
@@ -1786,7 +1788,7 @@ Ce qui est assez drôle car il n'y a rien de traditionnel dans l'apprentissage p
 Mais peut-être que les GTNs les rendront traditionnels.
 
 1:16:21,1:16:28
-La principale distinction est que vous travaillez sur une structure de données différente qui est un graphe. 
+La principale distinction est que vous travaillez sur une structure de données différente qui est un graphe.
 
 1:16:28,1:16:31
 Et les opérations seront bien sûr différentes.
@@ -1795,7 +1797,7 @@ Et les opérations seront bien sûr différentes.
 Donc pour pousser ce parallèle encore plus loin, avec l'apprentissage profond et les réseaux neuronaux, notre structure de données de base est un tenseur.
 
 1:16:41,1:16:46
-Cela peut être un tenseur 1D ou ND. 
+Cela peut être un tenseur 1D ou ND.
 
 1:16:46,1:16:53
 Avec les GTNs, notre structure de données de base est un graphe, typiquement un WFSA comme celui que j'ai montré plus tôt.
@@ -1867,7 +1869,7 @@ Si j'ai un certain savoir comme quoi un mot est composé de lettres ou de morcea
 Mais on peut encoder ça dans un graphe assez facilement en fait.
 
 1:19:36,1:19:46
-Si j'ai des connaissances sur l'ensemble des alignements autorisé par un modèle, comme par exemple qu’un blanc est facultatif, 
+Si j'ai des connaissances sur l'ensemble des alignements autorisé par un modèle, comme par exemple qu’un blanc est facultatif,
 
 1:19:46,1:19:50
 je peux encoder cela dans un graphe, comme je l'ai montré plus tôt.
@@ -1927,7 +1929,7 @@ Il est contraint par la transcription ainsi que l'entrée. Et le second graphe e
 Nous l'appelons graphe Z. Ce graphe z sert de graphe de normalisation.
 
 1:21:55,1:22:00
-Donc ce que nous essayons de faire, c'est d’augmenter le score du graphe 
+Donc ce que nous essayons de faire, c'est d’augmenter le score du graphe
 
 1:22:00,1:22:06
 qui est contraint par la cible Y car il encode tous les chemins
@@ -2184,7 +2186,7 @@ Donc si j'ai deux graphes d'entrée et que je veux calculer leur intersection, a
 encode/accepte toute séquence qui est acceptée par les deux graphes d'entrée.
 
 1:32:31,1:32:36
-Donc c'est juste comme l'intersection et l'union d'ensembles. 
+Donc c'est juste comme l'intersection et l'union d'ensembles.
 
 1:32:36,1:32:46
 L'intersection de deux graphes est le graphe qui accepte toute séquence
@@ -2194,7 +2196,7 @@ qui est accepté par les deux graphes d'entrée.
 Et le poids de ces séquences sera la somme des poids des graphes d'entrée.
 
 1:32:56,1:33:10
-Donc si le graphe 1 accepte une séquence x et le graphe 2 accepte la séquence x alors la sortie du graphe d’intersection acceptera également cette séquence x. 
+Donc si le graphe 1 accepte une séquence x et le graphe 2 accepte la séquence x alors la sortie du graphe d’intersection acceptera également cette séquence x.
 
 1:33:10,1:33:20
 Et le poids sera la somme des poids des deux graphes d'entrée ont assigné à x.
@@ -2227,7 +2229,7 @@ Alors passons en revue un algorithme pour voir comment cela fonctionne pour ces 
 Donc nous commençons en considérant l'ensemble des états de départ dans les deux graphes.
 
 1:34:34,1:34:41
-Nous construisons notre graphe d’intersection avec un état de départ combiné. 
+Nous construisons notre graphe d’intersection avec un état de départ combiné.
 
 1:34:41,1:34:47
 Donc notre graphe d’intersection a un état de départ qui combine les états de départs des deux graphes.
@@ -2318,7 +2320,7 @@ Nous avions ajouté ce chemin à notre graphe d’intersection, mais étant sans
 Puis nous explorons l'état suivant que nous avons ajouté à notre graphe d’intersection qui était l’état combiné (0,2).
 
 1:38:30,1:38:36
-Là encore cet état est une impasse, il n'y a aucun moyen de le quitter 
+Là encore cet état est une impasse, il n'y a aucun moyen de le quitter
 
 1:38:36,1:38:41
 via des arcs qui ont la même étiquette dans nos graphes d'entrée.
@@ -2429,7 +2431,7 @@ La chose principale à propos de la composition est qu'elle nous permet de faire
 Disons que j'ai un graphe qui relie les lettres aux mots et j'en ai un autre qui
 
 1:43:04,1:43:10
-permet de passer des mots aux phrases ou aux expressions. Si je compose ces 
+permet de passer des mots aux phrases ou aux expressions. Si je compose ces
 
 1:43:10,1:43:18
 deux graphes, mon graphe composé passera des lettres aux phrases. C’est un concept puissant.
@@ -2513,7 +2515,7 @@ l'ensemble de toutes les séquences possibles de longueur 4.
 L'alphabet étant « abc ».
 
 1:46:26,1:46:32
-La façon de penser à ce graphe en haut à droite, le graphe des émissions, 
+La façon de penser à ce graphe en haut à droite, le graphe des émissions,
 
 1:46:32,1:46:40
 entre deux nœuds, vous avez un ensemble de logits venant de votre réseau.
@@ -2531,7 +2533,7 @@ Il représente tous les alignements possibles de longueur 4 pour la séquence «
 Et si je calcule le score forward de ce graphe cible-contrainte, cela me donne
 
 1:47:15,1:47:22
-une somme sur tous les alignements possibles et je peux aussi normaliser 
+une somme sur tous les alignements possibles et je peux aussi normaliser
 
 1:47:22,1:47:27
 par la somme de tous les alignements non contraints possibles.
@@ -2681,7 +2683,7 @@ vous donner une idée de la façon dont les choses fonctionnent dans gtn.
 Les parallèles entre ce framework et quelque chose comme PyTorch.
 
 1:53:12,1:53:18
-Si vous ne saviez pas que c’était gtn, vous pouviez penser que c'était PyTorch. 
+Si vous ne saviez pas que c’était gtn, vous pouviez penser que c'était PyTorch.
 
 1:53:18,1:53:28
 On calcule une perte, un peu de structures de données, on calcule des gradients, on appelle backward pour faire une différenciation automatique.
@@ -2708,10 +2710,10 @@ Merci. [Yann : oui, merci beaucoup Awni pour la conférence.] Avec plaisir.
 [Yann : il y a un certain nombre de questions auxquelles nous avons répondu
 
 1:54:11,1:54:17
-dans le chat pendant que tu parlais.] Super, merci de l'avoir fait. 
+dans le chat pendant que tu parlais.] Super, merci de l'avoir fait.
 
 1:54:17,1:54:23
-Ravi de partager les diapositives et j'ai inclus des références pour des lectures supplémentaires, 
+Ravi de partager les diapositives et j'ai inclus des références pour des lectures supplémentaires,
 
 1:54:23,1:54:27
 pour les personnes qui seraient intéressées à en savoir plus.

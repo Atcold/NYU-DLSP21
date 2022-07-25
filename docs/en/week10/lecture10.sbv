@@ -1,0 +1,3185 @@
+00:00:00,00:00:14
+Alright, so welcome to class Wednesday the 7th of April 9 30 New York City Live Today we're going to have in Ishan Misla today talking about self supervised learning.
+
+00:00:14,00:00:21
+Ishan is a research scientist at Facebook. He's currently working on computer vision and machine learning. His research interest.
+
+00:00:21,00:00:33
+Is in reducing the need for supervision in visual learning? He holds a PhD from Robotics Institute at Carnegie Mellon University and graduated in 2018 when he joined Fair.
+
+00:00:33,00:00:50
+So his work are like in high performance supervised image classification with contrastive learning and many more things like a new way to assess AI bias. Also in object recognition systems so.
+
+00:00:50,00:00:56
+Here we go and I guess I disappear from the screen and I'll let Ishan talk for the rest of the lesson.
+
+00:00:56,00:00:59
+Thank you for the introduction.
+
+00:00:59,00:01:01
+Thanks, thank you.
+
+00:01:01,00:01:07
+Thanks for having me. Thanks for today. So good morning everyone. Today I'll be talking about supervised.
+
+00:01:07,00:01:10
+Learning in computer vision.
+
+00:01:10,00:01:17
+So without even getting into like a lot of motivation of why this is necessary, I think this used to be like door slide.
+
+00:01:17,00:01:29
+I would spend a lot of time, but I think now it has become more and more clear about the limits of supervised learning. So let's just recap it for a little bit. So getting real label is really difficult and expensive.
+
+00:01:29,00:01:43
+If you initial data set, which is considered one of the largest datasets, it has about 14,000,000 images in total, about 22,000 categories. And to label this data set, it took about 22 minutes.
+
+00:01:43,00:01:52
+And if you think about it, 22,000 concepts that initial has is not a whole load of concepts because there are far more like concepts in the visual world.
+
+00:01:52,00:01:58
+English it is just an image based data set so it does not have videos, so there are more sort of temporal concepts.
+
+00:01:58,00:02:04
+There are no actions really annotated in this data set, so either all the 22,000 concepts really captured it.
+
+00:02:04,00:02:08
+Very small motion of the visual runs etc. Interesting.
+
+00:02:08,00:02:11
+And even that of medical tools so.
+
+00:02:11,00:02:14
+Clearly, like labeling does not scale anymore.
+
+00:02:14,00:02:22
+So in the past few years, a lot of research already gone into obtaining labels in or semi automatic or automatic one.
+
+00:02:22,00:02:35
+For example, there is Vt supervised learning which takes images or videos and their associated metadata. For example hashtags or captions or something or GPS locations for example.
+
+00:02:35,00:02:37
+Associated with those images.
+
+00:02:37,00:02:51
+And then there is another paradigm which says that the data itself has enough structure or enough structure in itself to really be of importance and we can basically just use the data itself to learn powerful feature representations.
+
+00:02:51,00:02:54
+Start brings us to self supervisor a sort of once like.
+
+00:02:54,00:02:56
+Definition of self supervised.
+
+00:02:56,00:02:59
+Learning can be that you have observed data.
+
+00:02:59,00:03:16
+And you basically split it into 2 groups. You observe one date, one part of the data, and then you try to predict some property about a hidden part of the data from this observation and basically by setting up this sort of a prediction problem, we're able to learn fairly meaningful features.
+
+00:03:16,00:03:18
+So let's look at supervised.
+
+00:03:18,00:03:21
+Learning in the context of computer vision.
+
+00:03:21,00:03:23
+So in computer vision.
+
+00:03:23,00:03:31
+So supervised learning really started taking up a few years ago and there is any sort of concept of pretext tasks.
+
+00:03:31,00:03:43
+So pretext task is basically a task to solve, just to learn a feature representation. It's often not a real task, so pH task is just where you're taking this observed data and then you're predicting properties about.
+
+00:03:43,00:03:45
+This radiant data.
+
+00:03:45,00:03:45
+It's not the chance to.
+
+00:03:45,00:03:47
+Really care about and the.
+
+00:03:47,00:03:48
+Only reason you're solving it.
+
+00:03:48,00:03:52
+Is because you want to learn representations.
+
+00:03:52,00:03:58
+So let's take a sort of make few examples of what this means, and in general in vision there has been.
+
+00:03:58,00:03:58
+A lot of.
+
+00:03:58,00:04:10
+PTX tasks defined for images. For video, for video and sound, but we don't have time to cover all of them period, so I'll just talk about a few examples using images.
+
+00:04:10,00:04:16
+So one of the fairly popular pretext tasks for images is predicting relative position of patches.
+
+00:04:16,00:04:20
+So in this task you take 2 image patches. So in this case a blue patch.
+
+00:04:20,00:04:21
+And a red touch.
+
+00:04:21,00:04:22
+And you sample them.
+
+00:04:22,00:04:24
+Randomly on your image.
+
+00:04:24,00:04:25
+Now the task.
+
+00:04:25,00:04:29
+Is you need to predict the relative position of the red patch given the.
+
+00:04:29,00:04:38
+So much so you take an assignment 2 time too young and we basically just feet together. The image patches into this Siamese network.
+
+00:04:38,00:04:50
+We concatenate the features and then we basically predict, uh, basically, solver 8 classification problem predicting the relative position of the red trash with respect to the blue patch.
+
+00:04:50,00:04:56
+So this is one kind of pretext task. Again, the interest over here is not to solve this relative position task.
+
+00:04:56,00:04:57
+The interest is to basically.
+
+00:04:57,00:05:01
+Use this task as a way to learn features.
+
+00:05:01,00:05:05
+Another popular task was jigsaw puzzles, so here the idea is that we.
+
+00:05:05,00:05:08
+Basically take 9 image patches.
+
+00:05:08,00:05:10
+And you coordinate them randomly.
+
+00:05:10,00:05:11
+And now the task is.
+
+00:05:11,00:05:14
+To basically classify which permutation was applied.
+
+00:05:14,00:05:21
+Because the set of permutations that you have for 9 patches is very large, 9 factorial, you basically restricted.
+
+00:05:21,00:05:25
+Of permutation, we do apply, so you basically just say that I only have a fixed set of.
+
+00:05:25,00:05:27
+1000 permutations.
+
+00:05:27,00:05:32
+And you're going to sample a population from within you.
+
+00:05:32,00:05:37
+Another fairly popular task was basically predicting rotations, so you take an image.
+
+00:05:37,00:05:38
+And you apply it.
+
+00:05:38,00:05:39
+One of 4 rotations basically.
+
+00:05:39,00:05:42
+Zero degrees 91 equal to 70.
+
+00:05:42,00:05:44
+And then you output.
+
+00:05:44,00:05:52
+So basically a 4 way classification problem. So the idea here is basically going to be that it solves just.
+
+00:05:52,00:05:57
+The classification problem to predict the rotation by each.
+
+00:05:57,00:05:57
+So these tasks were so popular, what was missing?
+
+00:05:57,00:05:59
+He asked.
+
+00:05:59,00:06:00
+From him and.
+
+00:06:00,00:06:02
+Why did we have to really change the way?
+
+00:06:02,00:06:05
+We look at self supervisor.
+
+00:06:05,00:06:22
+So if you think about what's happening in a sort of pre training stage set supervisory, there is a big mismatch between what we're doing at pre training and what we really want to transfer to. So retraining we're solving these tasks like jigsaw or like rotation.
+
+00:06:22,00:06:25
+Which have very little to do with the transfer tasks that we.
+
+00:06:25,00:06:26
+Care about which?
+
+00:06:26,00:06:29
+Are say about transparent images or detecting objects.
+
+00:06:29,00:06:32
+And this is a fairly big mismatch, which means that.
+
+00:06:32,00:06:32
+This pre training.
+
+00:06:32,00:06:35
+Is not probably going to be fairly suitable for.
+
+00:06:35,00:06:36
+It's a lot.
+
+00:06:36,00:06:37
+Of the hope that we had that.
+
+00:06:37,00:06:40
+This stuff would generalize.
+
+00:06:40,00:06:45
+So the one way to check this basically is that we introduce then we.
+
+00:06:45,00:06:46
+Get this pre.
+
+00:06:46,00:06:49
+Trained network so we take a bunch of training data.
+
+00:06:49,00:06:56
+We apply the jigsaw problem and we take out take the continent that basically 3 using this we.
+
+00:06:56,00:06:56
+Can apply linear?
+
+00:06:56,00:07:00
+Classifiers to the intermediate layers so straight out.
+
+00:07:00,00:07:09
+What the feature like what the feature is basically at each of these intermediate layers. So what we'll do is we'll take features from these layers.
+
+00:07:09,00:07:19
+We learn a linear classifier to solve a particular image classification task, and then we can measure the performance of each of these layers to see what this network is doing.
+
+00:07:19,00:07:27
+So on this plot, what I basically have is for a resident I took 5 lives and and basically plotted the performance of.
+
+00:07:27,00:07:29
+Each one of them.
+
+00:07:29,00:07:32
+So from count one basically being the layer that is closest to the.
+
+00:07:32,00:07:33
+Input is fine.
+
+00:07:33,00:07:36
+But you know it it going to be closest to the output.
+
+00:07:36,00:07:38
+And we look at the image classification.
+
+00:07:38,00:07:44
+Performance on a data set and measure using the 18 metrics so higher is better.
+
+00:07:44,00:07:51
+So what we observe is basically go from 0.1 to raise 2. There is an improvement in performance all the way.
+
+00:07:51,00:07:54
+Basically, the performance will keep improving as you go deeper.
+
+00:07:54,00:07:54
+Into the network.
+
+00:07:54,00:07:55
+Which is like.
+
+00:07:55,00:08:02
+To be expected because as you detailed, network image features are probably going to get far more semantic.
+
+00:08:02,00:08:13
+But then the sharp drop in performance when you go from this 4 to this file. And this is basically this file is the layer that is closest to the jigsaw task.
+
+00:08:13,00:08:20
+And what this means is that at the last year, the features that are being learned are very specific to the tricks or task.
+
+00:08:20,00:08:22
+And these specific features are.
+
+00:08:22,00:08:26
+Not really transferring valuable image specifications.
+
+00:08:26,00:08:28
+And so this kind of brings.
+
+00:08:28,00:08:43
+Uh, they mean empirical evidence for suspicion right? In the pretraining state we were solving something like Jigsaw, which has nothing to do with classification, so the features that we learned at the last layer became very specific projects or tasks and would not transfer very well.
+
+00:08:43,00:08:45
+To image classification.
+
+00:08:45,00:08:49
+So if this is a problem, what is the solution well?
+
+00:08:49,00:08:50
+Let's take a.
+
+00:08:50,00:08:55
+Step back and try to figure out what should pre trained features.
+
+00:08:55,00:08:57
+So between features can satisfy 2 sort.
+
+00:08:57,00:08:59
+Of fundamental properties.
+
+00:08:59,00:09:02
+One is that they're useful to represent.
+
+00:09:02,00:09:04
+How images relate to one another.
+
+00:09:04,00:09:09
+So if I have a picture of a tree and picture of another 3I, should.
+
+00:09:09,00:09:09
+Be able to.
+
+00:09:09,00:09:10
+Figure out.
+
+00:09:10,00:09:11
+That these 2 pictures are related.
+
+00:09:11,00:09:23
+That maybe there is the same concept and if I had another picture of a cat then basically I should be able to figure out that this cat picture is not as related to the group picture.
+
+00:09:23,00:09:29
+And the second property is being robustness inspectors. If I have a tree, I should be able to.
+
+00:09:29,00:09:31
+Recognize that tree.
+
+00:09:31,00:09:43
+In basically different lighting conditions in different weather conditions across the year and maybe with like different number of leads. So there are a lot of nuisance factors and the feature should basically be robust.
+
+00:09:43,00:09:47
+All of these kind of nuisance factors.
+
+00:09:47,00:09:48
+So in the past.
+
+00:09:48,00:10:00
+Periods popular and common principle for most of those sort of high performing self supervised methods has been to learn features that are robust to data augmentation.
+
+00:10:00,00:10:04
+So the idea over here is basically that you are learning.
+
+00:10:04,00:10:05
+A function F.
+
+00:10:05,00:10:11
+Which is basically parameterized by Theta parameters. So this can be parameterized by appointment.
+
+00:10:11,00:10:24
+And what you want is. The feature is produced by this network or for an image I should basically be stable under different types of image augmentations that we've applied. So if I augment the image with I, I should still basically get that business feature.
+
+00:10:24,00:10:27
+Everything major.
+
+00:10:27,00:10:34
+And again, the reason it's useful is because when we basically satisfy this property, the features are going to be invariant.
+
+00:10:34,00:10:43
+2 reasons factors or data augmentation and this basically means that I can recognize the scene dear, no matter the sort of colour of it, or like the time of.
+
+00:10:43,00:10:47
+The day or so.
+
+00:10:47,00:10:49
+So let's try to see.
+
+00:10:49,00:10:50
+If such certain approach can.
+
+00:10:50,00:10:56
+Be Google, so let's go back to the sign. These kind of networks and try to see if we can implement this.
+
+00:10:56,00:11:06
+So we take an image and we apply 2 different data augmentations to and we feed it rainbow so we encode it, basically assigning.
+
+00:11:06,00:11:09
+And we get features for both of these great organizations and we.
+
+00:11:09,00:11:11
+Try to maximize similarity.
+
+00:11:11,00:11:18
+So again, we're trying to basically say that F street of I should be very similar to F Theta augmented 5.
+
+00:11:18,00:11:25
+And the similarity can be your favorite loss function. You can try to maximize the cosine similarity, or you can try to minimize the L 2 distance.
+
+00:11:25,00:11:26
+Whatever you want.
+
+00:11:26,00:11:33
+You get basically gradients by doing this and you can back propagate all the way through updated interval.
+
+00:11:33,00:11:34
+So why is like?
+
+00:11:34,00:11:37
+If this is so simple, then it should just work right? Why? Why is there any?
+
+00:11:37,00:11:39
+Sort of research needed for this.
+
+00:11:39,00:11:41
+The problem is if you.
+
+00:11:41,00:11:43
+Just provide this naive approach.
+
+00:11:43,00:11:50
+To solve into this trap of trivial solutions, but this measure will learn to do is essentially ignore.
+
+00:11:50,00:11:51
+The image input.
+
+00:11:51,00:11:54
+And produce a constant representation for the image.
+
+00:11:54,00:11:56
+So this constant representation.
+
+00:11:56,00:12:01
+Will satisfy the property that we want. F Theta Phi is X.
+
+00:12:01,00:12:01
+And Y is.
+
+00:12:01,00:12:04
+That essentially it's going to produce the same.
+
+00:12:04,00:12:08
+Feature, no matter what image you're feeding into.
+
+00:12:08,00:12:18
+So yes, the property is satisfied with this feature is not really useful for any downstream technician task, because it's going to not really capture this property that how images are related to one number.
+
+00:12:18,00:12:28
+It will produce the same feature for regular image. It will produce the same feature for Tiger image for a tree image and so on. So essentially it's not really helping satisfy this property.
+
+00:12:28,00:12:31
+Of how it is related to.
+
+00:12:31,00:12:41
+And So what we can do is basically we can categorize most of the recent self supervised methods as you know basically their different ways in which they're.
+
+00:12:41,00:12:45
+Trying to avoid this trivial solution.
+
+00:12:45,00:12:48
+So why do we not click the model after every 4?
+
+00:12:48,00:13:02
+Come when you can. So essentially you keep seeing the same pattern if you click the model at rest 4 then basically and you had a resonate, it is only 4 series. Why you would get the same pattern that you would get poor performance address 3.
+
+00:13:02,00:13:08
+So at least it's not really dependent on like whether it's rest 5 or S 4. The point is that the feature that is.
+
+00:13:08,00:13:08
+Going to happen.
+
+00:13:08,00:13:10
+At the end it ends.
+
+00:13:10,00:13:16
+Up basically becoming very specific to the task.
+
+00:13:16,00:13:17
+Yes, so we've going.
+
+00:13:17,00:13:21
+To be helpful, but sort of most of my presentation is not going to be about these kind.
+
+00:13:21,00:13:22
+Of generated models.
+
+00:13:22,00:13:23
+It's going to be about.
+
+00:13:23,00:13:31
+Fairly like discriminative models for working.
+
+00:13:31,00:13:40
+OK, so moving on, so most of the recent self supervised methods can really be categorized in ways that they're avoiding trivial solution.
+
+00:13:40,00:13:47
+So within those methods, we can actually draw like 2 different 2 different kinds of methods. So the first is.
+
+00:13:47,00:13:48
+A class of.
+
+00:13:48,00:13:52
+Methods that's really going to maximize the similarity.
+
+00:13:52,00:14:00
+Between features and image I.
+
+00:14:00,00:14:06
+Either by using contrastive learning or by using clustering, or by using distillation.
+
+00:14:06,00:14:16
+And there's another class of methods that basically going to use the redundancy reduction to reduce. Basically to prevent trivial solutions.
+
+00:14:16,00:14:18
+So let's look at the first class of cricket which is.
+
+00:14:18,00:14:21
+Going to be contrasted with.
+
+00:14:21,00:14:30
+So before we start like talking about details, let me just give you a sense of what it means when you're sort of evaluating these methods.
+
+00:14:30,00:14:46
+So for instance, when we're training them using a self supervised objective, we really rely on the original data set for fair comparisons, so we continued limited data, set the subset of it with 1000 classes, and we removed the labels. So we get about 1.3.
+
+00:14:46,00:14:48
+Million images without labels.
+
+00:14:48,00:14:53
+And we pre trained arrested 50 model initialize randomly.
+
+00:14:53,00:15:00
+And when we want to evaluate this representation, we basically take the pretenders in 50 model and we can evaluate it in 2 ways.
+
+00:15:00,00:15:08
+We can either just take a linear classifier on top of frozen features, so this is really evaluating the feature quality.
+
+00:15:08,00:15:10
+Or we can actually maintain the input for.
+
+00:15:10,00:15:11
+A downstream task.
+
+00:15:11,00:15:14
+So in this case you're basically saying.
+
+00:15:14,00:15:16
+How good open?
+
+00:15:16,00:15:19
+Installation management provides.
+
+00:15:19,00:15:31
+So one of the first ones we did with contractual during whisper, which stands for pretext invariant representation version and I'll show you how this sort of relates contrasted learning to pretext tasks.
+
+00:15:31,00:15:33
+So I'll try to told you that.
+
+00:15:33,00:15:34
+You guys have already seen.
+
+00:15:34,00:15:39
+Quadratic learning a lot of details, so I try to be fairly quick about this part.
+
+00:15:39,00:15:42
+But if anyone has any questions, please talking.
+
+00:15:42,00:15:52
+So interactivity, you have groups of related and unrelated images, so you have light blue and blue which are related or green and all the green images are related.
+
+00:15:52,00:15:54
+So the problem is that related.
+
+00:15:54,00:16:04
+And what we first do is we basically take a shared network, assign these network, and we compute embeddings for each of these items. So we basically get over the embedding on the right hand side.
+
+00:16:04,00:16:11
+And then the last function is essentially trying to say that all the related in bedrooms should be closed in feature space compared to the animated images.
+
+00:16:11,00:16:12
+So it can essentially.
+
+00:16:12,00:16:23
+Compares or to sort of satisfy this big string. I can say that all would be the distance between the blue embeddings should be less than the distance between the blue and green invariants.
+
+00:16:23,00:16:25
+Right?
+
+00:16:25,00:16:31
+So it's fairly straightforward how we sort of.
+
+00:16:31,00:16:33
+What we do is we basically feed in.
+
+00:16:33,00:16:36
+Image I and transform.
+
+00:16:36,00:16:38
+Right?
+
+00:16:38,00:16:39
+And we basically.
+
+00:16:39,00:16:43
+Then added contrasted on top to encourage similarity.
+
+00:16:43,00:16:51
+So this image transform is basically going to be any pretext task that we have. For example a jigsaw task or a rotation task.
+
+00:16:51,00:16:56
+And basically by sort of applying this kind of data augmentation, we are learning a network that is going to.
+
+00:16:56,00:16:59
+Be invariant to the pretext task.
+
+00:16:59,00:17:14
+So the last function again to sort of put it back into this slide, you have the image features and detached features which are basically being compared and you want both of them to be similar and you want them to be far away from any sort of random image or any other image in the data set.
+
+00:17:14,00:17:16
+So the idea is basically that.
+
+00:17:16,00:17:20
+But because tasks can actually be considered as another.
+
+00:17:20,00:17:21
+Way of big augmentation.
+
+00:17:21,00:17:31
+Rather than thinking of them as basically doing something you want to predict, you basically think of something that you want to be invariant.
+
+00:17:31,00:17:39
+So let's not try to see. Basically, by doing this kind of a property, we're actually learning something meaningful.
+
+00:17:39,00:17:46
+So in this graph again, we are basically taking linear classifiers tool and figure out what the accuracy for each of the layers in.
+
+00:17:46,00:17:47
+Our government is.
+
+00:17:47,00:17:54
+So we have 2 inputs, one trained in Jigsaw and one trained in both. And the only difference between them is essentially in the weighted.
+
+00:17:54,00:17:55
+Here treating the.
+
+00:17:55,00:17:59
+Pretext task checks or really trying to predict the permutation.
+
+00:17:59,00:18:00
+This poll is trying to be.
+
+00:18:00,00:18:02
+Invited to the presentation.
+
+00:18:02,00:18:20
+And local observers. Basically that the performance for the pole model actually keeps increasing as you go deeper into the network, which suggests that basically the feature is becoming more and more aligned to the downstream classification task. Complete assumption, legends over the performance kind of plateaus at rest 4 and then drops down sharply.
+
+00:18:20,00:18:25
+And the reason is again, that basically you're really satisfying fundamental property of what you want the features to be.
+
+00:18:25,00:18:27
+You want the features to be invariant to these.
+
+00:18:27,00:18:29
+Kind of data augmentations.
+
+00:18:29,00:18:34
+And with something that sticks out is really trying to retain all of that information. Orange are basically becoming not.
+
+00:18:34,00:18:37
+As both for transformation.
+
+00:18:37,00:18:56
+So this is just one way of doing contrasted learning. In fact, like in the past. Although there have been multiple sort of books which show different ways of creating these related images and unrelated images, also called positives and negatives and possible so, CPC style models basically say that it patches.
+
+00:18:56,00:18:57
+From an image.
+
+00:18:57,00:19:02
+Which are close by together should be related and patches from the scene image which are far away.
+
+00:19:02,00:19:02
+Should be unblocked.
+
+00:19:02,00:19:04
+So this is how you basically form your.
+
+00:19:04,00:19:07
+Positives and negatives.
+
+00:19:07,00:19:16
+On the other side of doing it is basically saying that patches from the same image are positive and patches from any other image are unrelated or negatives.
+
+00:19:16,00:19:23
+And this basically showing the sort of backbone for a lot of popular methods like new codes in Sierra.
+
+00:19:23,00:19:25
+And all of them sort of rely on this kind of.
+
+00:19:25,00:19:29
+Framing for contracts or building.
+
+00:19:29,00:19:41
+But why stop there? Why stop jested images so people are really coming up with all sorts of creative ways to really use videos and video and audio to define positive and negatives, for example.
+
+00:19:41,00:19:51
+Given a sequence of frames, you can say that in frames that are actually closed by in the temporal space are actually related, and frames that are far away are unrelated.
+
+00:19:51,00:20:13
+The same thing goes for video and module. If you have a video and its corresponding audio, you can say that these 2 modalities are related and if you get an audio from some other video then that is unrelated and essentially by sort of doing this you find your related and perform contrasted learning and you basically learn feature representation.
+
+00:20:13,00:20:24
+And this has also been used for something like tracking, so you can essentially take an object in a video frame and you can track it across multiple frames.
+
+00:20:24,00:20:43
+And now the patches that you get from this tracking or actually the related patches and patches that are coming from a different video are unrelated, so they become the unrelated patches and so basically by setting up this related and non related patches you can again solve the contrastive working problem and then a feature representation.
+
+00:20:43,00:20:57
+So this is all great. About one transition voted the fundamental property about it. That's really preventing trivial solutions. Well, it's basically coming up because of this kind of objective function that.
+
+00:20:57,00:20:59
+And if you were to sort of.
+
+00:20:59,00:21:02
+Coming to the trivial solution, you would not satisfy this property.
+
+00:21:02,00:21:05
+Also contrastive loss function. So let's look at how.
+
+00:21:05,00:21:06
+This is happening.
+
+00:21:06,00:21:17
+So if you have the embeddings for the related groups the positives, the distance between these embeddings should be smaller than the distance between related embeddings, so the distance between 2 embedding in every number.
+
+00:21:17,00:21:32
+If you were to say all of these embeddings to be constant, this loss function would not basically would not minimize this source function, so by basically having this attraction force between the positives and if any force between the negatives, we're preventing the trivial solution.
+
+00:21:32,00:21:42
+And these good negatives are really, really important. Untrustable. We've got a lot of research has really gone into figuring out how you can get both negatives and how that would.
+
+00:21:42,00:21:44
+Be improves performance.
+
+00:21:44,00:21:47
+So I will talk about 3 other sort of standard.
+
+00:21:47,00:21:48
+Ways of doing it of course.
+
+00:21:48,00:21:50
+There are a lot more.
+
+00:21:50,00:21:59
+Yeah, but these 3 are sort of also informative because they talk about 3 fairly related self supervised methods.
+
+00:21:59,00:22:06
+So the first is sincere so insincere are the way that you are actually able to get negative exam.
+
+00:22:06,00:22:08
+Is basically by creating.
+
+00:22:08,00:22:09
+A very large batch.
+
+00:22:09,00:22:23
+Size, So what you have is your F. Theta Mapper is spread across multiple GPS. So in this case 3 G equals you feed forward your images across all these 3 GPS independently and now you get embedded in each of these goals.
+
+00:22:23,00:22:25
+So to use negatives, what you can do?
+
+00:22:25,00:22:26
+Is you can.
+
+00:22:26,00:22:31
+Just collect the embeddings coming from a different GPU and you can just use them as negatives.
+
+00:22:31,00:22:34
+So if you have a batch of 1000 then basically you get a lot.
+
+00:22:34,00:22:36
+Of negatives coming from different people.
+
+00:22:36,00:22:51
+So essentially it's a fairly straightforward way of building negatives, because you just scale your batch size to a very large number, and you can just collect the embeddings by spreading this batch size across multiple GP US. So it's fairly simple to implement.
+
+00:22:51,00:22:53
+The bigger drawback is that.
+
+00:22:53,00:22:54
+You need a large batch.
+
+00:22:54,00:23:04
+Size to do this only since you might need a large number of GP accelerators to basically get such a large batch size.
+
+00:23:04,00:23:06
+The other way of doing this is.
+
+00:23:06,00:23:08
+To use something called memory.
+
+00:23:08,00:23:18
+So we really bad. What you do is you basically maintain a momentum of the activations across all of your features.
+
+00:23:18,00:23:28
+So if I had 1000 examples in my data set, so I'll basically having memory Bank of 1000 features and every time I compute a forward bus.
+
+00:23:28,00:23:43
+I will basically update this memory bank and update this windibank by basically embedding that I'm getting right now from the forward pass and I'll use this memory bank or memory banks features. Also, it's negative when I'm computing my contrast.
+
+00:23:43,00:23:44
+So this is fairly.
+
+00:23:44,00:23:50
+Complete efficient because in the way that it's implemented, you're giving me just one forward pass.
+
+00:23:50,00:23:59
+But sort of bigger drawback of this method is that it's not online. Essentially, you're storing these memory features in memory.
+
+00:23:59,00:24:07
+And we're basically updating them only once per airport, which means that they get stale very quickly. It also requires a large number of.
+
+00:24:07,00:24:24
+Like large sort of GPU RAM as well, because if your data set increases from 1000 samples to 1,000,000 samples, then basically you need to store features for 1,000,000 integers and basically after a point it becomes harder and harder to store very large data set.
+
+00:24:24,00:24:30
+The 3rd way of doing this was proposed global, which is basically that you have.
+
+00:24:30,00:24:40
+You try to use the memory bank idea, but you really try to remove its constraint that it's not online and it requires like this entire data set of activations.
+
+00:24:40,00:24:51
+So to do this you have 2 in separate intervals. The FQDN coder which is duration and cover that you really want to learn and you also maintain a moving average.
+
+00:24:51,00:24:53
+The parameters so.
+
+00:24:53,00:24:58
+Which is an exponential moving average of this represented by FTW.
+
+00:24:58,00:25:12
+And so now I reach forward, pass you basically forward this sample through your F, Theta encoder and your F Theta improved and that basically gives you a set of positive embeddings and you keep the sort of negative embeddings which is going to be fairly small.
+
+00:25:12,00:25:22
+Much smaller than what you would have for something like memory then and that basically helps you solve this complex problem positive.
+
+00:25:22,00:25:25
+So or even embedding is propagated through F, Theta, the.
+
+00:25:25,00:25:27
+Positive embedding comes from.
+
+00:25:27,00:25:37
+And the negative embeddings basically come from a few set of stored features that you have. So now this basically helps you scale the memory because you don't really need.
+
+00:25:37,00:25:41
+Unlike the full data set store which you did in the memory map, you need a.
+
+00:25:41,00:25:43
+Very small number of features.
+
+00:25:43,00:25:48
+The only additional thing that we needed in extra forward pass every time you want to go through the key to Umm.
+
+00:25:48,00:25:50
+OK.
+
+00:25:50,00:25:53
+So this kind of concludes this.
+
+00:25:53,00:25:57
+The explanation for all the contrasted methods.
+
+00:25:57,00:26:07
+So now let's move on to the setting sort of way of doing sort of avoiding trivial solutions, which is through clustering based methods.
+
+00:26:07,00:26:18
+So to do that, let's first try to relate what, how contrasted learning and clustering are even related to one another before we see how clustering is actually avoiding forward solutions.
+
+00:26:18,00:26:25
+So in contrast to learning, we have these positive samples. We have these negative samples and they trying to bring together embeddings from the positives.
+
+00:26:25,00:26:26
+And we repeat.
+
+00:26:26,00:26:29
+Basically, for each pair of positives.
+
+00:26:29,00:26:42
+So essentially what we're doing is we're kind of creating groups in feature space. If I had all, so all the Members are basically the embeddings that I'm getting shown a single sample, but different augmentations of it all.
+
+00:26:42,00:26:45
+The green embeddings are the embeddings that I'm getting from a single sample, and.
+
+00:26:45,00:26:46
+Its rate of.
+
+00:26:46,00:26:49
+Mutations I really want all of these embeddings to be close by.
+
+00:26:49,00:26:59
+To one another, but far away from so far away from like different samples. So essentially creating these sort of little groups in the feature space. Then I'm doing one possible.
+
+00:26:59,00:27:04
+So another direct way of doing this is essentially to just do clustering, because clustering naturally creates.
+
+00:27:04,00:27:07
+Groups in the feature space.
+
+00:27:07,00:27:16
+So one implementing propose this method for spark, which can be viewed as an online clustering based method.
+
+00:27:16,00:27:28
+So the key idea here is again we want to maximize similarity between the image I and vented versions of it, and to do that we are always going to say that the feature from image I and.
+
+00:27:28,00:27:28
+The feature from.
+
+00:27:28,00:27:35
+Augmented image I should belong to the same group and as long as we belong to the same group and maximizing medical.
+
+00:27:35,00:27:47
+Of course, because if I keep doing this, I can actually have a trivial solution that everything gets assigned to the same group or the same cluster. So prevent these trivial solutions by controlling my clustering process.
+
+00:27:47,00:27:50
+Let's take a complete example purpose.
+
+00:27:50,00:27:59
+So you have a bunch of embeddings coming from your data set, so the blue and building related, reinventing related, and you have a set of prototypes which can be thought of.
+
+00:27:59,00:28:00
+As cluster centers.
+
+00:28:00,00:28:03
+So here in this case 3 clusters Windows.
+
+00:28:03,00:28:17
+So what we want to do is we want to compute a similarity between each of the data set, embeddings and the prototypes, and this similarity helps us figure out which cluster it is. A single sample belong to.
+
+00:28:17,00:28:27
+So in the ideal case, what we would want is some sort of similarity that looks like this. All the blue samples get mapped to one nice cluster.
+
+00:28:27,00:28:31
+The Gray samples get mapped to 1 + 2 and the purple samples get mapped.
+
+00:28:31,00:28:32
+To one possible.
+
+00:28:32,00:28:35
+So in this case what I've done is basically that.
+
+00:28:35,00:28:45
+Ah, my all. The blue samples are basically coming together in person. The group and that group is separate from the group to which the total samples.
+
+00:28:45,00:28:46
+Belong to so.
+
+00:28:46,00:28:49
+I basically satisfied my sort of invariance property.
+
+00:28:49,00:28:52
+And relation property.
+
+00:28:52,00:29:01
+The problem is of course that there are lots of trivial solutions if I'm not careful about how we how we're basically doing this.
+
+00:29:01,00:29:09
+How we're basically doing this thing we can. Basically we can get these kind of trivial solutions where everything gets assigned with singles or single.
+
+00:29:09,00:29:13
+Prototype, which means that now I've basically.
+
+00:29:13,00:29:19
+Solution or collapsed representation?
+
+00:29:19,00:29:24
+One of the simple ways that we sort of enforce this constraint is by solving this.
+
+00:29:24,00:29:26
+Sort of equal partition country.
+
+00:29:26,00:29:37
+So the idea is basically that given north samples and K prototypes, we say that each prototype is going to be similar to at Max N by K sample.
+
+00:29:37,00:29:40
+So these prototypes basically are going to.
+
+00:29:40,00:29:42
+Be equally partitioned.
+
+00:29:42,00:29:55
+Sorry, the embeddings are equally partitioned amongst my prototypes and so this really prevents the trivial solution where everything could go to just one product or one product and basically dominating movements.
+
+00:29:55,00:30:04
+And to do this, we rather than using something like K means. So K means does not really have this equal partition constraint. We basically use the clustering algorithm.
+
+00:30:04,00:30:09
+Uh, voicing pool now, which is basically related to open air transport.
+
+00:30:09,00:30:18
+I won't go into the details of what this algorithm is, but you can think of this as a clustering algorithm, which basically automatically has this EP partition constraint.
+
+00:30:18,00:30:29
+So every time I perform clustering and automatically kind of guarantee that none of the prototypes are going to be dominant and that I'm creating clusters which are going to be of uniform.
+
+00:30:29,00:30:36
+So if I had any samples, if I want to create clusters, all of my classes are going to be of size and bulky.
+
+00:30:36,00:30:38
+There asking something like K means does not.
+
+00:30:38,00:30:42
+Really guarantee such a property.
+
+00:30:42,00:30:53
+So we basically have now this good clustering constraint we have basically a way to take each of the embeddings and assign them to the prototypes. So what next?
+
+00:30:53,00:30:57
+So the first change being made is basically rather than computing a hard sort of assignment.
+
+00:30:57,00:30:59
+Or hard clustering.
+
+00:30:59,00:30:59
+We make.
+
+00:30:59,00:31:01
+The clustering soft.
+
+00:31:01,00:31:10
+So rather than saying that one sample can only belong to one prototype, we basically say that it there is a distribution that it can basically satisfy over each of these prototypes.
+
+00:31:10,00:31:12
+So the blue sample.
+
+00:31:12,00:31:14
+Have a soft assignment to.
+
+00:31:14,00:31:33
+Each prototype so you can. You can think of this over soft similarity. So it had basically scores like 0.8 to the first 1.1 to the second prototype 0.1 to the 3rd voltage, so these similarities will sum up to one, but it's basically a soft assignment that is going that is telling you how each embedding is relatively equal.
+
+00:31:33,00:31:44
+And what you can think of these assignments tools, so they are basically the user end of codes. They're telling you how each embedding can be included. If you were to just put.
+
+00:31:44,00:31:48
+Up the prototype space.
+
+00:31:48,00:31:51
+So they will basically train this report. What we do is.
+
+00:31:51,00:31:52
+We take 2 crops.
+
+00:31:52,00:31:53
+From the image.
+
+00:31:53,00:32:08
+We feel it's over through their network Theta. We compute 2 embeddings which were the blue ambulance and now we solve this sort of same point or optimal transport problem to compute these codes given the prototype.
+
+00:32:08,00:32:11
+In the next stage, what we do is we basically this solver.
+
+00:32:11,00:32:12
+Solve prediction though.
+
+00:32:12,00:32:19
+So we try to predict your code from the deck code number 2 from the embedding number one.
+
+00:32:19,00:32:23
+And similarly code number one for handwriting number 2.
+
+00:32:23,00:32:24
+The idea basically.
+
+00:32:24,00:32:30
+Is where if these booktalks are related, and if I was in very documentation.
+
+00:32:30,00:32:31
+I should be.
+
+00:32:31,00:32:34
+Able to predict code number. One full feature number.
+
+00:32:34,00:32:36
+Because both of these should basically fall.
+
+00:32:36,00:32:38
+In the same group or in the same class?
+
+00:32:38,00:32:39
+OK.
+
+00:32:39,00:32:43
+So once I'm able to sort of solve this kind of a prediction problem.
+
+00:32:43,00:32:57
+I can just compute the gradients and you can back propagate and in this case I back propagate to be important and I can actually back propagates over prototypes as well. So the prototypes or the personal centers are actually updated online for back propagation.
+
+00:32:57,00:33:04
+And we don't really require explicit set of negatives, so there is no contrast of working the way the solutions.
+
+00:33:04,00:33:14
+It's just by basically this sort of nice optimal transport or the simple way of creating these codes, which ensures that there are.
+
+00:33:14,00:33:15
+Can you let us?
+
+00:33:15,00:33:18
+A bit more about the prototypes.
+
+00:33:18,00:33:23
+OK, so the prototypes are basically just initialized randomly at first so.
+
+00:33:23,00:33:24
+You can think.
+
+00:33:24,00:33:27
+Of them as just a bag of embeddings.
+
+00:33:27,00:33:30
+And that each forward pass. What you're doing is you're taking the embedding that you.
+
+00:33:30,00:33:32
+Get from the metal FTW.
+
+00:33:32,00:33:36
+And you're computing a similarity similarity to each of the prototypes.
+
+00:33:36,00:33:43
+So if you had say B embeddings in your batch size, you have K prototypes. We're computing B times K matrix.
+
+00:33:43,00:33:46
+And now I basically say that I'm going to.
+
+00:33:46,00:33:54
+And then I basically perform this optimal transport algorithm, which kind of ensures that my pores are nicely and evenly distributed across these K prototypes.
+
+00:33:54,00:33:59
+And then I just solve this sort of cross prediction problem. So because the prototypes were used in computing the.
+
+00:33:59,00:34:02
+Makes sense.
+
+00:34:02,00:34:02
+Code I can.
+
+00:34:02,00:34:07
+Actually, back propagate and update them using this like standardizing.
+
+00:34:07,00:34:16
+Yeah, so it is like it's not claiming then like basically if you try to do something like K means very quickly you can get into trivial solution.
+
+00:34:16,00:34:18
+So this is the reason for basically using.
+
+00:34:18,00:34:19
+Sync point what?
+
+00:34:19,00:34:23
+The optimal transport method so that you have this kind of equal partition constraint.
+
+00:34:23,00:34:27
+So what is the name of the algorithm? Can you show once again?
+
+00:34:27,00:34:28
+It's simply.
+
+00:34:28,00:34:31
+Not OK.
+
+00:34:31,00:34:45
+So solving this category of optimal transport algorithm, synchrony is just an efficient way of doing optimal transport, but generally all the optimal transport algorithms have this guarantee of equal partition.
+
+00:34:45,00:34:50
+OK.
+
+00:34:50,00:34:59
+So now we basically are able to learn this feature embedding and let's try to see what what this wall method basically ends up doing.
+
+00:34:59,00:35:13
+So we evaluate this method by looking at transferring performance and like it mentioned earlier, transfer learning can be evaluated in 2 different ways. You can take a linear classifier which is basically trained on top of fixed features.
+
+00:35:13,00:35:13
+Or you can fine tune.
+
+00:35:13,00:35:15
+The full network.
+
+00:35:15,00:35:17
+So in this case we're going to fine tune the.
+
+00:35:17,00:35:19
+Full input for detection task and.
+
+00:35:19,00:35:22
+We're going to train limited classifier for image classification.
+
+00:35:22,00:35:33
+So the top are basically a supervised input, so the supervised purpose trained using labels on image, net, and then we're transferring it to different downstream tasks.
+
+00:35:33,00:35:49
+So so basically here the Supervised network performs really well on a mission, and that's kind of to be expected because it was preparing or invested and you're basically transferring it to image mix, validation set and so if there is like a very large sort of nice.
+
+00:35:49,00:35:58
+Overlapping the image distribution and the class distributions. So the features that we learned during pre training are really well aligned to the downstream task.
+
+00:35:58,00:36:03
+Compared to when you basically have.
+
+00:36:03,00:36:09
+Like other felt supervised methods in the second group and you basically see that they're also transferring fairly well.
+
+00:36:09,00:36:18
+The one thing to note is that on tasks like object detection step, supervised learning is already performing far better than supervisor.
+
+00:36:18,00:36:33
+And on the total, we basically have solved which is really closing the gap to supervise working on vision. So it's basically coming up within like a percentage point and then another downstream tasks. It's outperforming engagements with the best degree.
+
+00:36:33,00:36:44
+So what this shows is that if at beating you're learning this sort of generic feature representation, you can transfer to different downstream datasets which are not very well aligned with emotion.
+
+00:36:44,00:36:51
+What I mean by that is for something like places and data set, the name classification task is to identify scenes.
+
+00:36:51,00:37:04
+So whether this is a shopping new or whether this is a beach, or whether this is a church, and so on and and in addition there are very few classes which really overlap with places. So if you do supervised.
+
+00:37:04,00:37:06
+Really, the feature ends up really becoming specific to.
+
+00:37:06,00:37:08
+The middle classes.
+
+00:37:08,00:37:12
+And so it does not really translate very well to data set set please.
+
+00:37:12,00:37:34
+Then you know self supervised beginning. You're lowering features without really moving their labels of condition. So basically it makes it easier for you to learn, generate feature representations so when you transfer to datasets like places where there is limited overlap from the management concepts, we're actually able to perform much better to better.
+
+00:37:34,00:37:37
+So there is a question here from Camilla.
+
+00:37:37,00:37:48
+How do we analyze the cost function when we have multiple clusters for embeddings which are not explicitly of negative samples nature?
+
+00:37:48,00:37:56
+I mean, how does the model figure out which is the most suitable cluster for its embedding? If you could not.
+
+00:37:56,00:37:56
+If you could.
+
+00:37:56,00:38:00
+Explain this a bit.
+
+00:38:00,00:38:21
+Think about it. Think about it. Basically, what happens at initialization. At initialization, you have these random prototypes, right? So when you feed forward the embeddings from 2 crops, they're naturally because of, like the way the images are there, naturally going to be more related than the embedding that you get from another.
+
+00:38:21,00:38:22
+So if you.
+
+00:38:22,00:38:33
+Think of this as just a random prediction, so the prototypes are just random feature vectors. What you're doing is you're taking this blue embedding and you're computing a random prediction onto this prototype prototype set.
+
+00:38:33,00:38:37
+And if you get a green embedding your again, computing a random prediction.
+
+00:38:37,00:38:38
+To the prototype set.
+
+00:38:38,00:38:50
+So at initialization, Excel because of how like how images are at initialization itself, the boom embedding is actually going to have a different signature or a different code compared to.
+
+00:38:50,00:38:52
+A green body.
+
+00:38:52,00:39:05
+And all you're doing is basically kind of really bootstrapping that signal, so you're taking that fitting and making it even stronger and stronger, so we're enforcing that OK, at initialization, you're kind of random your, but your signatures are different.
+
+00:39:05,00:39:17
+But I want you to keep having very, very different signatures. So as training progresses, I want your signatures to become even more and more different.
+
+00:39:17,00:39:37
+OK, then we have another question from our rule. My question was if we have a high class imbalance and then we have K partitions, it divides into the capital N divided by Capital K, one that creates a problem in learning the features because a lot of negative examples.
+
+00:39:37,00:39:39
+Could be in one cluster.
+
+00:39:39,00:40:00
+It's so that's exactly why we use soft, like the soft code rather than the hard boots. So with the hard mode this is kind of a problem we get into because we we actually observed that with hard code we were getting more performs with software told you kind of say that it's not really creating K hard classes, it's actually creating far more.
+
+00:40:00,00:40:08
+Number of parts like fun number of classes. Because rather than saying that you're only similar to prototype, number one and number 2 prototypes.
+
+00:40:08,00:40:28
+Number 2I can actually create a class which is I'm moving 0.8 similar to prototype number one and 0.2 similar to prototype number 2 and nothing to protect number 2 so I can actually create far more number of classes than just K. So these soft codes basically end up giving you a far richer representation so we become less.
+
+00:40:28,00:40:28
+And less sensitive.
+
+00:40:28,00:40:41
+To the number K. If you were doing this hard assignment where the codes were binary where you have to be similar to one and not 2, then basically the cable value matters a lot.
+
+00:40:41,00:40:56
+All right, both students are satisfied with your answer, and so finally you minimize the KL distance, right divergences between the 2 right?
+
+00:40:56,00:41:01
+Yeah, that was it.
+
+00:41:01,00:41:09
+So there were also few advantages that we kind of saw, which was that it actually had faster convergence than contrasted.
+
+00:41:09,00:41:12
+So the reason for this is basically that.
+
+00:41:12,00:41:25
+It's all all those sort of computation or all the similarities happening in the in the code space. You're never really comparing the embedding directly, so and because the whole space basically imposes its own constraints, we're actually able to converge.
+
+00:41:25,00:41:29
+Possible for something like contrastive learning? Everything happens in the embedding space.
+
+00:41:29,00:41:30
+Which means that.
+
+00:41:30,00:41:31
+You need a lot of samples to.
+
+00:41:31,00:41:32
+Be able to converge.
+
+00:41:32,00:41:37
+To converge and the convergence itself is slow.
+
+00:41:37,00:41:47
+And it was also sort of easy to train this model on smaller number of GP US, so that was another sort of practical advantage.
+
+00:41:47,00:41:57
+So before we move to the next part, let's take a look at at what we have done so far for both contrasted methods and like the clustering based methods.
+
+00:41:57,00:42:03
+I made this sort of claim initially that we're going to evaluate all of these methods on Imagenet without labels right?
+
+00:42:03,00:42:16
+So this is not real sense, supervised only one can impact. Argue that this is pretend self supervised learning because you're like closing your eyes and you're pretending that there are rules. But really there are lots of labels on each.
+
+00:42:16,00:42:18
+So what does this assumption?
+
+00:42:18,00:42:19
+Do for us.
+
+00:42:19,00:42:21
+So when we take.
+
+00:42:21,00:42:23
+Images without label. We are basically taking all.
+
+00:42:23,00:42:24
+Of these images.
+
+00:42:24,00:42:25
+And sure.
+
+00:42:25,00:42:26
+They don't have any labels.
+
+00:42:26,00:42:27
+For them.
+
+00:42:27,00:42:35
+But if you look at the images, they're very nicely curated, like on the top left. You basically have all these side mirrors.
+
+00:42:35,00:42:36
+Of a car.
+
+00:42:36,00:42:49
+Then in the bottom right you basically have this like 4 signal in the top right. You basically have like the yards and the planes, so there are lots of these sort of nice curated images in this data set.
+
+00:42:49,00:42:59
+Which means that even though we're directly not using the labels, we are really kind of giving this curation process or this hand selection process of the images.
+
+00:42:59,00:43:08
+So to completely tell you what what I mean is encrypted data is curated because the images naturally belong to these 1000 classes.
+
+00:43:08,00:43:09
+All the videos contain a prominent.
+
+00:43:09,00:43:11
+Object, that's actually how.
+
+00:43:11,00:43:12
+It was created.
+
+00:43:12,00:43:16
+And there is very limited amount of clutter because there is a single prominent object.
+
+00:43:16,00:43:17
+There are going to.
+
+00:43:17,00:43:25
+Be very few background concepts and this really affects self supervised learning. This is actually one of the hidden assumptions for it.
+
+00:43:25,00:43:30
+So there was this really nice paper on demystifying contrastive voting, which brought this sort of assumption.
+
+00:43:30,00:43:32
+To the flow.
+
+00:43:32,00:43:34
+So when you painting one dimensional data.
+
+00:43:34,00:43:36
+It really hurts performance.
+
+00:43:36,00:43:40
+So this image this of this scene.
+
+00:43:40,00:43:48
+Such images are not really typical image because the whole scene in it would just have something like a chair and like a Zumba division of this particular chair.
+
+00:43:48,00:43:50
+Now what happens when I take?
+
+00:43:50,00:43:52
+Multiple props from this scene.
+
+00:43:52,00:44:06
+I get these other crops and in contrast to learning or industry, I'm going to say that what you want is the embeddings from all of these 4 samples. Of all these 4 crops should basically be the same.
+
+00:44:06,00:44:08
+Which means that.
+
+00:44:08,00:44:12
+Really, I'm saying that uh refrigerator embedding should be very close to.
+
+00:44:12,00:44:13
+A chair embedding.
+
+00:44:13,00:44:14
+Which is not really what we want.
+
+00:44:14,00:44:29
+We don't want embeddings. We wanted to recognize the refrigerator and documentations of refrigerator. We didn't want refrigerator embeddings to be similar to share embedding single table models.
+
+00:44:29,00:44:30
+Compared to something.
+
+00:44:30,00:44:30
+Like the real.
+
+00:44:30,00:44:39
+World immediately have different distributions, right? Images cannot necessarily just speak up like clear images, they can be cartoon images.
+
+00:44:39,00:44:47
+Nowadays there are lots of means as well. There is likely that there is no single component object. Sometimes there is no dominant object or no object at all.
+
+00:44:47,00:44:52
+So related data really has very very different problem.
+
+00:44:52,00:44:56
+Now to sort of verify whether he had fallen into this.
+
+00:44:56,00:44:57
+So trap that.
+
+00:44:57,00:45:09
+Image and it was the data set that everything worked on and outside automated. Nothing works. We decided to take like the solve method and really try it out on large scale data.
+
+00:45:09,00:45:20
+So this brings us to sear, which is basically taking stock and testing it on billions of images which are random and these images are not filtered in anything.
+
+00:45:20,00:45:25
+So over here I'm basically showing you 3 ring like 3 different or 4 different models.
+
+00:45:25,00:45:32
+Which are going to which are basically the fine tune performance of models when transferred to engagement.
+
+00:45:32,00:45:33
+So on the top we.
+
+00:45:33,00:45:34
+Have here which is.
+
+00:45:34,00:45:39
+A regnant model trained on 1.3 billion random Internet images, so.
+
+00:45:39,00:45:42
+Completely random, not filtered in any way.
+
+00:45:42,00:45:51
+So yes, this can include something like means it can be seen. It can be completely text data. It can be Part 2. We basically do filter.
+
+00:45:51,00:45:56
+In the next ruling that saw, which I guess presented which is a resident monitoring machine.
+
+00:45:56,00:46:06
+Next we have similar which is another modified version of resonate, omniscient, and then the last order vision transformer, which is a supervised algorithm treatment resistant.
+
+00:46:06,00:46:15
+And then you transfer all of these. What you observe is basically that the stair models are working very well and they're working well across different model capacities.
+
+00:46:15,00:46:26
+So on the X axis we are basically looking at the number of parameters and each of the dots or each of the points in the plot represent a different model. So we can train those 3 models like more than a billion parameters.
+
+00:46:26,00:46:29
+Which are going to transfer.
+
+00:46:29,00:46:38
+And all of this is happening on completely random Internet images without really looking at any labels or without incubating those images in the deep.
+
+00:46:38,00:46:41
+So the next thing we wanted to see is basically how much of.
+
+00:46:41,00:46:43
+A difference there is.
+
+00:46:43,00:46:58
+When we are looking in discoloration images and then we're ignoring metadata, right? So all of the images that we had on the Internet had some kind of metadata associated with them. So what happens if we try to use admitted data?
+
+00:46:58,00:47:00
+So in the top row.
+
+00:47:00,00:47:03
+We have a hashtag direction.
+
+00:47:03,00:47:11
+It was pre trained on one billion images and leave one billion images already selected such that the hashtags aligned with Imagenet classes.
+
+00:47:11,00:47:28
+So if I had a hashtag for example of a concept that is not in image and this image was filtered out and the idea is basically that just by doing this sort of simple filtering process, you are creating a nice alignment between a pre training data set and your transfer data set is closed.
+
+00:47:28,00:47:32
+Then we trained resonates one one model numbers which has 19 parameters.
+
+00:47:32,00:47:34
+So you get a 9 transfer accuracy.
+
+00:47:34,00:47:36
+Of 82%.
+
+00:47:36,00:47:42
+Which is like really nice being given that you're not looking at any image net image at reading.
+
+00:47:42,00:47:56
+In the second movie apps here, which is also one billion images, but these images are not curated anyway, so we don't have any filtering processes associated with them. Also, of course we're not doing any hashtag prediction, so it's a self supervised method.
+
+00:47:56,00:47:56
+And we basically.
+
+00:47:56,00:48:00
+Here, within one percentage point of this hashtag prediction.
+
+00:48:00,00:48:01
+It is showing.
+
+00:48:01,00:48:02
+You that there is like.
+
+00:48:02,00:48:12
+This nice generalization property that you have self supervised learning. You can really scale it to lots of images and you can down fairly powerful representation.
+
+00:48:12,00:48:14
+So before we move on to the next part, are there?
+
+00:48:14,00:48:18
+Any questions for this?
+
+00:48:18,00:48:19
+You pick seems.
+
+00:48:19,00:48:19
+Second, that's good.
+
+00:48:19,00:48:23
+No one is typing here.
+
+00:48:23,00:48:27
+Do they understand?
+
+00:48:27,00:48:39
+Yeah right, so the next part when I talked about contrasted learning and clustering, I presented them as 2 separate things, but actually there is a very simple way to combine these methods.
+
+00:48:39,00:48:46
+So at this year, CVPR, we have this paper which shows that really you can combine sort of nice properties in both contrasted learning.
+
+00:48:46,00:48:48
+And clustering.
+
+00:48:48,00:48:49
+So in this case we're.
+
+00:48:49,00:49:01
+Studying rather than images. We were studying videos because videos provide this as you see, next, uh, very nice avenue to combine clustering and images and addressable.
+
+00:49:01,00:49:09
+So we studied this audio video discrimination task where, like I mentioned earlier, the positives are basically coming from.
+
+00:49:09,00:49:10
+Audio and video of this.
+
+00:49:10,00:49:18
+Example, so you have 2 encoders, a video encoder and audio input. Are you feeding the video so the video encoder? You get an embedding?
+
+00:49:18,00:49:28
+If we can be audio for audio encoder and we'll get it buddy, and now what you say? Basically both of these embeddings that are coming from the same sample should be closed in feature space compared to any other embedding.
+
+00:49:28,00:49:36
+Basically that is coming from any other sample, so it's really saying that across these 2 modalities of video and audio, the embedding should be the same.
+
+00:49:36,00:49:39
+It should be negative.
+
+00:49:39,00:49:41
+So this is straight.
+
+00:49:41,00:49:44
+There is no clustering.
+
+00:49:44,00:50:04
+To introduce this kind of clustering, we expanded the notion of positives. When I say expanded, we basically take a reference point, so that is a point on the top right and we compute its similarity in the video features or the video evidence and the audio embeddings to all the other samples.
+
+00:50:04,00:50:04
+In the data set.
+
+00:50:04,00:50:05
+That's it.
+
+00:50:05,00:50:13
+So basically this is sort of trying to show you there are lots of their routing. Lots of different samples when you're computing this similarity.
+
+00:50:13,00:50:16
+And for samples where both the video similarity and.
+
+00:50:16,00:50:17
+The audio similarity.
+
+00:50:17,00:50:21
+Is high we basically just called any positives also.
+
+00:50:21,00:50:33
+So you can see this as a weak way of doing clustering, because rather than in contrast coding where you just had a very sort of limited concept of positive, it has to be the audio from the same sample.
+
+00:50:33,00:50:40
+It has to be the video from this example or invasive images. It is basically the same image and just different perturbations.
+
+00:50:40,00:50:52
+In this case, we are actually looking at positives which are different samples altogether, and the way we've computed these samples is just by looking at similarity in both the video space and the audience.
+
+00:50:52,00:51:01
+And we call this basically looking at audiovisual arguments, because we're looking at every sample that agreeing with the reference sample in both the rule similarity.
+
+00:51:01,00:51:05
+And glorious in that.
+
+00:51:05,00:51:11
+And So what will be sample group like? So on the top we have basically 3 different references.
+
+00:51:11,00:51:22
+And I'm showing you what a positive looks, which basically agrees in both the visual similarity and the audio similarity. I'm showing you what virtual negative is. Do it on unity.
+
+00:51:22,00:51:32
+So if you take the first, like basically the first column, in this case we have a person dancing and either positive which is basically similar in both video and audio, which is.
+
+00:51:32,00:51:34
+Also present dancing.
+
+00:51:34,00:51:47
+If you were to completely ignore the audio and just look at visual similarity, you could get it smooth exercising because visually both of these concepts really look fairly simple.
+
+00:51:47,00:51:48
+But in our.
+
+00:51:48,00:51:48
+Case if you.
+
+00:51:48,00:51:54
+Just look at the audio. It's going to be very different for someone who's dancing they dance to like a particular kind of music.
+
+00:51:54,00:51:56
+There are some new exercising that actually done like.
+
+00:51:56,00:52:00
+Exercise for different kind of music or have a different word.
+
+00:52:00,00:52:02
+And if you want to just look.
+
+00:52:02,00:52:08
+At the audio part, but then that is confusing too because someone could be finishing with just the same background music.
+
+00:52:08,00:52:15
+So if you were to just use the audio to computer or like expand the set of positives, then you go get a very good signal there, right?
+
+00:52:15,00:52:24
+And similarly, we have like 2 more dishes here a moving train. It sounds very similar to a moving boat, but of course visually it's very different and a moving train.
+
+00:52:24,00:52:26
+Also time maybe?
+
+00:52:26,00:52:30
+Looks similar because of like the texture and so on to something like a truck station.
+
+00:52:30,00:52:31
+But both of them are going.
+
+00:52:31,00:52:34
+To sound very different.
+
+00:52:34,00:52:47
+So basically by doing all of these things, you're actually able to expand the set of positives, and now we can kind of combine the advantages of contrastive learning with clustering, by basically having this nice relation.
+
+00:52:47,00:52:48
+To different images.
+
+00:52:48,00:52:52
+And creating these groups in feature space.
+
+00:52:52,00:52:57
+So this brings us to the end clustering based methods.
+
+00:52:57,00:53:03
+And we can. Now we can move on to distillation. Or if anyone have any question.
+
+00:53:03,00:53:06
+I don't see.
+
+00:53:06,00:53:17
+So these decision based methods are again going to fall under this category of similarity maximization. So we have F 3 of I which we want to be similar to.
+
+00:53:17,00:53:18
+FT dot into.
+
+00:53:18,00:53:21
+The path, it's just a different way of boom so you.
+
+00:53:21,00:53:24
+Can view this as a student teacher distillation process.
+
+00:53:24,00:53:31
+Right, so we are going to compute an embedding from the student for the image I and we're going to compute an embedding from the teacher for the.
+
+00:53:31,00:53:32
+Augmented version of.
+
+00:53:32,00:53:34
+File and we're going to enforce similarity.
+
+00:53:34,00:53:36
+Between these 2.
+
+00:53:36,00:53:37
+And of course.
+
+00:53:37,00:53:43
+If the student, then the teachers were exactly identical and everything about them was exactly identical.
+
+00:53:43,00:53:51
+Solution, so we're going to prevent a trivial solution by asymmetry and decision making, and basically come in 2 different ways.
+
+00:53:51,00:54:00
+Yeah, and both of them actually can be jointly, so there is going to be a symmetric learning room between the student and teacher, so the student weights and the feature.
+
+00:54:00,00:54:00
+Weights may not.
+
+00:54:00,00:54:05
+Be updated in exactly the same day when we're doing backpropagation.
+
+00:54:05,00:54:08
+And there is another asymmetry in the architect.
+
+00:54:08,00:54:22
+So the student architecture and the teacher architecture are going to be different in subtle ways just so that again there is kind of any symmetry and that helps you prevent a trivial solution.
+
+00:54:22,00:54:25
+So the first method we look at is blue.
+
+00:54:25,00:54:30
+Uh, which explicitly constructs a student teacher.
+
+00:54:30,00:54:34
+So you have a student encoder.
+
+00:54:34,00:54:42
+Through which you feed in image features and you add a separate another sort of prediction head for the predictor and you get an embedding.
+
+00:54:42,00:54:44
+So this should encode.
+
+00:54:44,00:54:47
+From the teacher encoder you pre forward the.
+
+00:54:47,00:54:47
+Image and you.
+
+00:54:47,00:54:50
+Get an embedding directly so predictor is.
+
+00:54:50,00:54:50
+Not being applied.
+
+00:54:50,00:54:59
+So you can see over here already there is a difference in the architecture or asymmetry in the architecture between the student and the teacher.
+
+00:54:59,00:55:05
+Then you back propagate and then the gradients are only flow through the student encoder and not through the teacher input. So there is an asymmetry.
+
+00:55:05,00:55:07
+In the learning itself.
+
+00:55:07,00:55:14
+Now there is a 3rd edition Silver Face symmetry over which is in the weights of the student encoder and the teacher input.
+
+00:55:14,00:55:17
+The teacher encoder is actually being created as.
+
+00:55:17,00:55:18
+A moving average of the.
+
+00:55:18,00:55:19
+Student input so.
+
+00:55:19,00:55:26
+It's the same sort of Norco style winter included that is being used as a teacher.
+
+00:55:26,00:55:32
+So now basically what we've done is we've created 3. So basic metrics. We have an asymmetry in the architecture.
+
+00:55:32,00:55:41
+Basically, between the student and the teacher we have an asymmetry in the learning rule, which is basically that the gradient only updates the student and not the teacher.
+
+00:55:41,00:55:46
+And then there's a 3rd for pay symmetry, which is in the weights of the student and the teacher.
+
+00:55:46,00:55:49
+And teacher rates are very different.
+
+00:55:49,00:56:00
+So by introducing these 3 kinds of base symmetry, we can actually provide trivial solutions. So they say this will actually learn meaningful representations. Network collapse.
+
+00:56:00,00:56:03
+So we do need all these 3 sources of information.
+
+00:56:03,00:56:10
+But it turns out that in 2020 another set of authors introduce ensina, which shows that you don't really need.
+
+00:56:10,00:56:12
+All the resources of basically.
+
+00:56:12,00:56:20
+So in particular, they show that you don't really need a separate set of weights for the teacher teacher.
+
+00:56:20,00:56:22
+So in this case the student and teacher.
+
+00:56:22,00:56:25
+Input have the same exact weights.
+
+00:56:25,00:56:26
+And all you have are.
+
+00:56:26,00:56:28
+2 sources of asymmetry one.
+
+00:56:28,00:56:31
+That the student uses this special predictor head.
+
+00:56:31,00:56:31
+On top
+
+00:56:31,00:56:39
+So yes, there is an asymmetry in the architecture and setting when you're back propagating, you only flow gradients through the student and not through.
+
+00:56:39,00:56:40
+The teacher so yes.
+
+00:56:40,00:56:47
+Relation between Gaylord Monday. But we don't really need a separate set of weights for the teacher info.
+
+00:56:47,00:56:49
+So now basically you.
+
+00:56:49,00:57:00
+Can see that only by just using like 2 sets of asymmetry we're still able to learn fairly powerful feature representations.
+
+00:57:00,00:57:12
+So this sort of covered the distillation part of it. Which brings us to the final part of this lecture, which is going to be about redundancy reduction.
+
+00:57:12,00:57:18
+So is does anyone have any questions?
+
+00:57:18,00:57:22
+So we don't update the teacher.
+
+00:57:22,00:57:23
+In which one?
+
+00:57:23,00:57:27
+I don't know there is a question.
+
+00:57:27,00:57:30
+Vivek, can you clarify your question, please?
+
+00:57:30,00:57:32
+I think it's about since yeah, the question about since we don't do the teacher body gets automatically updated because it shares the weights with the student, yes?
+
+00:57:32,00:57:41
+Yes, exactly.
+
+00:57:41,00:57:51
+So in the forward pass you basically compute these embeddings, so the student included in the teacher. So in the forward path, basically both of them are identical rates and in the backwards you will.
+
+00:57:51,00:57:52
+Not update the.
+
+00:57:52,00:58:01
+Teacher, but then before the next forward pass will copy over the rates of the student anyway, so that's how it's going to get keep getting updated.
+
+00:58:01,00:58:09
+Makes sense, and we're certainly satisfied.
+
+00:58:09,00:58:11
+So this brings us to.
+
+00:58:11,00:58:11
+The last part of the.
+
+00:58:11,00:58:13
+Lecture I think we're going to have.
+
+00:58:13,00:58:14
+A lot of time.
+
+00:58:14,00:58:16
+So I encourage folks to ask questions.
+
+00:58:16,00:58:17
+In general because.
+
+00:58:17,00:58:19
+I don't have that much meeting. I think we have.
+
+00:58:19,00:58:24
+Like about him on your left.
+
+00:58:24,00:58:25
+All right so.
+
+00:58:25,00:58:40
+So, so this like this last set of like the last sort of objective function, is not really all about similarity maximization, it's about redundancy reduction, so it's called Barlow prints these awesome folks.
+
+00:58:40,00:58:59
+So the teacher hypothesis here is actually inspired by neuroscience. The the idea basically being that neurons in a brain communicate via spiking boats, and because your brain has a limited amount of real estate, you can't really pack a lot of neurons into it like this, not arbitrarily large.
+
+00:58:59,00:59:02
+I mean because it also has another sort of.
+
+00:59:02,00:59:20
+Energy constraint you can't really power the brain with like infinite amount of energy. So there are 2 sort of real physical constraints will be, which means that naturally you kind of expect that the communication that happens between these neurons is going to be an efficient sort of communication protocol. It will be completely in addition.
+
+00:59:20,00:59:36
+And so hardest part was really inspired by information theory, which came after like a decade before we proposed this sort of efficient coding hypothesis, and the idea that he said is that these spiky codes should really try to reduce the redundancy between bonds.
+
+00:59:36,00:59:45
+I mean, if you think about it, it kind of makes sense. So if you have like say, 10 neurons, you don't want all the 10 neurons to input the same exact information.
+
+00:59:45,00:59:56
+If you're doing that, you're kind of being wasteful, right? If all the 10 neurons encode the same information about the input, then you basically you're not sort of maximizing the sort of structure in representing.
+
+00:59:56,01:00:06
+Certainly runs, but would I? I really want is a subset of. It focuses on a different concept, a subset of it focused on a different concept.
+
+01:00:06,01:00:11
+So how do you take this sort of insight and try to apply it to representations?
+
+01:00:11,01:00:14
+So at a very high level and this is.
+
+01:00:14,01:00:15
+Like very very.
+
+01:00:15,01:00:21
+Roughly speaking, what you have are saying, neurons which produce representation which is going to be N dimensional.
+
+01:00:21,01:00:26
+So this can be the channels in your content. So say for a resident that could be 2000.
+
+01:00:26,01:00:29
+14 dimensional feature.
+
+01:00:29,01:00:31
+And for each of these neurons.
+
+01:00:31,01:00:36
+We don't do properties to be satisfied, so we want the representation produced by neuron.
+
+01:00:36,01:00:38
+To be in Vail.
+
+01:00:38,01:00:39
+So remember the documentation that.
+
+01:00:39,01:00:41
+Is being applied.
+
+01:00:41,01:00:45
+So the spying or the representation that being produced in Iran should be.
+
+01:00:45,01:00:50
+Inventory documentation India stimulus that's actually been.
+
+01:00:50,01:00:51
+And the second.
+
+01:00:51,01:00:53
+Is that it should be independent of?
+
+01:00:53,01:00:55
+The other results.
+
+01:00:55,01:00:59
+Because you don't want all the rooms to capture the same exact thing, there should be some kind of.
+
+01:00:59,01:00:59
+D correlation between them.
+
+01:00:59,01:01:01
+Perfect.
+
+01:01:01,01:01:02
+So where you?
+
+01:01:02,01:01:11
+Are really speaking. If you had FP dot I which is basically producing this individual representation and with these square brackets and indexing this representation.
+
+01:01:11,01:01:31
+So what we have is FP Divie at the scene we ran should basically be the same under different data augmentation, so that's the first property invariants, and in the second property we want them to be independent, so you don't want them to be kind of producing the same output, and this is not exactly mathematical mathematically, right?
+
+01:01:31,01:01:33
+But roughly speaking, this is these are the kind of properties.
+
+01:01:33,01:01:36
+That we want to impose.
+
+01:01:36,01:01:38
+So to illustrate this idea.
+
+01:01:38,01:01:38
+You have the.
+
+01:01:38,01:01:44
+Image that is basically being you're computing like 2 distorted versions of it or to be documented.
+
+01:01:44,01:01:45
+Versions of it.
+
+01:01:45,01:01:47
+Which we actually included.
+
+01:01:47,01:01:54
+Unitary representations in this case ZED and Zed B are representations of the same image under different data augmentations.
+
+01:01:54,01:02:01
+And let's suppose for a minute that we had 3 mediums, right? So this red, green and blue.
+
+01:02:01,01:02:02
+So the first property, which is about invariants.
+
+01:02:02,01:02:04
+OK.
+
+01:02:04,01:02:13
+Says that basically will bloom should produce the same representation for both J&ZB.
+
+01:02:13,01:02:21
+And this basically the same feature happened for being nude on the same picture happened for a blue moon.
+
+01:02:21,01:02:26
+Basically, should produce the same sort of representation across the different inputs.
+
+01:02:26,01:02:31
+Can you put the Peach life? There's a question about the I variable, is I?
+
+01:02:31,01:02:33
+Here, representing a different neuron.
+
+01:02:33,01:02:35
+So yes, this small I in.
+
+01:02:35,01:02:37
+The bracket you can think of it as like.
+
+01:02:37,01:02:38
+Indexing into a vector.
+
+01:02:38,01:02:39
+And so I.
+
+01:02:39,01:02:41
+And J are basically representing a.
+
+01:02:41,01:02:45
+Different one.
+
+01:02:45,01:02:57
+So you want the same I the same yarn is going to be behaving the same way for the normal image in the augmented image, but the other neurons should be differently have different.
+
+01:02:57,01:03:02
+Volume, yes, that's right.
+
+01:03:02,01:03:08
+So the other thing about this is that it's also preventing like preventing a trivial solution, right?
+
+01:03:08,01:03:10
+Potential solution would basically say that OK all.
+
+01:03:10,01:03:11
+The neurons produce the.
+
+01:03:11,01:03:15
+Same output, so in this case the second property is not satisfied, only the.
+
+01:03:15,01:03:19
+First property is satisfied.
+
+01:03:19,01:03:21
+Makes sense.
+
+01:03:21,01:03:28
+OK, so coming to this. We basically have the invariants, which is going to say that all the neurons are producing the same output.
+
+01:03:28,01:03:33
+And the second is redundancy reduction, which says that all the neurons should kind of produce.
+
+01:03:33,01:03:34
+A different output.
+
+01:03:34,01:03:35
+We don't want all of them representing the.
+
+01:03:35,01:03:37
+Same thing, so that's kind.
+
+01:03:37,01:03:40
+Of driven to collapse.
+
+01:03:40,01:03:47
+So in implementation, the way to do this is to first basically compute the cross correlation between the between these feature matrices.
+
+01:03:47,01:03:59
+So if you had a feature matrix of dimensions B times D where these batch size and these like the dimension of the feature, you will compute or D times D. So a feature dimension type feature.
+
+01:03:59,01:04:03
+Matrix which is going to be the cross correlation of D. So it's just going to.
+
+01:04:03,01:04:06
+Be like the outer product.
+
+01:04:06,01:04:21
+So now, once you have this feature feature matrix, the cross correlation matrix to satisfy the properties that we mentioned earlier. We want this matrix to be fairly similar or as close as possible to an identity matrix.
+
+01:04:21,01:04:30
+And so basically the identity matrix will enforce that all the neurons because in in the diagram you're basically enforcing that all the neurons.
+
+01:04:30,01:04:41
+And across the different data augmentation are producing the same output and all the off tablet only sort of telling you that those neurons should not be like different neurons to produce different.
+
+01:04:41,01:04:48
+And so basically the loss and we're trying to say that the cross correlation that you predict from the feature should be variation better.
+
+01:04:48,01:04:50
+Divided between events.
+
+01:04:50,01:04:58
+And once you minimize this loss, we basically get it back. We can back propagating the gradient and updated.
+
+01:04:58,01:05:05
+So one thing over here is that in this entire process we have really not added any asymmetric operation.
+
+01:05:05,01:05:07
+So we think of this in terms of the.
+
+01:05:07,01:05:10
+Student teacher model that we talked about earlier.
+
+01:05:10,01:05:11
+The student and the teacher have the same.
+
+01:05:11,01:05:13
+Exact makes so this is like.
+
+01:05:13,01:05:15
+Would be in some sign.
+
+01:05:15,01:05:22
+But both distributed images are actually being updated, so there is no relation between the loading it and there is no asymmetry in the architecture.
+
+01:05:22,01:05:24
+There is no extra.
+
+01:05:24,01:05:26
+Parameter in the student which are not present.
+
+01:05:26,01:05:27
+In the teacher.
+
+01:05:27,01:05:33
+So basically in this case we've sort of remove that asymmetry.
+
+01:05:33,01:05:38
+So in terms of math, here is what the sort of.
+
+01:05:38,01:05:46
+Dictation looks like the CID matrix can be computed as a cross correlation between zed A&ZD.
+
+01:05:46,01:05:50
+And this is basically a like a function to sort through that.
+
+01:05:50,01:05:53
+The loss is being computed.
+
+01:05:53,01:05:58
+In terms of like the cross correlation matrix being very similar to the identity matrix and you can.
+
+01:05:58,01:06:01
+Basically, split it out into 2 terms.
+
+01:06:01,01:06:06
+The first one that is basically taking the identity of the identity values and so that's going to.
+
+01:06:06,01:06:08
+Be one minus CI.
+
+01:06:08,01:06:19
+That's the invariants terms saying that everyone should produce the same output under different augmentations, and the second term will be off that later. That's basically saying that all the different neurons should be different.
+
+01:06:19,01:06:21
+Well, they should be different.
+
+01:06:21,01:06:23
+Now, why do you have that?
+
+01:06:23,01:06:24
+Lambda parameter there.
+
+01:06:24,01:06:39
+Where the Lambda parameter is basically taking computing a trade off. So if you think about a matrix which is going to be like north by north, there are going to be just north diagonal entries in it, so the first one, the invariants term, just has north values inside.
+
+01:06:39,01:06:40
+And the second term.
+
+01:06:40,01:06:42
+Has N squared minus N values.
+
+01:06:42,01:06:44
+Right, so all the.
+
+01:06:44,01:06:53
+Bill terms, so the Lambda basically just trying to balance the contribution of both of these terms because we have a lot more redundancy reduction terms, then we have invariants tools.
+
+01:06:53,01:07:01
+So Lambda basically just trying to say that OK, don't try to minimize the loss by just focusing, focusing on redundancy reduction. Try to balance both of these terms because both these.
+
+01:07:01,01:07:05
+Properties are really important.
+
+01:07:05,01:07:12
+He's asking a question here. Is it correct to assume the distortions or for the images are random every time?
+
+01:07:12,01:07:19
+Yes yes. So we sampled like every time you computer forward passing. Basically before the code patch it is computing the.
+
+01:07:19,01:07:25
+Random distortion field.
+
+01:07:25,01:07:29
+So good, so now all this loss function that I've talked about.
+
+01:07:29,01:07:32
+Uh, preventable solutions like in one way.
+
+01:07:32,01:07:34
+Right, so if you had.
+
+01:07:34,01:07:46
+Yeah, then you want like if you had a constant representation where organisms produce the same output then you would not be able to sort of minimize this loss function and you would basically have a trivial solution so.
+
+01:07:46,01:07:48
+You're kind of preventing translations this way.
+
+01:07:48,01:07:54
+There is actually another set of trivial solutions which this won't any prevent all that work.
+
+01:07:54,01:07:55
+So in that.
+
+01:07:55,01:08:03
+Table solution, then you know they're producing basically different outputs, so they're completely decorrelated, but they're constant across the entire input.
+
+01:08:03,01:08:14
+So essentially each new one is producing a very different kind of an output, and even or very basically we will be producing different types of output, but they're very, very similar across a bunch of entities.
+
+01:08:14,01:08:17
+Turn on lights.
+
+01:08:17,01:08:23
+So now to prevent that, we basically this center the ZA&ZB vectors before computing the cross correlation.
+
+01:08:23,01:08:36
+So when I say center or what what we're doing is, it's kind of like a batch norm operation. So you take Z 8 and you subtract its mean and you divide by the standard deviation. This is like a fairly standard centering transform.
+
+01:08:36,01:08:43
+And the reason it prevents this kind of trivial solution is because if if you for producing the same sort of output.
+
+01:08:43,01:08:57
+Feature across all the images. Then when you send it will basically get a zero matrix right? So if I had a matrix of North Times D and if everything is roughly the same when I subtract to mean, I'll basically get our entire matrix of zeros.
+
+01:08:57,01:09:03
+So just by doing this kind of centering before computing the cross correlation, we can kind of diet network away from this kind.
+
+01:09:03,01:09:04
+Of particles each.
+
+01:09:04,01:09:11
+And centering is kind of super super standard when we're trying to cross correlation in general.
+
+01:09:11,01:09:32
+So now there are 2 ways that we prevented this. So first we basically having this invariant and redundancy reduction from that prevents this kind of completely constant output across all neurons, and the second is basically that you can still have this weird kind of a constant output, where neurons are kind of being populated but still producing the same feature.
+
+01:09:32,01:09:35
+Or the images. So that is prevented by basically doing.
+
+01:09:35,01:09:38
+A sampling operation.
+
+01:09:38,01:09:51
+So in this entire process we presented trivial solutions without looking at negative samples, because at each point when you're considering these embeddings, we're only considering the positive tests.
+
+01:09:51,01:10:06
+And we are able to prevent these trivial solutions without this kind of asymmetric load. So in swab behind that sync on operator which was non differentiable and their kind of prevented trivial solutions by doing this sort of equal partition constraint in building.
+
+01:10:06,01:10:13
+Since I am the distinguish methods, we had some kind of feeder asymmetry in the learning update in the student teacher.
+
+01:10:13,01:10:16
+Or basically having this special predictor head?
+
+01:10:16,01:10:26
+Involving wings, basically there is the lowering orbit is similar. The encoder the student and teacher. If you want to think about it that they are also.
+
+01:10:26,01:10:34
+And the entire sort of trivial solution that prevented basically by the loss function and the way the cross correlation is computed.
+
+01:10:34,01:10:37
+So this makes Barbarians fairly easy.
+
+01:10:37,01:10:47
+So this is kind of like a Python pseudocode for the entire method, including like the data loader and the optimization step. So we can basically.
+
+01:10:47,01:10:50
+Doing this will be straightforward because.
+
+01:10:50,01:10:53
+More sort of asymmetric clicks are required to really.
+
+01:10:53,01:10:55
+Make it work.
+
+01:10:55,01:10:56
+So the first.
+
+01:10:56,01:11:03
+Thing that we want to do now is once we have this method we want to measure its transfer performance on downstream tasks.
+
+01:11:03,01:11:10
+So the first thing that we did was basically finding this balance method on initial data set.
+
+01:11:10,01:11:16
+And when we're doing this fine tuning, we are basically doing the fine tuning using a very limited set of labels.
+
+01:11:16,01:11:24
+So we take this 1% of the image net labels and we find a moving this to 1% or we take 10% and define 2 only using 10%.
+
+01:11:24,01:11:28
+So the variables measured the representation that we learn.
+
+01:11:28,01:11:40
+It's fairly competitive with state of the art methods, so you get the top one accuracy when you when you're using just 1% of the data. It's fairly competitive and performs like at par with.
+
+01:11:40,01:11:43
+If we're complex now.
+
+01:11:43,01:11:47
+On the right hand side, we are evaluating the representation.
+
+01:11:47,01:11:51
+We're taking the representation with freezing and we're learning a linear classifier on top.
+
+01:11:51,01:11:53
+Of the activity.
+
+01:11:53,01:12:06
+And in this case again we transferred into places you see 9 attributes and again at this point you can basically see that it's performing at par with state of the art methods. It's slightly worse answer for certain datasets, slightly better on certain datasets.
+
+01:12:06,01:12:28
+So what this shows you that there is, it is possible to develop a simpler method that can perform as well as state of the art, and it really advances our understanding in what it means to sort of learn representations and avoid trouble solutions. How many tricks or permitted to prevent further solutions?
+
+01:12:28,01:12:31
+So the other thing that we wanted to observe was basically.
+
+01:12:31,01:12:40
+There are questions here. So first of all, why don't we perform better than other methods in low data settings?
+
+01:12:40,01:12:48
+Everything there is any like particular. I don't have any insight into why that's happening, it's just really an empirical observation.
+
+01:12:48,01:12:53
+I don't think we have any reasoning for this. I mean most of these things are at least empirical observations.
+
+01:12:53,01:12:56
+OK, OK, and the previous slide someone is asking.
+
+01:12:56,01:12:57
+YZZ
+
+01:12:57,01:13:01
+A&ZB always belong. Do they always belong?
+
+01:13:01,01:13:04
+To the same image.
+
+01:13:04,01:13:04
+It's the same day and.
+
+01:13:04,01:13:06
+Then AZP.
+
+01:13:06,01:13:17
+Yeah, so I mean ZD can be considered as like matrices, so it's north by D matrix and Z is over north by D matrix and each entry basically corresponded to the stage.
+
+01:13:17,01:13:34
+So there's zero entry like the ONZ 8 is the same image as the the O 3.
+
+01:13:34,01:13:35
+OK.
+
+01:13:35,01:13:41
+So the next thing, code Inspector, basically whether the Barber pinch method or how sensitive it is to the batch size that is being used.
+
+01:13:41,01:13:43
+Because I did mention that we have this.
+
+01:13:43,01:13:47
+Centering operation that we need to do before computing across compilation.
+
+01:13:47,01:13:49
+So let's forget about Valentine's.
+
+01:13:49,01:13:55
+For a minute and let's look at Cynthia to understand what how that size can actually get imported.
+
+01:13:55,01:14:07
+So when I talk about Cynthia in terms of pics on plastic burning, I said that the way you get negatives is basically by spreading the sort of like taking a very large batch and spreading it across GP US, right?
+
+01:14:07,01:14:14
+So, and in contrast, moving. I also said that good negatives are super super important because that ends up.
+
+01:14:14,01:14:20
+Solution also previously like these nice sort of feature clusters.
+
+01:14:20,01:14:31
+So for simpler, if you reduce the number of like the number of samples in a batch, you're effectively reducing the number of negatives that you are using for computing, like full transfer blocks.
+
+01:14:31,01:14:45
+So when you go from bad Table 4000 to a backside of 256, you can see this sort of degradation in performance, which is directly related to the number of negatives that are being used.
+
+01:14:45,01:14:54
+The second method to look at it, bill, which is has this sort of distillation based flavor student teacher, and in this case it turns out that basically.
+
+01:14:54,01:14:57
+You don't really have that kind of.
+
+01:14:57,01:14:58
+You're fairly stable to batch.
+
+01:14:58,01:15:00
+Size, it doesn't matter whether you using.
+
+01:15:00,01:15:04
+A very large batch size or a very small taxes.
+
+01:15:04,01:15:19
+In the case of volume means, the stability is supported between, so it's not as sensitive to the latencies as sencilla, and it's basically like robust or batch size, but not as robust compared to.
+
+01:15:19,01:15:35
+Say bill and in recent like past few weeks so that we push this to the limit and we trained with even smaller batch sizes were funded 20 and we can actually observe that it's still robustly even beyond discussion.
+
+01:15:35,01:15:45
+So the other thing that we wanted to study was basically that there is some importance of data augmentation when we're trying to learn these methods, right so?
+
+01:15:45,01:15:48
+So the previous slide.
+
+01:15:48,01:15:55
+If they drop in accuracy for BT due to the use of batch norm action.
+
+01:15:55,01:16:06
+So I mean, that's the reason to actually verify it at 128 patch size. So at 128 batch mode, like basically the variance in bathroom is going to be higher, but it turns out even 128 performance.
+
+01:16:06,01:16:13
+After that he fairly similar to that works like Bill. So it turns out I don't suspect it's because of that.
+
+01:16:13,01:16:23
+And at the right end where you're seeing like a big drop in performance at 4:00, 1000, I suspect it's more because of the optimization rather than PowerPoint itself. So The thing is.
+
+01:16:23,01:16:25
+Can you change batch sizes? You need to adapt?
+
+01:16:25,01:16:27
+A lot of people have been like natural parameters.
+
+01:16:27,01:16:37
+That would be great for both DK and basically like how you sort of became the learning rate and so on, so I suspected the right hand side like Google drop in performance is.
+
+01:16:37,01:16:38
+Not because of.
+
+01:16:38,01:16:42
+The algorithm it's because of, like the optimization method parameters that we used.
+
+01:16:42,01:16:53
+So also Raul is asking can you tell us in detail why different batch sizes create so much differences? I mean I think you just mentioned that you just answer this question.
+
+01:16:53,01:16:54
+And I mean.
+
+01:16:54,01:17:00
+Apart from that, like, uh, perform optimization, then certain loss functions are like more sensitive to the backside.
+
+01:17:00,01:17:12
+So like contrast with those functions, because especially the way it's implemented in cincilla, it really relies on the batch size to get its negatives, and so depending on the batch size you can actually see a very dramatic difference.
+
+01:17:12,01:17:14
+In performance.
+
+01:17:14,01:17:16
+Because you will actually get fewer number of chemicals.
+
+01:17:16,01:17:20
+Yeah, it makes sense.
+
+01:17:20,01:17:27
+Alright, so the next thing to study was how important data augmentations are when you're creating these sort of different distorted or perturbed versions.
+
+01:17:27,01:17:29
+But it's.
+
+01:17:29,01:17:31
+So in this case, again, we're studying saidul.
+
+01:17:31,01:17:33
+Barlow tools and simsala.
+
+01:17:33,01:17:46
+So the baseline you basically have what baseline in this graph means is like you are using all the data augmentations and then at each step then we basically move towards the right. We're removing a particular kind of data augmentation.
+
+01:17:46,01:17:55
+The first thing to observe is basically like Simcere and Bonnie rings are roughly similar, so similar for training when you're looking at different data augmentations.
+
+01:17:55,01:18:06
+Both of them seem to be fairly sensitive to the way like what the documentation is being used, whereas jewels seems to be far more robust to their documentation like you can remove a lot more data.
+
+01:18:06,01:18:07
+Station enter drop.
+
+01:18:07,01:18:10
+In performance is actually going to be much more.
+
+01:18:10,01:18:13
+So if you think about it.
+
+01:18:13,01:18:17
+There is a very different way in which both of these models are working, so in Baldwin.
+
+01:18:17,01:18:18
+'s you take the.
+
+01:18:18,01:18:20
+Image or in simpler to take?
+
+01:18:20,01:18:21
+The image and you.
+
+01:18:21,01:18:23
+Feed it to exactly the same encoder, right?
+
+01:18:23,01:18:28
+So the signing network that you have is basically has the same exact weights for both inputs and.
+
+01:18:28,01:18:29
+You get a.
+
+01:18:29,01:18:30
+Feature output.
+
+01:18:30,01:18:31
+And now what?
+
+01:18:31,01:18:37
+You're saying is basically both of these features should be like in the case of hardware to install redundancy, reduction loss.
+
+01:18:37,01:18:43
+But in the case of simpler, basically saying that both of these should be similar by using more transfer mode.
+
+01:18:43,01:18:55
+So the power that you have in this sort of case is that the data augmentation really needs to produce very different features so that we're actually like at every step we're basically doing something different.
+
+01:18:55,01:19:03
+Whereas in the case of Bill, when you're feeding in the image through the encoder, the weights actually are completely different for the student and the teacher.
+
+01:19:03,01:19:08
+So even if you will repeat the exact same image through the encoder, you would actually get a.
+
+01:19:08,01:19:09
+Very different output.
+
+01:19:09,01:19:16
+Because the student rates and the teacher rates are updated, so naturally the teacher is actually applying some. You can think of it as.
+
+01:19:16,01:19:20
+There is a natural amount of both augmentation that's coming from this moving average in Google.
+
+01:19:20,01:19:24
+So essentially this is one of the reasons why.
+
+01:19:24,01:19:35
+Google seems to be far more sort of prostate data of mutation compared to other methods, like say Barber to enter some data.
+
+01:19:35,01:19:41
+Now the next thing that we wanted to check was whether any sort of asymmetry is actually beneficial for bound opens.
+
+01:19:41,01:19:49
+So far we've seen that asymmetry without asymmetry. We can actually prevent total solutions, but there's adding any asymmetry actually help.
+
+01:19:49,01:20:00
+So we tried basically the same kind of asymmetric ideas that are present in sunshine. So basically using a stop gradient. So stopping the rate into one branch or adding a different sort of predictive head.
+
+01:20:00,01:20:08
+And it turns out really who we like in barnacles, adding in both of these methods really does not seem to improve performance by Holger.
+
+01:20:08,01:20:09
+In fact, adding.
+
+01:20:09,01:20:12
+Both of them together actually seems to hurt performance.
+
+01:20:12,01:20:25
+So we kind of suggest that the like the way we have sort of prevented the trivial solution asymmetry is not needed at all, and in fact, adding it will probably not give you much benefit anyway.
+
+01:20:25,01:20:38
+The 3rd for the property to verify is the number of non redundant neurons. This entire, like the entire photos discussion started with taking saying that you have neurons and you want to be different.
+
+01:20:38,01:20:44
+So to do it, I'll talk about a little sort of detailed in power grids, which is important to understand when you have the image.
+
+01:20:44,01:20:49
+When you feel it should be encoded, get particular feature dimension so that would be 2.
+
+01:20:49,01:20:51
+1048
+
+01:20:51,01:20:58
+And then that feature is actually projected to an energy before applying C redundancy reduction box. And this is also standard inside.
+
+01:20:58,01:21:07
+Contrasted working, you actually apply from the 2014 dimension feature to apply NLP to compute a very small embedding, and then you perform contrasting working.
+
+01:21:07,01:21:09
+In that.
+
+01:21:09,01:21:10
+And similarly for something like.
+
+01:21:10,01:21:13
+Though you have a predictive.
+
+01:21:13,01:21:19
+So the invalid wins. All the redundancy reduction is happening on the feature that is computed after reality.
+
+01:21:19,01:21:26
+So what we do now study is basically does that feature dimension matter and how much it matters?
+
+01:21:26,01:21:41
+So to do this we will vary the MLP dimensions. So basically the MLP will go from say 2048 to so it will take as input a 2014 dimensional feature and it can produce say there are 256 dimensional feature or 4 like 4000 dimensional feature.
+
+01:21:41,01:21:43
+So you just.
+
+01:21:43,01:21:44
+Right?
+
+01:21:44,01:21:49
+And for all of the methods, we basically evaluate still with the 2048.
+
+01:21:49,01:21:51
+Image representing from the encoder.
+
+01:21:51,01:21:58
+Yeah, it shows that we are just measuring the encoder 's performance and sorry coupling it from the MLP that.
+
+01:21:58,01:22:01
+Is being used.
+
+01:22:01,01:22:17
+So on the X axis we have basically a different dimension for the projector, so we were going from say 16 dimension to like in this case 16,000 dimension and we again have a 3 methods, powder horns, bullets in Sierra.
+
+01:22:17,01:22:18
+So for Barbara means the performance, really like really improves that you increase your dimensionality of.
+
+01:22:18,01:22:23
+It's so funny.
+
+01:22:23,01:22:24
+The project so.
+
+01:22:24,01:22:29
+If you go from 30 to like 16,000, the performance is going to like really really improve.
+
+01:22:29,01:22:35
+As we keep increasing the dimension, in fact it's not even plateaued. At 16:00 1000. You can keep increasing it.
+
+01:22:35,01:22:44
+Or something like Jewel and sencilla. It seems to be slightly more robust to this, but do basically.
+
+01:22:44,01:22:49
+I think you will see a drop in performance if you keep reducing the depth a little bit, so be 128. It really starts.
+
+01:22:49,01:22:52
+So performance, little bit.
+
+01:22:52,01:22:58
+Actually far more robust like you can increase the number or you can decrease the number and it's going to perform.
+
+01:22:58,01:23:03
+So why is this called sort of a different trend for these 3 methods?
+
+01:23:03,01:23:04
+So in Baldwin 's that.
+
+01:23:04,01:23:06
+We're doing this redundancy reduction.
+
+01:23:06,01:23:13
+'cause we're really encouraging, kind of sparse representation. We are saying that all the neurons should include something very different.
+
+01:23:13,01:23:27
+So now suppose you had like 10 concepts represented an image. It means that we are basically kind of saying that all the rewards will capture different aspects of it. So we need maybe a slightly larger number of neurons because we're enforcing this sparse representation.
+
+01:23:27,01:23:30
+We want the neurons to be completely decoded.
+
+01:23:30,01:23:39
+Whereas for something like Simpson and Blue, we're actually taking these very dense vectors and these vectors themselves. We're not enforcing any sparsity on.
+
+01:23:39,01:23:41
+Top of that.
+
+01:23:41,01:23:51
+So that's one of the reasons we suspected for Baldwin 's we actually we benefit a lot more with higher predictor dimensionality compared to some of them.
+
+01:23:51,01:23:53
+And that actually brings me to the.
+
+01:23:53,01:23:54
+End of my lecture.
+
+01:23:54,01:23:57
+Uh, and finished over here, but if you have questions then.
+
+01:23:57,01:23:57
+Not really.
+
+01:23:57,01:24:00
+Happy to take them.
+
+01:24:00,01:24:03
+What is the depth of MLB used?
+
+01:24:03,01:24:05
+In the draft network.
+
+01:24:05,01:24:11
+There should be many Englishmen.
+
+01:24:11,01:24:16
+Waiting for clarification, then trajector.
+
+01:24:16,01:24:22
+They put in Bangalore, India. So basically it's like 2,000,000 years.
+
+01:24:22,01:24:26
+And in build by default it's 100 year. We also tried 2 builders. It does not.
+
+01:24:26,01:24:30
+Make that much of a difference.
+
+01:24:30,01:24:31
+So Robin is asking.
+
+01:24:31,01:24:40
+The following there has been so much development in the field and you have just presented different methods or what should be the blueprint to follow.
+
+01:24:40,01:24:50
+If we have to run a model for SSL task since someone is doing a project, I think in this thing with these things.
+
+01:24:50,01:24:57
+Yes, so every question that we want to that you want to pick.
+
+01:24:57,01:25:01
+Yeah, which model are better for which kind of tasks?
+
+01:25:01,01:25:11
+OK, so like without knowing much about the data set and what you're trying to do, it's harder to sort of give you a general advice for this.
+
+01:25:11,01:25:12
+But there are.
+
+01:25:12,01:25:14
+Different kinds of pros and cons for each.
+
+01:25:14,01:25:15
+One of them.
+
+01:25:15,01:25:17
+So right now we have 4 on this.
+
+01:25:17,01:25:18
+One this particular slide.
+
+01:25:18,01:25:20
+Right, so so if you talk.
+
+01:25:20,01:25:21
+About like how.
+
+01:25:21,01:25:31
+These models converge. Clustering based models converge faster. So if you want to just talk about in that you have limited computing world stuff to move very fast then I will go with something.
+
+01:25:31,01:25:33
+Like this clustering based model.
+
+01:25:33,01:25:34
+Because it will just end up converging.
+
+01:25:34,01:25:35
+Faster if you.
+
+01:25:35,01:25:42
+Care about significant implementation. I will go with something like Battlefield because it's it's like I showed you like the Python code is fairly simple.
+
+01:25:42,01:25:45
+There are like very few sort of parameters that we, so I would.
+
+01:25:45,01:25:47
+Just go with something like that.
+
+01:25:47,01:26:00
+If you have like very different modalities that you're trying to compare, like we talk about video, audio, or if you're trying to do something like RGB pixels to death, then in those cases it turns out that maybe using substrate.
+
+01:26:00,01:26:18
+Trusted learning is generally better because you have 2 very very different types of encoders and 2 very very different types of architectures and the optimization problem is really really hard. So in those cases we generally found that using simpler contracts.
+
+01:26:18,01:26:25
+Yeah, one thing I wanted to point out. So shine as you were going to be aware of.
+
+01:26:25,01:26:41
+There's going to be a, uh, a project. Follow class and it's it. It basically has to do with self supervised learning, so the students are quite interested by questions around you. Know what works best for running features.
+
+01:26:41,01:26:45
+Yeah I yeah I I want to paint.
+
+01:26:45,01:26:59
+In the in the classroom you know explains some of those techniques that are very high level, and so I think your lecture is useful of, you know in terms of giving more details about exactly how this works and you.
+
+01:26:59,01:27:04
+You know I may be biased, but I I like the non contrasting methods.
+
+01:27:04,01:27:10
+There there's a question as to whether battle twins is actually not sort of a.
+
+01:27:10,01:27:19
+Uh, secret contrasting method, because it it does, you know, cortachy training across features as opposed to across samples.
+
+01:27:19,01:27:21
+Right?
+
+01:27:21,01:27:34
+But it was an indie Royale. Also is very mysterious, right works, but we serve implicit contrastive term due to the you know funny effects of of batch normalization.
+
+01:27:34,01:27:38
+Like have you come?
+
+01:27:38,01:27:45
+You know, there's like a number of publications from from deep learning, others about Web URL works by basically removing parts.
+
+01:27:45,01:27:47
+And you know.
+
+01:27:47,01:27:51
+See what if, when it fails, do you have an intuition for?
+
+01:27:51,01:27:54
+What makes below works?
+
+01:27:54,01:28:02
+I really think it's just the fact that I mean so there is a batch normal sort of. There is of course like this computational batch mode, which people.
+
+01:28:02,01:28:07
+I say sort of wrinkled options one, but I think.
+
+01:28:07,01:28:24
+And interpreting that as a hidden contrasted method is taking it a little bit too far in my opinion. So yes, you're relying on the batch statistic to really sort of right in the data, which is so I would think of it as like preconditioning, like preconditioning or sort of improving optimization.
+
+01:28:24,01:28:26
+Completely contrast.
+
+01:28:26,01:28:40
+Contracted movie you really need lots of negatives. I mean, everything is really relying thousands and thousands of tickets because if something is really working with like Bachelor 128, I don't think it's fair to call it a contrast.
+
+01:28:40,01:28:45
+So we now coming to like whether it can actually work with certain.
+
+01:28:45,01:28:46
+Different types of.
+
+01:28:46,01:28:51
+Normalization, so yes, it can actually work with different types of normalization.
+
+01:28:51,01:29:01
+It depends on the architecture that you're using, and with careful optimization. So we recently found Transformers and you can basically train.
+
+01:29:01,01:29:06
+Something like build and in that case you're not really using batch normalization.
+
+01:29:06,01:29:12
+So you cannot retrain these methods without using batch normalization. And yeah, because the architecture in itself does.
+
+01:29:12,01:29:14
+Not have it.
+
+01:29:14,01:29:22
+So I mean this is paper, right? But declined right? That tries to analyze like removing batch normalization advice, various levels and oil.
+
+01:29:22,01:29:24
+And if you remove it in.
+
+01:29:24,01:29:26
+The last layer is just completely.
+
+01:29:26,01:29:34
+Collapses, so I think we have a trade for it where you can basically initialize like we can use learning and you can try to.
+
+01:29:34,01:29:37
+This is the parameter slightly differently.
+
+01:29:37,01:29:56
+And in that case it tends to work, but I think more of it is probably like it. It's just because of the difficulty in optimization rather than something tight to the method, so I do believe that if you were to like move on to different types of architectures for the student, important teacher encoder is probably good goal.
+
+01:29:56,01:29:58
+So move to centimeter transformer, which does not have.
+
+01:29:58,01:30:01
+Any batch now?
+
+01:30:01,01:30:11
+Is the new question coming from the student? What do you see in the future of SSL and what is the North Star for it?
+
+01:30:11,01:30:12
+I think we've.
+
+01:30:12,01:30:13
+Been not started.
+
+01:30:13,01:30:33
+Uh, I think in the future. So if you think about like all the image based SSL work, it's really bootstrapping the same signal everyone is going with augmentations of the same image and basically saying that that should be the same and all like all the other images should be different or augmentations of them should be different. So everything in this slide and everything.
+
+01:30:33,01:30:40
+Actually, in the past few years, it's really sort of working is kind of using this signal in some way or the other.
+
+01:30:40,01:30:46
+So, so it's good because yes, now we're kind of understanding more and more what is necessary to make it work.
+
+01:30:46,01:30:52
+But I think there should also be some kind of effort to understand. Are there any other signals that we should really focus on?
+
+01:30:52,01:31:00
+So all of this is all about augmentation invariants, and because there is a trivial solution there, let's come up with.
+
+01:31:00,01:31:06
+But is there any other signal is in there? Is the only thing that we care about? Or are there other like interesting property that should really?
+
+01:31:06,01:31:07
+Be modeled in.
+
+01:31:07,01:31:08
+Self supplies, I think that's.
+
+01:31:08,01:31:13
+Like the bigger open question.
+
+01:31:13,01:31:16
+That makes sense.
+
+01:31:16,01:31:20
+So I have a question actually so, So what do you think of?
+
+01:31:20,01:31:40
+The possibility of applying isn't some methods, perhaps somewhat different, from the one that we heard to video learning features from video, as opposed to steal images because in some extent the the idea of distorting an image is just a way of building kind of a nearest neighbor graph, right? You you you have a collection of collection of images.
+
+01:31:40,01:31:45
+And you you generate images that you know are similar in terms of content.
+
+01:31:45,01:31:51
+And what you what you have in the end, what you use is a similarity graph, right? A bunch of groups of images or universe similar.
+
+01:31:51,01:32:04
+Now if you have video, you can imagine the kind of a similar thing where successive frames in the video are deemed to have similar content. Or you could imagine that you know one of the branches in a joint.
+
+01:32:04,01:32:11
+Winning architecture would have a bunch of frames and then the other branch would have maybe just fine framing even you know predicting.
+
+01:32:11,01:32:14
+The next frame, with some time in the middle.
+
+01:32:14,01:32:18
+Can you comment on this cell phone video?
+
+01:32:18,01:32:28
+So like if it would video so far it really followed, I would say like most of the times like video sort of architecture in video class with tasks.
+
+01:32:28,01:32:36
+He sort of mirror image tasks or image like architectures. So in the same way like in SS. And it had really been, I would say a mirror effect.
+
+01:32:36,01:32:44
+So there are the same kind of fantastic methods like we talk about where you consider like images from like from the same neighborhood to be close by.
+
+01:32:44,01:32:50
+We apply similar integrate augmentations, cropping and like basically like colour distortions and so on.
+
+01:32:50,01:33:03
+So all of it is basically the same thing, and we're doing contrasted working again. The only sort of newer thing that I have seen is like using audio or supervision, and that's really been because we were computing these data augmentations in a video.
+
+01:33:03,01:33:08
+There is a lot of redundant information, so the contractor task becomes fairly easy, so you need.
+
+01:33:08,01:33:10
+To be even more.
+
+01:33:10,01:33:21
+Cognition, because the task over here is to recognition different clips from the same video, and because there are like 10 frames, all 10 frames are going to have some more background stuff. Is there moving amongst them so the.
+
+01:33:21,01:33:23
+Transfer comes easier.
+
+01:33:23,01:33:34
+I think predictive movie definitely like one of the more sort of interesting and open problems there, but it is really I would say about the hardest problem because video prediction.
+
+01:33:34,01:33:40
+I mean, we've talked about this also multiple times. Video prediction is like one of the hardest things to do, but.
+
+01:33:40,01:33:43
+I do think it is like the right way forward. I just don't think we.
+
+01:33:43,01:33:48
+Know how to do it right now.
+
+01:33:48,01:34:06
+Our question coming in for SSL, has anyone ever tried to stick a gun to generate noise for data augmentation? Like trying to learn some limited noise that tweak the encoder in the worst way possible.
+
+01:34:06,01:34:12
+I see so kind of an atmosphere setting where you're wearing adversarial network to.
+
+01:34:12,01:34:17
+Like create a augmentations. Expect their losses like maximize valid minimums.
+
+01:34:17,01:34:20
+Uh beliefs, yes.
+
+01:34:20,01:34:26
+Yeah, so there has been some work on it that I have seen, but not like it hasn't become super popular.
+
+01:34:26,01:34:40
+But I know like also like I have tried to do experiments myself and I know other folks who tried this is basically trying to inject like some kind of upload it along with the network.
+
+01:34:40,01:34:47
+Can it? And it's like very similar to with standards or adverse side effects that you get like, really distinguish what's really going on.
+
+01:34:47,01:34:59
+There is super high frequency signal being added and that makes the sort of Glasgow very very like it completely goes nuts.
+
+01:34:59,01:35:03
+All right, so it seems like we have satisfied the curiosity of.
+
+01:35:03,01:35:06
+Everyone in the room.
+
+01:35:06,01:35:10
+Oh OK, uh platform to reach John. How do how do?
+
+01:35:10,01:35:12
+They reach you.
+
+01:35:12,01:35:13
+I mean.
+
+01:35:13,01:35:14
+Women OK?
+
+01:35:14,01:35:15
+Do we know your email?
+
+01:35:15,01:35:18
+Yeah, it's like.
+
+01:35:18,01:35:21
+I am sorry my first clip.
+
+01:35:21,01:35:24
+I am.
+
+01:35:24,01:35:29
+OK, very good. We provide the student the email in case they ask.
+
+01:35:29,01:35:31
+Alright, alright so.
+
+01:35:31,01:35:35
+Thank you again for being with us today. It was very enlightening.
+
+01:35:35,01:35:47
+So the slides are very good. I saw yesterday. Yes, I saw them yesterday already so I really knew what was coming more or less, but the last one is very pretty. I haven't seen business.
+
+01:35:47,01:36:01
+Anyway, so again thanks for for for you know, explaining Indiana in answering every question we throw at you. So looking forward to see. Oh around. Perhaps after the pandemic and.
+
+01:36:01,01:36:03
+And to hang out a little.
+
+01:36:03,01:36:06
+Thanks, thank you.
+
+01:36:06,01:36:09
+Right?
+
+01:36:09,01:36:13
+Thank you, Ishan. Thank you again, thanks everyone.

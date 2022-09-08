@@ -1,5 +1,5 @@
 ---
-title: Foreword, FAQ and disclamer
+title: Foreword, FAQ and disclaimer
 author: Loïck Bourdois
 date: 07 Jul 2021
 lang-ref: faq

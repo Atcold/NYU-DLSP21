@@ -128,3 +128,7 @@ fr:
           - path: fr/week12/12-3.md
     - path: fr/week13/13.md
     - path: fr/week14/14.md
+    - path: fr/week15/15.md
+      sections:
+          - path: fr/week15/15-1.md
+          - path: fr/week15/15-2.md

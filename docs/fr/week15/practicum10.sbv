@@ -16,7 +16,7 @@ Donc peut-être qu'on va l’avoir avec nous. Je lui ai demandé s’il veut ven
 0:00:42.000,0:00:46.000
 Mais laissez-moi vous montrer d'abord ce qu'il a fait.
 
-0:00:46.000,0:00:55.000			                                  
+0:00:46.000,0:00:55.000
 Donc si vous allez sur mon profil Twitter [alfcnz] et faites défiler vers le bas, vous verrez ça.
 
 0:00:55.000,0:01:08.640
@@ -98,7 +98,7 @@ Je vais donc recommencer à partir de là et relier toutes ces choses dont nous 
 Je sais qu'on a fait des allers-retours, mais je pense ça devrait être assez clair.
 
 0:03:40.200,0:03:45.319
-Donc nous avons dit que nous avions deux différents types d'architectures. 
+Donc nous avons dit que nous avions deux différents types d'architectures.
 
 0:03:45.319,0:03:50.319
 Nous avons la première qui est les modèles à base d'énergie génératifs à variable latente.
@@ -176,7 +176,7 @@ et une élevée ailleurs. Comment faire ça ? Deux options possibles.
 Soit avec la technique contrastive où on abaisse l'énergie sur les choses observées
 
 0:06:19.199,0:06:28.039
-et on augmente l’énergie sur les endroits qui ne sont pas les emplacements en bleu. 
+et on augmente l’énergie sur les endroits qui ne sont pas les emplacements en bleu.
 
 0:06:28.039,0:06:33.120
 Soit avec l'autre option qui, ici, est le cas architectural
@@ -197,10 +197,10 @@ Donc je pense que vous pouvez penser à l'approche architecturale comme
 un type de contrainte dure et à l’approche régularisée comme une contrainte douce, comme un ressort.
 
 0:07:09.280,0:07:13.720
-Il y a différentes techniques que je ne veux pas répéter. 
+Il y a différentes techniques que je ne veux pas répéter.
 
 0:07:13.720,0:07:22.000
-Je vais donner un exemple de ces JEMs. Mon point de vue. Vous aurez ensuite celui de Jiachen et le tout devrait donner un ensemble clair. 
+Je vais donner un exemple de ces JEMs. Mon point de vue. Vous aurez ensuite celui de Jiachen et le tout devrait donner un ensemble clair.
 
 0:07:22.000,0:07:26.000
 Donc les JEMs contrastives, via clustering, distillation, etc.
@@ -257,7 +257,7 @@ Tout d'abord, nous pouvons parler de ce « e » ici.
 Définissons pour l'instant ces lettres et ces termes.
 
 0:08:56.120,0:09:02.200
-Donc ex est la représentation d'un batch d'entrée, x. 
+Donc ex est la représentation d'un batch d'entrée, x.
 
 0:09:02.200,0:09:09.600
 Donc x est un batch dans ce cas-là et e_x la représentation de l'ensemble du batch de x. Idem pour y.
@@ -365,7 +365,7 @@ Jusqu’à quel point ? Jusqu'à ce qu’il devienne égal à gamma.
 Si c'est plus grand que gamma, tout le truc va être négatif et la partie positive va le tuer.
 
 0:13:02.399,0:13:07.079
-Ok c'est tout ce que je voulais dire et j'ai pris exactement 15 minutes. 
+Ok c'est tout ce que je voulais dire et j'ai pris exactement 15 minutes.
 
 0:13:07.079,0:13:11.760
 [Chat : qu’est-ce que e̊ ?] Je ne l'ai pas dit.
@@ -386,10 +386,10 @@ Le côté droit de cette expression ici calcule la moyenne des lignes.
 e⁽ᵇ⁾ est une ligne donnée.
 
 0:13:39.639,0:13:45.480
-Je fais donc la somme jusqu’à B de toutes les lignes et je divise par B. 
+Je fais donc la somme jusqu’à B de toutes les lignes et je divise par B.
 
 0:13:45.480,0:13:48.480
-Donc le résultat est la ligne moyenne. 
+Donc le résultat est la ligne moyenne.
 
 0:13:48.480,0:13:53.639
 Et je soustrais à e la ligne moyenne donc les colonnes sont maintenant de moyenne nulle.
@@ -431,7 +431,7 @@ Tout d'abord, faisons un très rapide récapitulatif de ce dont nous avons parl�
 Donc la première chose était l'apprentissage de représentations visuelles, un processus en deux étapes : le pré-entraînement puis l'évaluation.
 
 0:15:56.480,0:16:08.399
-Puis on a vu que pour réaliser l'apprentissage de représentations visuelles, on a soit les méthodes génératives, soit les tâches de prétexte, soit les JEMs.  
+Puis on a vu que pour réaliser l'apprentissage de représentations visuelles, on a soit les méthodes génératives, soit les tâches de prétexte, soit les JEMs.
 
 0:16:08.399,0:16:16.000
 On s’est concentré sur les JEMs qui ont deux propriétés/intuitions.
@@ -482,7 +482,7 @@ Pourquoi voulons-nous faire ça ?
 dans la pratique, les gens observent que ces méthodes ont besoin de beaucoup de choses pour fonctionner.
 
 0:18:06.320,0:18:11.000
-Il y a un tas d'exemples. Vous avez besoin de ces choses. 
+Il y a un tas d'exemples. Vous avez besoin de ces choses.
 
 0:18:11.000,0:18:16.000
 Au moins certaines d'entre elles pour que les méthodes contrastives fonctionnent.
@@ -503,7 +503,6 @@ la représentation ne devrait pas avoir beaucoup de redondance.
 Donc c’est appelé réduction de la redondance comme par exemple les Barlow Twins.
 
 0:18:54.559,0:19:01.840
-
 Ou vous devez maximiser l'information contenu dans la représentation comme par exemple VICReg.
 
 0:19:01.840,0:19:16.500
@@ -601,7 +600,7 @@ Et comme la diagonale peut être négative ou positive vous ajoutez un carré ic
 Donc on pousse pour que tous les termes diagonaux soient petits.
 
 0:22:43.000,0:22:48.559
-Et vous voyez qu’au lieu de procéder en deux temps, on le fait en trois. 
+Et vous voyez qu’au lieu de procéder en deux temps, on le fait en trois.
 
 0:22:48.559,0:22:52.400
 Donc celui-ci est invariant à l’augmentation de donnée.
@@ -664,7 +663,7 @@ A ma connaissance il n'y a qu'un seul groupe qui travaille sur ces méthodes de 
 C’est une sorte de vielle méthode mais c'est vraiment intéressant donc je voudrais la présenter.
 
 0:25:31.440,0:25:35.720
-Donc vous avez ce graphe très complexe. Voyons ce qu’il signifie.  
+Donc vous avez ce graphe très complexe. Voyons ce qu’il signifie.
 
 0:25:35.720,0:25:45.159
 Donc vous avez de distorsion d’une même image, x et y. Vous en générez une représentation pour chaque.
@@ -727,7 +726,7 @@ Laissez-moi expliquer à nouveau. Oh, peut-être que c'est plus facile de compre
 Ce W est notre centroïde. Il est de taille K par d. Et H_x est de taille N par K.
 
 0:28:18.720,0:28:24.000
-Donc l’algorithme de Sinkhorn… 
+Donc l’algorithme de Sinkhorn…
 
 0:28:24.000,0:28:36.640
 Si vous faites un k-means, parfois tous les échantillons sont regroupés en un seul centroïde.
@@ -805,13 +804,13 @@ Donc au lieu de pousser directement pour que les deux soient proches l’un de l
 Donc c’est une manière différente de s'assurer qu'ils sont invariants à l’augmentation de données.
 
 0:32:02.000,0:32:07.000
-[Alfredo : comment pouvons-nous interpréter ça ? Quels sont ces clusters ? 
+[Alfredo : comment pouvons-nous interpréter ça ? Quels sont ces clusters ?
 
 0:32:07.000,0:32:18.500
 On peut penser à ce qu’on a vu hier avec l’application de l’auto-encodeur variationnel aux chiffres du jeu de données MNIST. [cf. vidéo de TD de la semaine 8 de l’édition 2020]
 
 0:32:18.500,0:32:24.500
-On peut penser que l'espace latent est partitionné en peut-être 10 clusters différents. 
+On peut penser que l'espace latent est partitionné en peut-être 10 clusters différents.
 
 0:32:24.500,0:32:31.519
 Nous ne fournissons pas d’étiquettes à nos algorithmes mais automatiquement si le réseau ou l’algorithme a besoin
@@ -838,7 +837,7 @@ plus tard, nous avons juste besoin, par exemple, de 10 points de données pour a
 C'est comme ça que ce clustering peut être connecté à la tâche en aval.]
 
 0:33:26.240,0:33:36.159
-Oui. J'ai vu deux questions dans le chat. Premièrement, « en quoi le swap aide ? »  
+Oui. J'ai vu deux questions dans le chat. Premièrement, « en quoi le swap aide ? »
 
 0:33:36.159,0:33:52.880
 Si vous ne le faite pas, cela revient à utiliser K H_x pour prédire le Q_x mais avec les q̃_x générés à partir de h_x et non pas h_y. Donc la solution est triviale.
@@ -898,7 +897,7 @@ Donc je viens de parler de la façon de pousser pour être invariant à l’augm
 La solution triviale est empêchée par l’algorithme Sinkhorn qui essaie de d’allouer un nombre égal d'échantillons à chaque cluster.
 
 0:37:20.000,0:37:24.480
-Vous ne pouvez pas mettre tous les échantillons dans un seul centroïde. 
+Vous ne pouvez pas mettre tous les échantillons dans un seul centroïde.
 
 0:37:30.560,0:38:01.520
 Ainsi en faisant en sorte que les représentations ne soient pas trop proches l’une de l’autres, Sinkhorn empêche la solution triviale qui rend toutes les représentations identiques.
@@ -952,7 +951,7 @@ K est un hyper paramètre que vous pouvez changer et qui dans l’article de SwA
 [lis le chat] H ne peut pas être nul car h est normalisé.
 
 0:40:15.680,0:40:23.000
-Je pense que je l'ai mentionné. 
+Je pense que je l'ai mentionné.
 
 0:40:23.000,0:41:01.680
 [Jiachen et Alfredo discutent ici d’une erreur qui était présente sur la diapositive d’origine mais qu’Alfredo a corrigé au montage de la vidéo]
@@ -1021,7 +1020,7 @@ La différence est que les softargmax ont une température différente, ou froid
 Donc vous faites une entropie croisée entre ces deux-là, vous poussez pour les rapprocher.
 
 0:43:50.000,0:43:57.500
-Mais il n'y a pas d’échantillons négatifs ou quoi que ce soit d'autre et ça fonctionne. 
+Mais il n'y a pas d’échantillons négatifs ou quoi que ce soit d'autre et ça fonctionne.
 
 0:43:57.500,0:44:02.000
 La dernière méthode qui est vraiment récente s’appelle Data2Vec.
@@ -1069,7 +1068,7 @@ Donc c'est pourquoi je disais qu’il y a une régularisation implicite qui a li
 [Chat : quel est le lien avec l’apprentissage contrastif ?]
 
 0:46:08.720,0:46:37.200
-Beaucoup de gens pensent que si le prédicteur de BYOL est simplement linéaire, on peut faire implicitement un échantillon négatif contrastif. 
+Beaucoup de gens pensent que si le prédicteur de BYOL est simplement linéaire, on peut faire implicitement un échantillon négatif contrastif.
 
 0:46:37.200,0:46:48.000
 Mais quand le prédicteur est compliqué avec trois ou quatre couches feed forward, alors c'est presque impossible à analyser.
@@ -1213,7 +1212,7 @@ Il y a un nombre follement élevé d'augmentations. En apprentissage supervisé 
 Donc c'est la première chose.
 
 0:53:36.000,0:53:49.000
-La deuxième chose est que si vous enlevez ces augmentations une par une pour mesurer leur effet, on trouve que le recadrage aléatoire est l’augmentation la plus importante. 
+La deuxième chose est que si vous enlevez ces augmentations une par une pour mesurer leur effet, on trouve que le recadrage aléatoire est l’augmentation la plus importante.
 
 0:53:49.000,0:53:59.000
 Si vous faites du retournement, de la variation de couleur et appliquer du flou mais ne faites pas de recadrage aléatoire, la représentation sera horrible.

@@ -2,7 +2,7 @@
 Bienvenue en classe. Nous commençons le cours par la fin car
 
 0:00:04.400,0:00:08.400
-j'ai oublié d'appuyer sur le bouton d'enregistrement. Donc je vais refaire 
+j'ai oublié d'appuyer sur le bouton d'enregistrement. Donc je vais refaire
 
 0:00:08.400,0:00:12.480
 l'introduction de la leçon d'aujourd'hui qui a été donnée par Jiachen
@@ -56,7 +56,7 @@ Nous avons aussi besoin d'ajouter un terme de régularisation. Pourquoi en avons
 sur la latente ? Car sinon elle devient beaucoup trop puissante et le modèle global va attribuer une énergie nulle
 
 0:01:49.920,0:01:56.479
-à toutes les valeurs possibles, donc ça va être un modèle qui s’effondre. 
+à toutes les valeurs possibles, donc ça va être un modèle qui s’effondre.
 
 0:01:56.479,0:02:00.200
 Donc nous avons le décodeur qui génère ỹ.
@@ -340,7 +340,7 @@ un des plus célèbres est l'auto-encodeur. Donc vous avez juste une image…
 Disons que c'est une image ici.
 
 0:10:08.000,0:10:14.320
-Dans le cas du DAE, vous avez l'image originale vous ajoutez un peu de bruit et puis 
+Dans le cas du DAE, vous avez l'image originale vous ajoutez un peu de bruit et puis
 
 0:10:14.320,0:10:20.240
 vous essayez d'utiliser l'encodeur-décodeur pour reconstruire l'image originale.
@@ -351,7 +351,7 @@ A la fin, après avoir entraîné les réseaux, vous jetez le décodeur et ne ga
 0:10:30.320,0:10:34.640
 Vous pouvez l’utiliser pour d’autres tâches possibles.
 
-0:10:34.640,0:10:38.560	
+0:10:34.640,0:10:38.560
 Donc il y a une autre catégorie appelée tâches de prétexte.
 
 0:10:38.560,0:10:43.600
@@ -412,7 +412,7 @@ C’est très difficile de concevoir une bonne tâche de prétexte.
 Oui, oui, oui, oui, c'est aussi un autre problème.
 
 0:12:36.720,0:12:42.160
-[Alfredo : donc la perte ici est juste une classification pour ce cas ?] 
+[Alfredo : donc la perte ici est juste une classification pour ce cas ?]
 
 0:12:42.160,0:12:45.000
 Oui c’est juste une classification.
@@ -421,7 +421,7 @@ Oui c’est juste une classification.
 [Alfredo : quel est le principal problème des modèles génératifs ? Pourquoi ne les utilisons pas ?]
 
 0:12:50.160,0:12:59.200
-Le principal problème pour l'auto-encodeur est ceci. Vous avez besoin de ce décodeur. Entraîner un décodeur 
+Le principal problème pour l'auto-encodeur est ceci. Vous avez besoin de ce décodeur. Entraîner un décodeur
 
 0:12:59.200,0:13:07.839
 est déjà très difficile. Si vous avez un mauvais décodeur, vous obtiendrez un mauvais encodeur.
@@ -433,7 +433,7 @@ Aussi des fois résoudre un problème est trop dur.
 [Alfredo : pourquoi est-ce que c'est difficile de décoder ?]
 
 0:13:20.000,0:13:29.000
-Car pour beaucoup de tâche en aval nous n’avez pas nécessairement à reconstruire l’image. 
+Car pour beaucoup de tâche en aval nous n’avez pas nécessairement à reconstruire l’image.
 
 0:13:29.000,0:13:36.720
 Disons que vous avez deux images de chiens. Si vous voulez juste faire de la classification,
@@ -444,7 +444,7 @@ les deux chiens ont la même représentation, ce qui signifie qu'ils sont juste 
 0:13:47.000,0:13:52.240
 Mais si vous voulez reconstruire, alors ces deux chiens ne peuvent pas être la même représentation.
 
-0:13:52.240,0:14.04.040
+0:13:52.240,0:14:04.040
 Ce qui est en fait plus difficile par rapport à juste presser l'espace de représentation.
 
 0:14:04.040,0:14:12.639
@@ -481,7 +481,7 @@ Dans un auto-encodeur variationnel basique, vous voulez que h soit gaussien car 
 Mais si je fais juste une tâche en aval comme une classification je ne me soucie pas vraiment de savoir si la représentation est gaussienne ou non.
 
 0:15:35.000,0:15:45.000
-Si vous utilisez un auto-encodeur variationnel pour apprendre la représentation, c'est juste ajouter des contraintes supplémentaires à la 
+Si vous utilisez un auto-encodeur variationnel pour apprendre la représentation, c'est juste ajouter des contraintes supplémentaires à la
 
 0:15:45.000,0:15:49.199
 représentation mais vous ne vous souciez pas vraiment de la contrainte.
@@ -499,7 +499,7 @@ Oh oui oui oui. Je pense que peut-être tu as raison. Peut-être que chaque patc
 a neuf catégories différentes mais vous devez les contrôler et vous assurer que tous les patchs n'appartiennent pas à la même catégorie.
 
 0:16:19.000,0:16:24.500
-[Alfredo : je vois. Je pense que c'est tout pour les questions jusqu’ici.] 
+[Alfredo : je vois. Je pense que c'est tout pour les questions jusqu’ici.]
 
 0:16:24.500,0:16:30.880
 Ok donc retour aux JEMs. Encore une fois, l'idée est juste d'essayer de
@@ -528,17 +528,17 @@ Cela veut dire que les deux images partagent certaines informations sémantiques
 0:17:14.439,0:17:20.000
 Mais ensuite il y a une mauvaise chose qui peut se produire : la solution triviale.
 
-0:17:20.000,0:17.29.840
+0:17:20.000,0:17:29.840
 Pourquoi ? En fait le réseau peut tricher en n’étant pas juste invariant aux augmentations de données mais aussi aux entrées.
 
 0:17:29.840,0:17:39.880
 Quelle que soit l'entrée que vous lui donnez, il peut générer la même sortie et alors la distance sera juste de zéro.
 
 0:17:39.880,0:17:49.880
-Donc dans ce cas, vous avez cette solution triviale. Toute la question, toutes les différences entre les différentes JEMs, proviennent juste de la 
+Donc dans ce cas, vous avez cette solution triviale. Toute la question, toutes les différences entre les différentes JEMs, proviennent juste de la
 
 0:17:49.880,0:17:53.000
-façon dont vous empêchez cette solution triviale. 
+façon dont vous empêchez cette solution triviale.
 
 0:17:53.000,0:18:04.240
 Donc l'idée générale est qu'au lieu de considérer juste l'énergie locale entre votre paire d'images déformées,
@@ -589,7 +589,7 @@ Vous obtenez alors H_x. Vous essayez d’être sûr que ces
 H_x ont une certaine propriété comme par exemple que toutes les lignes ne peuvent pas être les mêmes.
 
 0:19:41.400,0:19:46.919
-[Alfredo : donc la perte agit sur le batch.] Oui, elle agit sur le batch. 
+[Alfredo : donc la perte agit sur le batch.] Oui, elle agit sur le batch.
 
 0:19:46.919,0:19:52.000
 [Alfredo : alors que l'énergie agit sur…] sur l'échantillon.
@@ -628,7 +628,7 @@ Je vous expliquerai ce qu’elles valent pour les différentes méthodes.
 En fonction des JEMs, A et B sont différents.
 
 0:20:54.000,0:21:00.480
-Je peux poursuivre ? [Alfredo : Oui, je vais juste lire les questions quand elles remonteront]. 
+Je peux poursuivre ? [Alfredo : Oui, je vais juste lire les questions quand elles remonteront].
 
 0:21:00.720,0:21:02.480
 Ok.
@@ -745,7 +745,7 @@ L’écart de performance est vraiment important et je pense que c'est la princi
 Le problème majeur de la tâche de prétexte est le fait que…]
 
 0:25:37.440,0:25:42.120
-c'est vraiment difficile de concevoir une bonne tâche de prétexte 
+c'est vraiment difficile de concevoir une bonne tâche de prétexte
 
 0:25:42.120,0:25:47.480
 [alors que le problème majeur de l’approche générative est…]
@@ -817,7 +817,7 @@ C'est pour ça que j'ai mis l’« implicite » ici.
 Mais en général pour la plupart des fonctions de perte ont ces deux termes. alors une autre chose est
 
 0:28:03.440,0:28:17.919
-Une autre chose pour les JEMs pouvant différer de l’approche supervisée ou générative ou autre, est que 
+Une autre chose pour les JEMs pouvant différer de l’approche supervisée ou générative ou autre, est que
 
 0:28:17.919,0:28:27.200
 la seule entrée de la fonction de perte est la représentation générée en sortie de votre backbone.
@@ -895,7 +895,7 @@ Pour l'instant, de ce qu’on comprend, si on entraîne avec ces types d’augme
 [Alfredo : donc il y a comme une connexion entre la tâche de prétexte et ces augmentations de données.] Oui.
 
 0:31:35.120,0:31:45.000
-[Car il semble que la tâche de prétexte nous donne des paramètres qui sont conçus pour résoudre une tâche spécifique inventée 
+[Car il semble que la tâche de prétexte nous donne des paramètres qui sont conçus pour résoudre une tâche spécifique inventée
 
 0:31:45.000,0:31:56.080
 et ici ces JEMs semblent être construites de manière à être invariantes à l'augmentation de données qui est en quelque sorte aussi adaptée aux tâches en aval.
@@ -955,10 +955,10 @@ C’est le même problème que nous avons vu à la fin du cours d'hier.
 la technique régularisée, l’auto-encodeur variationnel me donnait une haute énergie
 
 0:34:03.919,0:34:09.839
-pour ce type d'interpolation linéaire de deux chiffres d'entrée alors que 
+pour ce type d'interpolation linéaire de deux chiffres d'entrée alors que
 
 0:34:09.839,0:34:18.839
-l’auto-encodeur débruiteur, qui est une technique contrastive, donnait une faible l'énergie sur cette interpolation linéaire. 
+l’auto-encodeur débruiteur, qui est une technique contrastive, donnait une faible l'énergie sur cette interpolation linéaire.
 
 0:34:18.839,0:34:24.159
 Bref, revenons à la diapositive et essayons de comprendre ce que sont ces i, ces j et ces choses].
@@ -994,7 +994,7 @@ Voici donc l'idée de base de l'apprentissage contrastif.
 0:35:45.000,0:35:52.480
 [Alfredo : que se passe t’il si tous les i et j sont des images de chiens ?]
 
-0:35:52.480,0:35:02.880
+0:35:52.480,0:36:02.880
 S’il s’agit de chiens différents, il faut les repousser.
 
 0:36:02.880,0:36:12.400
@@ -1019,13 +1019,13 @@ A cette époque, cela ne fonctionnait pas très bien. Cela fonctionnait uniqueme
 Le problème des méthodes d’apprentissage contrastif est de trouver un bon moyen de définir les paires négatives.
 
 0:37:10.839,0:37:12.500
-Par exemple… 
+Par exemple…
 
 0:37:12.500,0:37:25.000
 [Jiachen cherche un exemple]
 
 0:37:25.000,0:37:35.000
-Par exemple si tous mes exemples négatifs viennent de chiens et d’une classe, le réseau va trouver facilement que c’est deux choses différentes. 
+Par exemple si tous mes exemples négatifs viennent de chiens et d’une classe, le réseau va trouver facilement que c’est deux choses différentes.
 
 0:37:35.000,0:37:40.400
 Ce n'est pas nécessaire d'apprendre la représentation complète du chien.
@@ -1090,7 +1090,7 @@ C'est ainsi qu'ils résolvent le problème de trouver de bonnes paires négative
 0:39:40.240,0:39:50.400
 Si c'est un chien différent ou un chat différent, peut-on pousser avec différentes intensités en fonction du contenu de l'image ?
 
-0:39:50.400,0:39:04.319
+0:39:50.400,0:40:04.319
 Donc je pense que la question est : peut-on pousser différemment en fonction de l'étiquette associée à l'image ? Mais je pense qu’on n’a pas d’étiquette.]
 
 0:40:04.319,0:40:09.200
@@ -1106,7 +1106,7 @@ On ne sait pas que c'est une image de chien ou une image de chat.
 Si je prends des photos de mon chien et vous prenez des photos de vos chiens, alors on serait dans cette configuration.
 
 0:40:24.800,0:40:29.999
-Mais habituellement, on a une énorme collection d'images non étiquetées et 
+Mais habituellement, on a une énorme collection d'images non étiquetées et
 
 0:40:29.999,0:40:35.999
 on doit construire une représentation qui ne s'effondre pas en un seul point
@@ -1136,7 +1136,7 @@ Cette fonction de perte a en fait été proposée assez tôt, dans un papier en 
 Mais elle n'a jamais vraiment bien fonctionné jusqu'à ce qu'on ait assez de puissance de calcul pour être capable d'utiliser une plus grande taille de batch.
 
 0:41:25.599,0:41:37.200
-Et donc début de 2020 nous avons ces deux papiers étonnants utilisant la perte InfoNCE pour faire de l’apprentissage contrastif. 
+Et donc début de 2020 nous avons ces deux papiers étonnants utilisant la perte InfoNCE pour faire de l’apprentissage contrastif.
 
 0:41:37.200,0:41:46.480
 Expliquons donc maintenant ce qu'est cette fonction de perte InfoNCE et comment ils font ça.
@@ -1181,7 +1181,7 @@ Donc vous obtenez – β fois la similarité entre les paires positives + softma
 Donc vu que c’est une fonction de perte, on souhaite la minimiser, donc β est positif.
 
 0:43:26.500,0:43:33.000
-Pour minimiser vous essayez de pousser ce terme vers le haut. Vous poussez 
+Pour minimiser vous essayez de pousser ce terme vers le haut. Vous poussez
 
 0:43:33.000,0:43:37.000
 pour que la similarité entre la paire positive soit élevée.
@@ -1193,7 +1193,7 @@ Puis le softmax sur toutes les paires négatives donc on pousse pour que la simi
 Mais avec une force différente car vous essayez de pousser la paire négative a une forte similarité beaucoup plus dure que la paire négative avec une faible similarité car il y a un softmax.
 
 0:44:01.760,0:44:13.920
-Donc dans ce cas, vous faites essentiellement les deux choses suivantes : rapprocher les paires positives entre elles et éloigner les paires négatives entre elles. 
+Donc dans ce cas, vous faites essentiellement les deux choses suivantes : rapprocher les paires positives entre elles et éloigner les paires négatives entre elles.
 
 0:44:13.920,0:44:21.200
 Vous devez faire quelque chose pour éviter que le gradient explose.
@@ -1292,10 +1292,10 @@ est une très vieille idée : l’utilisation du banque mémoire.
 L'idée est d'utiliser des batchs plus petits, disons de taille 128 ou 256.
 
 0:48:10.000,0:48:20.000
-Pour les paires positives, vous les prenez dans le batch que vous traitez. 
+Pour les paires positives, vous les prenez dans le batch que vous traitez.
 
 0:48:20.000,0:48:50.000
-Pour former les négatives, vous prenez un élément du batch que vous traitez et un élément de la banque de mémoire qui contient des éléments de batchs précédents récents.  
+Pour former les négatives, vous prenez un élément du batch que vous traitez et un élément de la banque de mémoire qui contient des éléments de batchs précédents récents.
 
 0:48:50.000,0:48:57.000
 Donc disons que votre taille de batch vaut 256.
@@ -1324,88 +1324,88 @@ Donc si vous faites un apprentissage contrastif dessus, vous verrez clairement u
 0:50:01.920,0:50:11.359
 MoCo signifie « Momemtum Contrast » car utilise un backbone avec momemtum.
 
-0:50:11.960,0:50:20.319							                 
+0:50:11.960,0:50:20.319
 L'idée est de ralentir l'entraînement du backbone de droite.
 
-0:50:20.319,0:50:30.240								                               
+0:50:20.319,0:50:30.240
 On met à jour beaucoup plus lentement. Dans ce cas, la différence entre l'ancien et le nouveau backbone n'est pas si différente
 
-0:50:30.240,0:50:38.559				                                                                                      
+0:50:30.240,0:50:38.559
 Cela signifie que ces échantillons négatifs sont toujours valables, même si vous vous entraînez depuis un certain temps.
 
-0:50:38.559,0:50:42.079				                             
+0:50:38.559,0:50:42.079
 [Alfredo : est-ce qu'il manque un gradient d'arrêt en haut à droite ?]
 
-0:50:42.079,0:50:45.999			                                             
+0:50:42.079,0:50:45.999
 Oh désolé, oui, il y a un gradient d'arrêt ici.
 
-0:50:48.000,0:50:52.160				                             
+0:50:48.000,0:50:52.160
 [Alfredo : en haut à droite] C’est en fait ici.
 
-0:50:52.160,0:50:57.600					                              
+0:50:52.160,0:50:57.600
 En fait, vous ne mettez rien du tout à jour.
 
-0:50:57.600,0:51:00.400							               
+0:50:57.600,0:51:00.400
 Alors, comment fait-on ?
 
-0:51:00.400,0:51:08.000					                            
+0:51:00.400,0:51:08.000
 Pour le backbone, j’appelle ça l'appelle θ bien que je devrais plutôt l'appeler w.
 
-0:51:08.480,0:51:15.599						                   
+0:51:08.480,0:51:15.599
 Comment le mettre à jour ? C’est l'optimiseur SGD simple sans momentum ni taux de décroissance des poids.
 
-0:51:15.599,0:51:22.500				                                       
+0:51:15.599,0:51:22.500
 Donc c’est simplement le dernier poids moins le taux d'apprentissage multiplié par le gradient de θ_t.
 
-0:51:22.500,0:51:34.559				                                   
+0:51:22.500,0:51:34.559
 C’est comme ça que vous mettez à jour chaque comme un réseau backbone. [Alfredo : est-ce que plus lent signifie un très petit taux d'apprentissage. Que veut dire plus lent ?]
 
-0:51:34.559,0:51:38.800				                                      
+0:51:34.559,0:51:38.800
 Ok, laissez-moi expliquer ça.
 
-0:51:38.800,0:51:41.119			                                        L
+0:51:38.800,0:51:41.119
 aissez-moi d'abord finir cette chose.
 
-0:51:41.119,0:52:01.440			                                        
+0:51:41.119,0:52:01.440
 Pour le paramètre du backbone, à chaque fois que ϑ_{t+1} change, vous faites cette moyenne mobile exponentielle sur ϑ_t.
 
-0:52:01.440,0:52:09.400					                              
+0:52:01.440,0:52:09.400
 Donc, en gros, ϑ_t est le paramètre du backbone avec momentum. La moyenne mobile exponentielle sur ϑ_t.
 
-0:52:09.400,0:52:18.640		                                              
+0:52:09.400,0:52:18.640
 Le m est habituellement configuré à 0,99 ou 0,996.
 
-0:52:18.640,0:52:23.520			                                         
+0:52:18.640,0:52:23.520
 Donc dans ce sens, vous pouvez...
 
-0:52:23.520,0:52:28.400			                                          
+0:52:23.520,0:52:28.400
 Si vous avez du temps, vous pouvez essayer vous-même. Vous pouvez l’augmenter.
 
-0:52:28.400,0:52:34.500				                                 
+0:52:28.400,0:52:34.500
 C’est en fait comme le taux d'apprentissage de θ_{t+1} fois (1 – m).
 
-0:52:34.500,0:52:38.240			                                               
+0:52:34.500,0:52:38.240
 Donc quand (1 – y) vaut 0,01
 
-0:52:38.240,0:52:46.319			                                       
+0:52:38.240,0:52:46.319
 notre taux d'apprentissage de ϑ_t est cent fois plus petit que le taux d'apprentissage de θ_t.
 
-0:52:46.319,0:52:51.040			                                         
+0:52:46.319,0:52:51.040
 Donc c'est essentiellement comme avoir un taux d'apprentissage plus petit.
 
-0:52:51.280,0:52:59.440			                                           
+0:52:51.280,0:52:59.440
 Ou d’une autre manière, c'est juste la moyenne mobile exponentielle puisque la moyenne mobile de ϑ_t.
 
-0:52:59.440,0:53:03.040				                                     
+0:52:59.440,0:53:03.040
 Donc à chaque fois, cela a changé très légèrement.
 
-0:53:03.079,0:53:10.960					                                
+0:53:03.079,0:53:10.960
 [Alfredo : Cela semble très contre-intuitif. Pourquoi le momentum devrait-il être très élevé ?]
 
-0:53:10.960,0:53:15.400	                                                      
+0:53:10.960,0:53:15.400
 Car vous voulez que ϑt soit stable.
 
-0:53:15.400,0:53:23.040			                                            
+0:53:15.400,0:53:23.040
 Si vous mettez le momentum élevé, la mise à jour sera très lente.
 
 0:53:23.040,0:53:32.400

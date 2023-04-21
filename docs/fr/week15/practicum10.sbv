@@ -1,0 +1,1473 @@
+0:00:00.000,0:00:10.000
+Bienvenue à ce cours pour apprendre et apprécier des choses en lien avec l'apprentissage profond.
+
+0:00:10.000,0:00:14.200
+J'aimerais commencer le cours avec une petite histoire.
+
+0:00:14.200,0:00:30.500
+Il y a quelque temps, un ancien étudiant de l'Université de New York d’il y a quatre ans, Aditya Ramesh, un de mes amis, travaillant maintenant à OpenAI, a fait un papier qui est juste incroyable.
+
+0:00:30.500,0:00:35.000
+Je vais le partager avec vous : DALL·E. DALL·E 2 en fait.
+
+0:00:35.000,0:00:42.000
+Donc peut-être qu'on va l’avoir avec nous. Je lui ai demandé s’il veut venir nous dire comment ça marche.
+
+0:00:42.000,0:00:46.000
+Mais laissez-moi vous montrer d'abord ce qu'il a fait.
+
+0:00:46.000,0:00:55.000
+Donc si vous allez sur mon profil Twitter [alfcnz] et faites défiler vers le bas, vous verrez ça.
+
+0:00:55.000,0:01:08.640
+Ces images ont été généré avec le prompt « une théière enseigne la chimie à un groupe de tasses de thé à l'école primaire alors qu'elle porte un costume trois pièces fantaisiste ».
+
+0:01:08.640,0:01:13.680
+Et donc voici les deux images générées par le réseau.
+
+0:01:13.680,0:01:19.439
+Il s'agit d'un modèle génératif, bien sûr.
+
+0:01:19.439,0:01:28.000
+Cette image sera donc le ỹ violet tandis que le x va être le prompt, l'observation, qui est donné un prompt au modèle.
+
+0:01:28.000,0:01:32.560
+Et si vous faites défiler vers le bas vous en verrez un peu plus…
+
+0:01:32.560,0:01:36.640
+Oops, ici. Donc si vous faites défiler un peu plus bas vous aurez
+
+0:01:36.640,0:01:41.119
+« un chien mignon qui joue du piano » ou encore celui-là qui est
+
+0:01:41.119,0:01:44.600
+je pense génial, je veux dire qu'ils sont tous géniaux.
+
+0:01:44.600,0:01:50.600
+« Une peinture d'une pieuvre triste jouant de la guitare avec des algues marines en arrière-plan »
+
+0:01:50.600,0:01:56.960
+Ou encore celui-là qui est, je pense, juste incroyable.
+
+0:01:56.960,0:02:02.399
+« Les ours prennent le contrôle de la planète » et j'ai aussi un ours.
+
+0:02:02.400,0:02:08.399
+Jeu de mots. Enfin ce n'est pas un jeu de mots mais j'aime bien les ours.
+
+0:02:08.399,0:02:16.239
+Ok c'était un jeu de mots. Oh mon dieu c'est une mauvaise blague. Ok si vous ne comprenez pas la blague, c’est mieux de toute façon.
+
+0:02:16.239,0:02:20.879
+Donc « Les ours prennent le contrôle de la planète » par DALL·E 2.
+
+0:02:20.879,0:02:26.720
+Enfin bref, vous pouvez faire défiler, voir des choses si jolies. Je pense que c'est incroyable.
+
+0:02:26.720,0:02:36.000
+J'ai en fait marqué le truc. Le post d’Aditya. Je vais vérifier. Bref, assez de publicité.
+
+0:02:36.000,0:02:41.000
+Retournons à nos affaires d'énergie. Et donc un petit récapitulatif.
+
+0:02:41.000,0:02:45.599
+Hier nous avons parlé d'optimisation, puis j'ai montré l’exemple de
+
+0:02:45.599,0:03:00.000
+quel est le profil d'énergie qu’on observe lorsque l’on se déplace dans la direction de l’interpolation linéaire dans l'espace ambiant. [cf. vidéo « Semaine 15 – TD partie A » de l’édition 2020]
+
+0:03:00.000,0:03:06.000
+On a vu qu’il y avait les deux énergies basses et puis l’espèce de bosse, l’énergie élevée,
+
+0:03:06.000,0:03:11.440
+si vous effectuez une interpolation linéaire dans l'espace d'entrée, l’espace ambiant.
+
+0:03:11.440,0:03:15.920
+Donc vous pouvez voir comment le modèle indique essentiellement
+
+0:03:15.920,0:03:22.500
+« ce truc est un déchet qui n'appartient pas à la variété d'entraînement » donc j'assigne un énergie élevée.
+
+0:03:22.500,0:03:27.360
+Et la semaine dernière, nous avons parlé des méthodes d’enchâssements joints [JEMs].
+
+0:03:27.360,0:03:33.000
+Je vais donc recommencer à partir de là et relier toutes ces choses dont nous avons parlées.
+
+0:03:33.000,0:03:40.000
+Je sais qu'on a fait des allers-retours, mais je pense ça devrait être assez clair.
+
+0:03:40.200,0:03:45.319
+Donc nous avons dit que nous avions deux différents types d'architectures.
+
+0:03:45.319,0:03:50.319
+Nous avons la première qui est les modèles à base d'énergie génératifs à variable latente.
+
+0:03:50.319,0:03:53.000
+L’autre est les JEMs.
+
+0:03:53.000,0:04:00.500
+Puis nous avons dit que la première était celle qui a le ỹ.
+
+0:04:00.500,0:04:07.000
+Et nous comparons la variation dans la variété de ỹ avec la variété de la cible bleue.
+
+0:04:07.000,0:04:12.500
+Et on fait cela en introduisant un paramètre supplémentaire, la variable latente.
+
+0:04:12.500,0:04:14.750
+Puis avons le ressort et c'est l’énergie.
+
+0:04:14.750,0:04:19.250
+L'énergie va être la somme des carrés à l'intérieur de la zone en pointillée.
+
+0:04:19.250,0:04:27.000
+Sur le côté droit, nous avons les JEMs où nous allons avoir deux branches : la branche gauche et la branche droite.
+
+0:04:27.000,0:04:40.479
+Pour la branche droite, nous supposons qu'elle réduit la variabilité, qu’elle est invariante aux variations à travers la variété.
+
+0:04:40.500,0:04:45.000
+Encore une fois, vous avez deux points, et vous les comparez.
+
+0:04:45.000,0:04:48.800
+Soit on compare les points, soit on compare les variétés.
+
+0:04:48.800,0:04:52.800
+On ne peut pas mélanger les choses sinon c’est le bazar, ça ne fonctionne pas.
+
+0:04:52.800,0:04:59.900
+De nouveau l'énergie est la grande boîte qui contient seulement la boîte « C » et c’est donc mon F.
+
+0:04:59.900,0:05:07.520
+On a vu beaucoup de modèles génératifs et si Aditya vient on en verra un de plus.
+
+0:05:07.520,0:05:19.479
+Donc on a dit qu'il y avait deux types de procédures d’entraînement différentes afin que notre modèle ne s’effondre pas.
+
+0:05:19.500,0:05:23.759
+Nous avons soit les méthodes contrastives, soit les méthodes architecturales ou régularisées.
+
+0:05:27.280,0:05:39.000
+Nous avons répété plein de fois qu’est-ce qui les différencie, mais vous savez, « repetita iuvant ». Répéter les choses aide. Donc je me répète car c’est bon.
+
+0:05:39.000,0:05:42.160
+Donc l'entraînement. Comment on entraîne ces choses ?
+
+0:05:42.160,0:05:46.240
+Donc nous voudrions trouver une énergie telle que
+
+0:05:46.240,0:05:52.960
+l'énergie pour les paires observées, ou juste les cibles si nous n'avons pas les x,
+
+0:05:52.960,0:05:59.199
+étant plus faible que
+
+0:05:59.199,0:06:04.840
+C'est donc ce que nous aimerions faire. Donc si nous avons ces cibles là,
+
+0:06:04.840,0:06:09.520
+nous aimerions avoir une énergie faible pour les points observés
+
+0:06:09.520,0:06:14.500
+et une élevée ailleurs. Comment faire ça ? Deux options possibles.
+
+0:06:14.500,0:06:19.199
+Soit avec la technique contrastive où on abaisse l'énergie sur les choses observées
+
+0:06:19.199,0:06:28.039
+et on augmente l’énergie sur les endroits qui ne sont pas les emplacements en bleu.
+
+0:06:28.039,0:06:33.120
+Soit avec l'autre option qui, ici, est le cas architectural
+
+0:06:33.120,0:06:44.500
+où nous limitons la région, l'espace de faible énergie, pour qu’il soit dans ce cas une variété unidimensionnelle.
+
+0:06:44.500,0:06:51.250
+C'est une courbe, une variété à une dimension enchâssée dans cet espace ambiant à deux dimensions.
+
+0:06:51.250,0:06:55.520
+Ou vous avez le terme de régularisation qui est comme une contrainte douce.
+
+0:06:55.520,0:06:59.199
+Donc je pense que vous pouvez penser à l'approche architecturale comme
+
+0:06:59.199,0:07:09.280
+un type de contrainte dure et à l’approche régularisée comme une contrainte douce, comme un ressort.
+
+0:07:09.280,0:07:13.720
+Il y a différentes techniques que je ne veux pas répéter.
+
+0:07:13.720,0:07:22.000
+Je vais donner un exemple de ces JEMs. Mon point de vue. Vous aurez ensuite celui de Jiachen et le tout devrait donner un ensemble clair.
+
+0:07:22.000,0:07:26.000
+Donc les JEMs contrastives, via clustering, distillation, etc.
+
+0:07:26.000,0:07:30.500
+Vous avez tellement d'options. On va en apprendre davantage après.
+
+0:07:30.500,0:07:36.240
+Donc il y a beaucoup, beaucoup, beaucoup, d'options. Pas mal de choses bizarres dont on peut ou non parler.
+
+0:07:36.240,0:07:41.440
+Il y a tellement de choses. Et encore d’autres de ce côté.
+
+0:07:41.440,0:07:48.400
+Donc il y a, comme vous pouvez le voir, plusieurs options disponibles que vous pouvez essayer d'utiliser.
+
+0:07:48.400,0:07:52.240
+Et chacune d'entre elles présente des avantages et des inconvénients.
+
+0:07:52.240,0:07:56.400
+Celle qui est la plus simple à vous expliquer est
+
+0:07:56.400,0:08:00.160
+celle qui n'a pas ces sortes de boîtes bleues.
+
+0:08:00.160,0:08:04.319
+Il s’agit du type d'architecture le plus simple.
+
+0:08:04.319,0:08:08.879
+Donc celle que je voudrais vous présenter aujourd'hui est VICReg.
+
+0:08:08.879,0:08:12.199
+VICReg a ces deux branches : la branche gauche et la droite.
+
+0:08:12.199,0:08:16.199
+Puis, il y a plusieurs coûts au sommet de ces deux branches.
+
+0:08:16.199,0:08:25.000
+On se rend compte que ce dessin est incorrect car certaines de ces boîtes doivent être d’une couleur différente.
+
+0:08:25.000,0:08:34.200
+Elles ne font pas partie de l'énergie mais elles vont faire partie de la perte. Je vais devoir mettre à jour ce dessin.
+
+0:08:34.200,0:08:37.599
+Donc comment fonctionne VICReg ?
+
+0:08:37.599,0:08:41.200
+Tout d'abord, nous pouvons parler de ce « e » ici.
+
+0:08:41.200,0:08:50.320
+« e » pour « enchâssement ».  On pourrait préférer utiliser une lettre différente pour éviter la confusion avec l'énergie.
+
+0:08:50.320,0:08:56.120
+Définissons pour l'instant ces lettres et ces termes.
+
+0:08:56.120,0:09:02.200
+Donc ex est la représentation d'un batch d'entrée, x.
+
+0:09:02.200,0:09:09.600
+Donc x est un batch dans ce cas-là et e_x la représentation de l'ensemble du batch de x. Idem pour y.
+
+0:09:09.600,0:09:13.760
+e_y va être la représentation pour le batch de y.
+
+0:09:13.760,0:09:24.080
+Donc mon e est de dimension, la dimension du batch fois la dimension de D. Peu importe ce qu’est cette dimension interne.
+
+0:09:24.640,0:09:34.000
+Chaque colonne de cette matrice est de B éléments.
+
+0:09:34.080,0:09:38.560
+Donc chaque colonne de cette matrice a B éléments
+
+0:09:38.560,0:09:46.000
+et ensuite chaque ligne de cette matrice a D éléments.
+
+0:09:46.000,0:09:52.959
+Donc ce que ces deux choses font c'est que la première va a avoir ce coût de similarité.
+
+0:09:52.959,0:09:55.120
+Ce coût de similarité.
+
+0:09:55.120,0:10:01.600
+Donc nous allons essayer de faire en sorte que ces deux représentations soient proches l'une de l'autre.
+
+0:10:01.600,0:10:10.200
+Mais si nous faisons juste ça, nous savons que le modèle peut simplement produire la solution constante.
+
+0:10:10.240,0:10:13.760
+Nous devons introduire deux termes supplémentaires.
+
+0:10:13.760,0:10:21.000
+C’est une introduction, je laisserai Jiachen expliquer cela plus concrètement.
+
+0:10:21.000,0:10:26.000
+Je voulais juste introduire cette perspective différente pour la même chose.
+
+0:10:26.000,0:10:32.880
+Donc, encore une fois, si nous minimisons juste la distance entre ces deux éléments, nous allons obtenir une représentation constante
+
+0:10:32.880,0:10:36.560
+car c'est le moyen le plus simple pour que deux choses soient identiques.
+
+0:10:36.560,0:10:40.880
+Nous devons donc introduire deux autres éléments ici.
+
+0:10:40.880,0:10:53.600
+Donc le premier, ce V, garde ces vecteurs ici pour avoir une représentation constante à travers le batch.
+
+0:10:53.600,0:11:02.399
+Donc ce terme de variance va essayer d'augmenter les variations de ces représentations à travers le batch.
+
+0:11:02.399,0:11:15.920
+Puis nous avons un autre terme. Ce terme C qui va essayer de rendre chacune de ces représentations indépendantes et au maximum informatives.
+
+0:11:15.920,0:11:22.920
+Pourquoi c'est nécessaire ? Je dirais peut-être que le terme C n'est pas strictement nécessaire.
+
+0:11:22.920,0:11:28.800
+Vous avez besoin du terme V qui en gros a un terme différent pour chacun d'entre eux.
+
+0:11:28.800,0:11:34.880
+Mais après si vous essayez de décorréler chacun de ces éléments, vous aurez des représentations qui
+
+0:11:34.880,0:11:41.279
+sont fondamentalement alignées sur x. Encore une fois le point principal est le S qui
+
+0:11:41.279,0:11:46.000
+me permet d'avoir une représentation similaire pour les deux branches.
+
+0:11:46.000,0:11:52.480
+Le moyen le plus facile de tricher serait d'avoir une représentation constante à chaque fois qu’on passe dedans.
+
+0:11:52.480,0:12:01.399
+Et donc au lieu de cela, ce terme V imposera la variance à travers le batch à être une valeur spécifique.
+
+0:12:01.399,0:12:06.160
+Comment faire cela ? Avec cette « hinge loss ».
+
+0:12:06.160,0:12:12.880
+Ce composant ici calcule la variance de ces vecteurs e_d.
+
+0:12:12.880,0:12:20.000
+Puis comme vous pouvez le voir ici, si nous essayons de minimiser ce terme, puisqu'il y a un moins ici,
+
+0:12:20.000,0:12:26.720
+nous allons repousser cette variance. Jusqu'où ? Jusqu’à ce que nous arrivions à ce seuil γ.
+
+0:12:26.720,0:12:32.720
+Et il a cette partie positive donc on ne va pas pousser au-delà du seuil.
+
+0:12:32.720,0:12:40.560
+Donc ce terme de variance ici s'assure que la variance reste supérieure à ce gamma.
+
+0:12:40.560,0:12:50.000
+Si ce truc est en dessous du gamma, alors quand on entraîne le système, quand on essaye de minimiser les pertes, ce terme va essayer de grandir.
+
+0:12:50.000,0:12:54.320
+Jusqu’à quel point ? Jusqu'à ce qu’il devienne égal à gamma.
+
+0:12:54.320,0:13:02.399
+Si c'est plus grand que gamma, tout le truc va être négatif et la partie positive va le tuer.
+
+0:13:02.399,0:13:07.079
+Ok c'est tout ce que je voulais dire et j'ai pris exactement 15 minutes.
+
+0:13:07.079,0:13:11.760
+[Chat : qu’est-ce que e̊ ?] Je ne l'ai pas dit.
+
+0:13:11.760,0:13:16.320
+C’était juste pour introduire cette leçon mais je vais vous le dire.
+
+0:13:16.320,0:13:21.519
+e̊ est mon enchâssement centré. Qu’est-ce que cela signifie ?
+
+0:13:21.519,0:13:30.519
+Simplement que c’est la matrice e à laquelle j’ai soustrais la moyenne des lignes.
+
+0:13:30.600,0:13:36.639
+Le côté droit de cette expression ici calcule la moyenne des lignes.
+
+0:13:36.639,0:13:39.639
+e⁽ᵇ⁾ est une ligne donnée.
+
+0:13:39.639,0:13:45.480
+Je fais donc la somme jusqu’à B de toutes les lignes et je divise par B.
+
+0:13:45.480,0:13:48.480
+Donc le résultat est la ligne moyenne.
+
+0:13:48.480,0:13:53.639
+Et je soustrais à e la ligne moyenne donc les colonnes sont maintenant de moyenne nulle.
+
+0:13:53.639,0:13:59.600
+Donc si je calcule la longueur carrée de la colonne, j’obtiens la variance.
+
+0:13:59.600,0:14:10.000
+Encore une fois, je ne voulais pas vraiment entrer dans les détails, je voulais juste vous montrer que cette architecture ne requiert pas de choses compliquées.
+
+0:14:10.000,0:14:20.560
+Car Jiachen va vous développer que les huit autres architectures que j’ai affichées avant ont tellement de choses fantaisistes.
+
+0:14:20.560,0:14:24.639
+Et donc que VICReg est la plus simple à comprendre.
+
+0:14:24.639,0:14:42.000
+Des questions ? [Alfredo lit le chat]. Pour le C, ce que je montre ici, c’est que je calcule la somme de tous les carrés de la matrice de covariance.
+
+0:14:42.000,0:14:56.000
+Et je soustrais la diagonale de telle sorte qu'en minimisant ce terme, je minimise tous les termes croisés dans la matrice de covariance.
+
+0:14:56.000,0:15:07.999
+Donc ce terme C décorrèle les vecteurs e_d. Encore une fois ce n’est pas trop important. C’est V est le plus important.
+
+0:15:08.320,0:15:20.500
+Donc V essaie juste de booster la variance pour chaque dimension individuelle et C essaie de rendre ces dimensions indépendantes.
+
+0:15:21.000,0:15:31.000
+Ok, j'ai pris assez de temps. Donc pour le reste de la leçon, Jiachen va essayer d’ordonner les choses et essayer de vous donner une perspective plus profonde de tout ceci.
+
+0:15:31.000,0:15:38.160
+J’ai fini ma journée. Je poserai à Jiachen vos questions sur le contenu qu’il va vous présenter.
+
+0:15:38.480,0:15:46.320
+Tout d'abord, faisons un très rapide récapitulatif de ce dont nous avons parlé jeudi dernier.
+
+0:15:46.320,0:15:56.480
+Donc la première chose était l'apprentissage de représentations visuelles, un processus en deux étapes : le pré-entraînement puis l'évaluation.
+
+0:15:56.480,0:16:08.399
+Puis on a vu que pour réaliser l'apprentissage de représentations visuelles, on a soit les méthodes génératives, soit les tâches de prétexte, soit les JEMs.
+
+0:16:08.399,0:16:16.000
+On s’est concentré sur les JEMs qui ont deux propriétés/intuitions.
+
+0:16:16.000,0:16:25.000
+La première est d’être invariante à l’augmentation de données mais cela peut produire une solution triviale.
+
+0:16:25.000,0:16:30.000
+Donc nous avons introduit la deuxième intuition sur comment prévenir cette solution triviale.
+
+0:16:30.000,0:16:40.000
+Une manière de procéder est de recourir aux méthodes contrastives où on pousse pour rapprocher toutes les paires positives et éloigner les paires négatives.
+
+0:16:40.000,0:16:45.500
+L’objectif est alors d’avoir un moyen de trouver une stratégie de génération de paires négatives.
+
+0:16:45.500,0:16:53.839
+Les vieux papiers utilisent l’« hard negative mining » [pêche à l’échantillon négatif] que nous n'avons pas vraiment développé.
+
+0:16:53.839,0:16:59.999
+Il s’agissait juste que vous sachiez que cette méthode pour trouver des échantillons négatifs existent.
+
+0:17:00.000,0:17:07.000
+Puis j’ai introduit la méthode utilisée par la plupart des papiers les plus récents : utiliser grand pool d'échantillons négatifs.
+
+0:17:07.000,0:17:14.000
+Je ne veux pas utiliser le batch car Yann a parlé de la différence entre le batch et le pool.
+
+0:17:14.000,0:17:29.000
+Donc dans cette approche nous voulons un grand échantillon de négatifs mais nous avons vu que certains échantillons peuvent être vraiment difficiles à obtenir.
+
+0:17:29.000,0:17:34.480
+J’ai mentionné comment SimCLR et MoCo procèdent pour faire cela.
+
+0:17:34.480,0:17:40.000
+Donc c’était le récapitulatif. Cette fois nous allons parler des méthodes non-contrastives.
+
+0:17:40.000,0:17:45.280
+En gros, on essaie d'empêcher la solution triviale sans utiliser des échantillons négatifs.
+
+0:17:45.280,0:17:48.799
+Pourquoi voulons-nous faire ça ?
+
+0:17:48.799,0:17:56.080
+À part le fait que Yann et Alfredo parlent beaucoup des inconvénients des méthodes contrastives,
+
+0:17:56.640,0:18:06.320
+dans la pratique, les gens observent que ces méthodes ont besoin de beaucoup de choses pour fonctionner.
+
+0:18:06.320,0:18:11.000
+Il y a un tas d'exemples. Vous avez besoin de ces choses.
+
+0:18:11.000,0:18:16.000
+Au moins certaines d'entre elles pour que les méthodes contrastives fonctionnent.
+
+0:18:16.000,0:18:26.520
+Dans la pratique cela a conduit à introduire beaucoup d'astuces d'ingénierie rendant en fait très difficile l'analyse de comment ça marche.
+
+0:18:26.559,0:18:34.080
+Aussi cela devient instable si vous n’utilisez pas ces choses-là.
+
+0:18:34.280,0:18:44.440
+Donc il y a un tas de méthodes non-contrastives introduites qui sont basées sur la théorie de l'information qui dit que
+
+0:18:44.559,0:18:49.600
+la représentation ne devrait pas avoir beaucoup de redondance.
+
+0:18:49.600,0:18:54.559
+Donc c’est appelé réduction de la redondance comme par exemple les Barlow Twins.
+
+0:18:54.559,0:19:01.840
+Ou vous devez maximiser l'information contenu dans la représentation comme par exemple VICReg.
+
+0:19:01.840,0:19:16.500
+L'avantage de ces deux méthodes, mais aussi d’autres comme TCR [de Li et al. (2022)] et certaines que je ne listerai pas, est qu’elles n'ont pas besoin d’architectures spéciales.
+
+0:19:16.500,0:19:23.039
+Il est possible d’entraîner avec une configuration de base.
+
+0:19:23.039,0:19:27.360
+Il n’y a pas besoin d'avoir trop d'astuces d'ingénierie.
+
+0:19:27.360,0:19:38.360
+Donc aujourd'hui je voudrais surtout présenter VICReg qui est basée sur le principe de la maximisation de l’information.
+
+0:19:38.360,0:19:46.440
+En gros, fondamentalement vous voulez que vos représentations aient le maximum d'informations à propos de votre image.
+
+0:19:46.500,0:19:52.640
+Car une solution triviale signifie que quelle que soit l'image que vous avez, vous aurez la même représentation.
+
+0:19:52.640,0:20:00.480
+Cela signifie que le contenu de la représentation contient aucun contenu d'information sur l'image.
+
+0:20:00.480,0:20:05.000
+Donc vous voulez maximiser le contenu de l'information. Comment le faire ?
+
+0:20:05.000,0:20:10.500
+En essayant de produire des variables d’enchâssement qui sont décorrélées les unes des autres.
+
+0:20:10.500,0:20:25.000
+Car si toutes les variables sont corrélées les unes aux autres, elles vont covarier et le contenu de l'information est réduit.
+
+0:20:25.080,0:20:33.400
+Si vous avez deux variables indépendantes, le contenu informationnel sera plus élevé que les deux variables qui covarient entre elles.
+
+0:20:33.500,0:20:41.679
+[Alfredo : c'est ce que fait le terme C dans la diapositive que j'ai montrée avant ?] Oui.
+
+0:20:41.679,0:20:47.000
+Cela empêche un effondrement informationnel dans lequel les variables portent une information redondante.
+
+0:20:47.000,0:20:50.880
+Donc vous voyez qu’on a deux effondrements.
+
+0:20:50.880,0:20:57.600
+Un effondrement où quelle que soit l'image que vous avez, vous générez toujours la même représentation qui est une solution triviale.
+
+0:20:57.600,0:21:00.000
+On en a parlé jeudi dernier.
+
+0:21:00.000,0:21:08.159
+Pour VICReg, on a aussi un type d’effondrement spécial où toutes les représentations portent une quantité vraiment limitée d'informations.
+
+0:21:08.159,0:21:19.280
+Ainsi, bien que des images différentes aient une représentation différente, le contenu de l'information est vraiment faible dans chaque représentation.
+
+0:21:19.280,0:21:27.280
+Donc comment les auteurs font ça ? Alfredo a déjà introduit la fonction de perte de VICReg.
+
+0:21:27.280,0:21:38.400
+Donc vous avez trois termes. Le premier terme est le même que pour toutes les autres méthodes, à savoir qu’on rapproche les paires positives.
+
+0:21:38.400,0:21:42.640
+Le deuxième dit que vous essayez de pousser la matrice de covariance.
+
+0:21:42.640,0:21:46.960
+Vous pouvez calculer la matrice de covariance comme ceci.
+
+0:21:46.960,0:21:51.999
+La diagonale d'une matrice de covariance est juste la variance pour chaque vecteur.
+
+0:21:51.999,0:21:59.280
+Vous voulez que la variance soit élevée car pour la solution triviale, la variance de chaque terme est 0.
+
+0:21:59.280,0:22:09.200
+Donc ce terme empêche le premier type de solution triviale en voulant que la variance de chaque terme soit élevée.
+
+0:22:09.200,0:22:14.999
+Mais alors vous aurez le problème que tous les éléments covarient entre eux.
+
+0:22:14.999,0:22:19.000
+Donc vous avez le deuxième type de solution triviale.
+
+0:22:19.000,0:22:27.200
+Pour le résoudre, on utilise le troisième terme de notre fonction de perte
+rend la covariance des enchâssements petite.
+
+0:22:27.200,0:22:32.320
+Donc on prend tous les termes hors diagonale de la matrice de covariance et on essaie de les rendre faibles.
+
+0:22:32.320,0:22:37.520
+Et comme la diagonale peut être négative ou positive vous ajoutez un carré ici.
+
+0:22:37.520,0:22:42.720
+Donc on pousse pour que tous les termes diagonaux soient petits.
+
+0:22:43.000,0:22:48.559
+Et vous voyez qu’au lieu de procéder en deux temps, on le fait en trois.
+
+0:22:48.559,0:22:52.400
+Donc celui-ci est invariant à l’augmentation de donnée.
+
+0:22:52.400,0:23:02.280
+Celui-ci est pour empêcher le premier type de solution triviale où on veut une variance élevée. Cependant il produit le second type de solution triviale.
+
+0:23:02.799,0:23:10.640
+Pour résoudre ce second type de problème, on veut que la covariance soit faible.
+
+0:23:10.640,0:23:13.679
+Donc c’est en gros l’intuition derrière VICReg.
+
+0:23:13.679,0:23:16.159
+Daniel a fait une remarque :
+
+0:23:16.159,0:23:36.000
+« Oh peut-être que c’est juste une façon intelligente d’utiliser les échantillons négatifs en calculant la matrice de covariance au lieu de les repousser directement ».
+
+0:23:36.000,0:23:50.000
+C'est un argument légitime mais en pratique les gens observent que la taille nécessaire pour les batchs est beaucoup plus petite.
+
+0:23:50.000,0:23:57.000
+Vous avez toujours besoin d'un batch d'échantillons car il faut estimer la matrice de covariance.
+
+0:23:57.000,0:24:02.240
+Il n’est pas possible d’estimer la matrice de covariance en ayant juste un seul échantillon.
+
+0:24:02.240,0:24:15.080
+Mais l’estimation de la matrice de covariance est facile à estimer et donc ne nécessite pas trop d'échantillons.
+
+0:24:15.080,0:24:25.000
+Les résultats empiriques montrent qu’il n’y a pas besoin d’autant d’échantillons négatifs que pour les méthodes contrastives.
+
+0:24:25.000,0:24:36.999
+Donc dans un certain sens, vous pouvez voir ça comme une méthode contrastive plus intelligente mais en général comme les gens considèrent que c’est une méthode non-contrastive.
+
+0:24:36.999,0:24:40.000
+D’autres questions ?
+
+0:24:40.000,0:24:47.600
+[Alfredo : tout le monde est juste très heureux car ton explication est juste parfaite, nous aimons]. Ok, c’est bien :)
+
+0:24:47.600,0:24:55.440
+Donc c'est une catégorie de méthode non-contrastive basée sur la théorie de l'information.
+
+0:24:55.440,0:25:05.279
+Il y a donc une autre catégorie de méthodes non-contrastives très intéressantes : les méthodes de clustering.
+
+0:25:05.279,0:25:10.440
+En gros, elles essaient d'empêcher la solution triviale en quantifiant l’espace d’enchâssement.
+
+0:25:10.440,0:25:13.600
+Il n’y a pas énormément de méthodes.
+
+0:25:13.600,0:25:24.080
+A ma connaissance il n'y a qu'un seul groupe qui travaille sur ces méthodes de clustering bien qu'il ait publié quatre ou cinq articles différents.
+
+0:25:24.080,0:25:31.440
+C’est une sorte de vielle méthode mais c'est vraiment intéressant donc je voudrais la présenter.
+
+0:25:31.440,0:25:35.720
+Donc vous avez ce graphe très complexe. Voyons ce qu’il signifie.
+
+0:25:35.720,0:25:45.159
+Donc vous avez de distorsion d’une même image, x et y. Vous en générez une représentation pour chaque.
+
+0:25:45.159,0:25:53.600
+Puis vous pouvez les empiler comme nous l'avons fait pour toutes les autres méthodes.
+
+0:25:53.600,0:26:00.400
+Vous en avez N que vous empilez donc vous obtenez ces matrices N par d pour H_x et H_y.
+
+0:26:00.400,0:26:06.400
+Puis vous faites le clustering. Vous en faites deux.
+
+0:26:06.400,0:26:16.000
+Pour le premier vous utilisez l’algorithme de Sinkhorn dont je parlerai un peu plus tard.
+
+0:26:16.000,0:26:22.000
+Donc vous avez une affectation de clustering. K est le nombre de clusters.
+
+0:26:22.000,0:26:28.320
+Donc vous avez N par K pour cette matrice Q.
+
+0:26:28.320,0:26:36.000
+En réalité, c'est continu mais ici, pensons que c’est un vecteur de la base canonique.
+
+0:26:36.000,0:26:45.039
+Donc pour chaque ligne un seul élément vaut 1 et les autres éléments valent 0. Et vous avez N lignes pour chaque image.
+
+0:26:45.039,0:26:55.520
+Puis vous pouvez faire un autre clustering que j'ai appelé « soft-kmeans » même si en fait c’en n'est pas vraiment un.
+
+0:26:55.520,0:27:00.559
+J’expliquerai pourquoi je l'appelle comme ça.
+
+0:27:00.559,0:27:05.600
+On fait un clustering avec le même centroïde de sorte que vous générerez la prédiction…
+
+0:27:05.600,0:27:10.799
+Oh désolé c'est en fait ici.
+
+0:27:10.799,0:27:26.000
+Donc utilisez y et faites un soft-kmeans et vous générez la prédiction q̃_x pour Q_x.
+
+0:27:26.000,0:27:38.159
+Donc vous utilisez h_y pour prédire le clustering de Q_x et utilisez h_x pour prédire le clustering de Q_y.
+
+0:27:38.159,0:27:44.000
+C'est pourquoi on appelle cette méthode SwAV, car on « swap » [échange] les prédictions.
+
+0:27:44.000,0:27:50.320
+[Alfredo : il y a une question ici. Comment utiliser un vecteur pour prédire un clustering ?]
+
+0:27:50.320,0:27:56.880
+Non, non… Tu veux dire ici ? [Alfredo : je ne sais pas, je lis la question]
+
+0:27:57.000,0:28:06.360
+Laissez-moi expliquer à nouveau. Oh, peut-être que c'est plus facile de comprendre en regardant la fonction de perte ensemble.
+
+0:28:06.960,0:28:18.159
+Ce W est notre centroïde. Il est de taille K par d. Et H_x est de taille N par K.
+
+0:28:18.720,0:28:24.000
+Donc l’algorithme de Sinkhorn…
+
+0:28:24.000,0:28:36.640
+Si vous faites un k-means, parfois tous les échantillons sont regroupés en un seul centroïde.
+
+0:28:36.640,0:28:44.480
+Beaucoup d'échantillons sont proches d'un centroïde et d'autres centroïdes n'ont aucun échantillon.
+
+0:28:44.480,0:28:49.120
+Donc Sinkhorn est en fait un algorithme qui peut empêcher une telle chose de se produire.
+
+0:28:49.120,0:28:54.559
+Il fait en sorte que la distribution des échantillons soit presque égale pour tous les clusters.
+
+0:28:58.480,0:29:02.480
+Il s'assurer que chaque cluster a au moins un certain nombre d’échantillons.
+
+0:29:02.480,0:29:07.520
+C'est un hyperparamètre que l’on peut modifier dans Sinkhorn.
+
+0:29:07.520,0:29:16.559
+Il permet d'obtenir soit les résultats du k-means, soit une distribution de manière égale entre les clusters.
+
+0:29:16.559,0:29:38.039
+Donc après avoir généré ça, on obtient ce Q_x contant N q_x où un q_x donné est un vecteur « one-hot » où le 1 indique le centroïde le plus proche.
+
+0:29:38.100,0:29:43.200
+Donc c’est une assignation unique.
+
+0:29:43.200,0:29:48.880
+Donc c'est la branche supérieure.
+
+0:29:48.880,0:29:54.480
+Pour la branche inférieure, on fait ce que j'appelle le « soft-kmeans ».
+
+0:29:54.480,0:30:07.080
+Ce qui se passe c'est qu’on a un centroïde et un h_ⓨ normalisé.
+
+0:30:07.840,0:30:19.600
+Donc W fois h_ⓨ est la similarité entre h_y et tous les autres centroïdes.
+
+0:30:19.600,0:30:23.919
+Puis vous appliquez une fonction « softmax ».
+
+0:30:24.000,0:30:36.000
+Si on utilise l’argmax, on obtient exactement le k-means qui nous dit quel centroïde est proche d’un échantillon donné.
+
+0:30:36.000,0:30:46.000
+Mais si on utilise la softargmax, on a la version « soft » du k-means.
+
+0:30:46.000,0:30:55.840
+Et vous voyez qu’on fait une prédiction de q̃_x avec h_ⓨ.
+
+0:30:55.840,0:30:58.880
+Donc c'est pour ça que c'est un échange [« swap »].
+
+0:30:58.880,0:31:02.799
+Et de même, on fait une prédiction de q̃y avec hⓧ.
+
+0:31:02.799,0:31:13.440
+La fonction d'énergie est simple, c'est juste une entropie croisée entre le vecteur « one-hot » et la prédiction effectuée.
+
+0:31:13.440,0:31:17.840
+Donc étudions deux choses sur les JEMs.
+
+0:31:17.840,0:31:26.960
+Comment pousser pour être invariant à l'augmentation de données ?
+
+0:31:26.960,0:31:45.000
+Comme q̃_x est générée avec h_y et q̃_y est générée avec h_x, on essaye d'assigner à la fois h_x et h_y au même cluster.
+
+0:31:45.000,0:31:55.080
+Donc au lieu de pousser directement pour que les deux soient proches l’un de l’autre, on les pousse à être dans le même cluster.
+
+0:31:55.500,0:32:02.000
+Donc c’est une manière différente de s'assurer qu'ils sont invariants à l’augmentation de données.
+
+0:32:02.000,0:32:07.000
+[Alfredo : comment pouvons-nous interpréter ça ? Quels sont ces clusters ?
+
+0:32:07.000,0:32:18.500
+On peut penser à ce qu’on a vu hier avec l’application de l’auto-encodeur variationnel aux chiffres du jeu de données MNIST. [cf. vidéo de TD de la semaine 8 de l’édition 2020]
+
+0:32:18.500,0:32:24.500
+On peut penser que l'espace latent est partitionné en peut-être 10 clusters différents.
+
+0:32:24.500,0:32:31.519
+Nous ne fournissons pas d’étiquettes à nos algorithmes mais automatiquement si le réseau ou l’algorithme a besoin
+
+0:32:31.519,0:32:41.679
+de trouver un nombre spécifique de clusters qu'il pourrait utiliser, il arrive que ces clusters soient connectés aux classes réelles des éléments individuels.
+
+0:32:41.679,0:32:45.679
+Donc bien que nous n'ayons pas d’information sur les étiquettes,
+
+0:32:45.679,0:33:00.000
+on peut s'attendre à ce que l’algorithme global arrive à cette subdivision des données en se basant sur les clusters extraits des données.
+
+0:33:00.000,0:33:06.559
+Donc plus tard, nous pouvons entraîner de manière supervisée avec très très peu d'exemples/d’annotations.
+
+0:33:06.559,0:33:12.000
+Si nous arrivons à 10 clusters différents pour MNIST par exemple,
+
+0:33:12.000,0:33:20.799
+plus tard, nous avons juste besoin, par exemple, de 10 points de données pour affecter chaque cluster à la bonne cible.
+
+0:33:20.799,0:33:26.240
+C'est comme ça que ce clustering peut être connecté à la tâche en aval.]
+
+0:33:26.240,0:33:36.159
+Oui. J'ai vu deux questions dans le chat. Premièrement, « en quoi le swap aide ? »
+
+0:33:36.159,0:33:52.880
+Si vous ne le faite pas, cela revient à utiliser K H_x pour prédire le Q_x mais avec les q̃_x générés à partir de h_x et non pas h_y. Donc la solution est triviale.
+
+0:33:52.880,0:34:04.320
+Donc vous voulez en fait utiliser le h_y pour prédire q̃_x car Q_x est généré par H_x.
+
+0:34:04.320,0:34:15.119
+Comme je l'ai expliqué avant, le « swap » impose que les H_x et H_y soient regroupés dans la même classe.
+
+0:34:15.119,0:34:31.119
+Si vous ne faites pas l'échange vous imposez que hx soit regroupé avec lui-même dans la même classe, ce qui n’aide pas à être invariant à l’augmentation de données.
+
+0:34:31.119,0:34:38.000
+Donc il y a une autre question : « pourquoi softargmax(Wh_ⓨ) = q̃_x ? »
+
+0:34:38.000,0:34:43.679
+Laissez-moi vous donner un exemple simple. Disons que K = 2.
+
+0:34:43.679,0:34:49.040
+Donc W est une matrice 2 par d et vous n'avez que deux centroïdes.
+
+0:34:49.040,0:35:02.640
+W étant une matrice 2 par d et h_ⓨ de taille d donc vous obtenez un vecteur de taille 2.
+
+0:35:02.640,0:35:14.880
+Et chaque élément est la similarité cosinusoïdale désolée entre h_ⓨ et le centroïde correspondant.
+
+0:35:14.880,0:35:33.680
+Puis vous appliquez une fonction softargmax car le cosinus peut être négatif et que vous voulez une probabilité positive. C’est pourquoi q̃_x.
+
+0:35:33.680,0:35:41.680
+Il y a une autre question : « on voudrait que le nombre de clusters soit le plus proche possible du nombre de classes ? »
+
+0:35:41.680,0:35:52.880
+Pas nécessairement car dans le papier de SwAV ils utilisent 8000 classes dans le clustering. Même pour ImageNet qui n’a que 1000 classes.
+
+0:35:52.880,0:36:07.040
+Pensez que pour toutes les images de chiens, vous pouvez encore les sous diviser.
+
+0:36:07.040,0:36:24.320
+Vous pouvez les diviser en différents types de chiens en fonction de la texture de leur peau, la couleur, la taille du chien, etc.
+
+0:36:24.320,0:36:36.560
+En fait, si vous pouvez subdiviser encore plus chaque classe, ça aide car fourni des informations supplémentaires sur l'espace de représentation.
+
+0:36:36.560,0:36:45.599
+Vous voulez en fait diviser davantage, même si vous n'en avez pas besoin, car cela peut aider votre entraînement.
+
+0:36:45.599,0:36:48.320
+Ok, je pense que c'est bon pour les questions.
+
+0:36:48.320,0:37:03.440
+Donc je viens de parler de la façon de pousser pour être invariant à l’augmentation de données mais je n'ai pas parlé de la façon dont on empêche la solution triviale.
+
+0:37:03.440,0:37:20.000
+La solution triviale est empêchée par l’algorithme Sinkhorn qui essaie de d’allouer un nombre égal d'échantillons à chaque cluster.
+
+0:37:20.000,0:37:24.480
+Vous ne pouvez pas mettre tous les échantillons dans un seul centroïde.
+
+0:37:30.560,0:38:01.520
+Ainsi en faisant en sorte que les représentations ne soient pas trop proches l’une de l’autres, Sinkhorn empêche la solution triviale qui rend toutes les représentations identiques.
+
+0:38:01.599,0:38:05.440
+Ok, laissez-moi reformuler.
+
+0:38:05.440,0:38:18.960
+Car on éloigne beaucoup les centroïdes les uns des autres, on ne peut pas avoir que toutes les représentations soient les mêmes.
+
+0:38:18.960,0:38:33.200
+Avec la représentation obtenue, on rend cette entropie croisée impossible à prédire. Car le clustering du Sinkhorn sera vraiment aléatoire.
+
+0:38:33.280,0:38:43.480
+Vous ne voyez pas la différence entre chaque image, c'est comme ça qu'on évite les effondrements. J’espère que j’ai été clair.
+
+0:38:43.480,0:38:50.160
+[Chat : est ce que Sinkhorn est « soft » ?] Oui.
+
+0:38:50.179,0:38:59.119
+En fait, dans le papier de SwAV, les auteurs indiquent qu’ils ont essayés les deux versions : « hard » et « soft ».
+
+0:38:59.119,0:39:08.160
+Leur conclusion est la version « soft » fonctionne mieux mais que la version « hard » marche aussi.
+
+0:39:08.160,0:39:16.640
+L'intuition est plus simple à comprendre avec la version « hard » c’est pourquoi je l’utilise.
+
+0:39:16.640,0:39:21.500
+[Chat : est-ce pour ça qu’on utilise des pour h_x et h_y ?]
+
+0:39:21.500,0:39:27.500
+Pour Sinkhorn, vous voulez faire un clustering de classification contrairement aux k-means.
+
+0:39:27.500,0:39:37.520
+Pour les k-means vous n'avez pas besoin de savoir tous les autres échantillons, il faut juste connaître le centroïde et les échantillons où vous vous trouvez.
+
+0:39:37.520,0:39:41.000
+Donc vous calculez juste la distance entre tous les centroïdes et vous obtenez le clustering.
+
+0:39:41.000,0:39:56.400
+Pour Sinkhorn, car vous voulez un nombre égal d'échantillons dans toutes les classes, vous devez savoir H_x et le clustering des autres échantillons.
+
+0:39:56.400,0:40:01.000
+C’est pourquoi nous utilisons H_x et non h_x.
+
+0:40:01.000,0:40:09.520
+K est un hyper paramètre que vous pouvez changer et qui dans l’article de SwAV vaut 8000.
+
+0:40:09.520,0:40:15.680
+[lis le chat] H ne peut pas être nul car h est normalisé.
+
+0:40:15.680,0:40:23.000
+Je pense que je l'ai mentionné.
+
+0:40:23.000,0:41:01.680
+[Jiachen et Alfredo discutent ici d’une erreur qui était présente sur la diapositive d’origine mais qu’Alfredo a corrigé au montage de la vidéo]
+
+0:41:01.680,0:41:08.680
+Ok, donc c’étaient les méthodes de regroupement. La dernière catégorie est ce que j'appelle les « autres méthodes ».
+
+0:41:08.680,0:41:13.000
+Car nous ne comprenons pas réellement comment elles fonctionnent.
+
+0:41:13.000,0:41:27.119
+Il y a un peu d’études théoriques mais ne savons toujours pas pourquoi elles ne s'effondrent pas en solutions triviales.
+
+0:41:27.119,0:41:38.800
+Le premier exemple est BYOL. On n’a pas besoin… Ok, laissez-moi d’abord l’expliquer.
+
+0:41:38.800,0:41:47.839
+D’abord vous avez l'entrée x et l'entrée y. Comme avant, deux versions déformées d’une même image, vous avez deux représentations.
+
+0:41:47.839,0:41:55.520
+Mais au lieu d'utiliser simplement D, on ajoute un prédicteur.
+
+0:41:55.700,0:42:05.040
+Dans le papier original ils appellent ça un prédicteur car utilisent h_x pour prédire h_y.
+
+0:42:05.040,0:42:16.960
+Et cette fonction d'énergie est juste une similarité cosinus entre le h_y prédit et h_y et vous coupez le gradient.
+
+0:42:16.960,0:42:23.839
+Mais il n'y a pas de terme pour éviter que cela s’effondre.
+
+0:42:23.839,0:42:29.500
+Si vous vous souvenez des graphiques pour les méthodes contrastives, nous avions une boîte N,
+
+0:42:29.500,0:42:36.960
+nous échantillonnions un batch et imposions qu’un une certaine chose se produise.
+
+0:42:36.960,0:42:44.160
+Mais ici, on rapproche uniquement les paires positives. On n’éloigne pas les paires négatives ou on n’impose rien.
+
+0:42:44.160,0:42:52.640
+Et cela fonctionne. Comment-cela se fait ? Il y a un tas de théories. Peut-être que c’est lié à la normalisation par batch,
+
+0:42:52.640,0:42:56.319
+d’autres disent que ce n'est pas le cas. Il y a beaucoup de théories.
+
+0:42:56.319,0:43:06.079
+Mais apparemment cette architecture asymétrique avec une couche supplémentaire fonctionne dans ce cas particulier.
+
+0:43:06.079,0:43:18.000
+SimSiam est un papier qui a suivi BYOL. La seule différence est que BYOL utilise un backbone avec momentum alors que SimSiam utilise un backbone sans momemtum.
+
+0:43:18.040,0:43:24.000
+Nous avons aussi la méthode Dino qui est encore plus bizarre.
+
+0:43:24.000,0:43:28.800
+Donc on a un backbone avec momentum d’un côté et un backbone sans momentum de l’autre.
+
+0:43:28.800,0:43:37.200
+On obtient deux représentations que l’on passe dans une fonction softargmax.
+
+0:43:37.200,0:43:45.000
+La différence est que les softargmax ont une température différente, ou froideur comme dit Alfredo.
+
+0:43:45.000,0:43:50.000
+Donc vous faites une entropie croisée entre ces deux-là, vous poussez pour les rapprocher.
+
+0:43:50.000,0:43:57.500
+Mais il n'y a pas d’échantillons négatifs ou quoi que ce soit d'autre et ça fonctionne.
+
+0:43:57.500,0:44:02.000
+La dernière méthode qui est vraiment récente s’appelle Data2Vec.
+
+0:44:02.000,0:44:09.359
+En fait, elle ajoute juste une couche de normalisation à la fin de cette représentation. Et cela fonctionne.
+
+0:44:09.359,0:44:15.440
+Donc pour toutes ces méthodes, pourquoi ça marche ? Nous ne sommes pas tout à fait sûrs.
+
+0:44:15.440,0:44:33.000
+Mais c'est intéressant car cela signifie qu’il y a probablement une régularisation implicite qui se produit dans ces réseaux qui empêche de converger vers une solution triviale.
+
+0:44:33.000,0:44:38.440
+Et toutes ces méthodes sont vraiment bien car les fonctions de perte sont vraiment locales.
+
+0:44:38.440,0:44:56.000
+Vous n'avez besoin que de h_x et h_y pour calculer la fonction de perte, là où pour toutes les méthodes précédentes présentées précédemment, il faut un H_x ou H_y qui est un pool d’échantillons négatifs.
+
+0:44:56.000,0:45:07.240
+Cela pose un problème quand vous distribuez l’entraînement car dans un entraînement distribué vous devez collecter tous les vecteurs de différents appareils.
+
+0:45:07.240,0:45:14.880
+C’est pourquoi beaucoup de gens se concentrent à essayer de comprendre comment ces « autres méthodes »
+
+0:45:14.880,0:45:22.880
+qui n'empêchent pas une solution trop triviale fonctionnent et dans quelle condition elles convergent vers une solution triviale.
+
+0:45:22.880,0:45:26.640
+J'ai vu qu’il y a quelques questions.
+
+0:45:26.640,0:45:31.440
+[Chat : je pense que ça va marcher mais peut-être converger plus lentement.]
+
+0:45:31.440,0:45:40.960
+En fait non. Pour toutes les JEMs, la convergence est en fait assez lente.
+
+0:45:40.960,0:45:51.440
+Ces « autres méthodes » ne sont pas particulièrement plus lentes que les autres (contrastives, ViCReg, etc.).
+
+0:45:51.440,0:46:04.720
+Donc c'est pourquoi je disais qu’il y a une régularisation implicite qui a lieu faisant qu’elles ne convergent pas vers une solution triviale.
+
+0:46:04.720,0:46:08.720
+[Chat : quel est le lien avec l’apprentissage contrastif ?]
+
+0:46:08.720,0:46:37.200
+Beaucoup de gens pensent que si le prédicteur de BYOL est simplement linéaire, on peut faire implicitement un échantillon négatif contrastif.
+
+0:46:37.200,0:46:48.000
+Mais quand le prédicteur est compliqué avec trois ou quatre couches feed forward, alors c'est presque impossible à analyser.
+
+0:46:48.280,0:46:57.040
+Mais ces trois ou quatre couches feed forward fonctionnent beaucoup mieux qu'un simple prédicteur linéaire.
+
+0:46:57.040,0:47:05.000
+[Chat : que penser du fait d’initier le réseau avec une solution triviale ?]
+
+0:47:05.000,0:47:29.000
+Si on initialise le réseau pour qu'il donne une solution triviale alors il ne fonctionnera jamais car ces fonctions de perte produiront un gradient nul et il ne pourra jamais s’échapper de la solution triviale.
+
+0:47:29.000,0:47:39.599
+Cependant pour une raison quelconque, l’entraînement dynamique ne converge jamais vraiment vers la solution triviale. Donc nous ne sommes pas sûrs de la raison de pourquoi cela se produit.
+
+0:47:39.599,0:48:00.000
+[Jiachen lit une question sur le Data2Vec qu’il ne répète que partiellement à l’oral et n’est donc pas transcriptible]
+
+0:48:00.000,0:48:07.500
+Je n'ai jamais essayé d’ajouter une couche de normalisation sur la branche de gauche du Data2Vec.
+
+0:48:07.500,0:48:13.500
+Pour votre projet [de fin de semestre], vous pouvez essayer de voir si cela fonctionne ou non.
+
+0:48:13.599,0:48:20.720
+[Chat : y a-t-il de bons papiers pour essayer de comprendre ce que sont que les régularisations implicites ?]
+
+0:48:20.720,0:48:31.680
+J’ai vu quelques papiers mais aucun d'entre eux ne donne d’explication satisfaisante. C'est un sujet de recherche très actif.
+
+0:48:31.680,0:48:38.000
+Data2Vec a été publié il y a 3 mois [février 2022].
+
+0:48:38.240,0:48:44.240
+Donc ce sont des choses sont encore relativement récentes, très nouvelles.
+
+0:48:44.240,0:48:49.040
+Nous ne sommes pas sûrs de ce qui s'y passe.
+
+0:48:49.040,0:48:52.160
+Ok il y a une question sur SwAV.
+
+0:48:52.160,0:48:55.680
+[Chat : SwAV est très similaire aux méthodes contrastives,
+
+0:48:55.680,0:49:00.000
+c'est comme si au lieu d'utiliser ce qui est dans le batch comme paires négatives,
+
+0:49:00.000,0:49:07.000
+on utilise ces autres clusters comme des paires négatives. Pourquoi elle n’est pas considérée comme contrastive ?]
+
+0:49:07.000,0:49:16.040
+On peut, ça dépend juste de la façon de voir. Ok, laissez-moi insister sur ce point.
+
+0:49:18.319,0:49:25.839
+Pour SwAV, vous pouvez absolument penser qu’au lieu de contraster avec des échantillons négatifs, on contraste avec des centroïdes négatifs.
+
+0:49:25.839,0:49:35.900
+Vous pouvez absolument y penser. Mais penser comme cela ne va pas vous aider nécessairement à comprendre ce qui se passe.
+
+0:49:35.920,0:49:39.839
+Car l’explication de l’apprentissage contrastif n'est pas certifiée.
+
+0:49:44.880,0:50:02.000
+On y dit qu’on veut éloigner les paires négatives, mais on ne dit pas qu’est-ce qu’une bonne paire négative et comment la produire.
+
+0:50:02.000,0:50:12.000
+Donc vous pouvez y penser comme un apprentissage contrastif mais le voir comme une régularisation vous donne une meilleure explication.
+
+0:50:12.000,0:50:24.480
+Vous quantifiez l'espace d’enchâssement en K sous-espaces ce qui est plus facile à comprendre.
+
+0:50:26.040,0:50:37.760
+Et cette explication aide à développer plus d'algorithmes, c'est pourquoi les gens ont davantage tendance à penser que ce ne sont pas des méthodes contrastives.
+
+0:50:37.760,0:50:47.280
+[Chat : est-ce qu’aussi toutes les « autres méthodes » n’ont pas de régularisation ?]
+
+0:50:47.280,0:50:55.280
+Oui. Toutes les « autres méthodes » n’ont aucune régularisation et ne produisent pas de solutions triviales.
+
+0:50:55.280,0:51:00.880
+Mais elles sont assez sensibles à la configuration des hyperparamètres.
+
+0:51:00.880,0:51:10.480
+Si vous avez mal défini les hyperparamètres, cela peut convertir très rapidement vers une solution triviale.
+
+0:51:10.520,0:51:20.319
+Mais donc si vous réglez correctement les hyperparamètres, cela ne converge pas vers une solution triviale mais personne ne comprend pourquoi.
+
+0:51:20.319,0:51:23.680
+Donc c'est tout au sujet de ces « autres méthodes ».
+
+0:51:23.680,0:51:30.319
+La dernière chose dont je voudrais parler est à propos de l’augmentation de données et de l'architecture du réseau.
+
+0:51:30.319,0:51:41.500
+Cela sera assez bref car nous n'avons pas une bonne compréhension de ces choses à l’exception qu’ils sont super importants.
+
+0:51:41.500,0:51:51.000
+Si vous pouvez trouver une bonne augmentation de données, cela peut booster davantage vos performances, en termes de précision, que de changer la fonction de perte.
+
+0:51:51.000,0:51:55.000
+Parfois la fonction de perte n'a pas vraiment d'importance.
+
+0:51:55.000,0:52:00.240
+C’est surtout pour vous permettre de comprendre ce que vous mesurez, comment ça fonctionne.
+
+0:52:00.240,0:52:04.999
+Mais l'architecture du réseau et l’augmentation de données sont parfois plus importantes.
+
+0:52:04.999,0:52:11.559
+Si vous ne vous souciez que de la précision, elles sont plus importantes dans un certain sens.
+
+0:52:11.599,0:52:27.000
+Entre 2020 et 2021, les augmentations de données principalement utilisées ont été proposées dans SimCLR et un peu améliorées dans BYOL.
+
+0:52:27.000,0:52:35.599
+Elles consistent essentiellement à effectuer un recadrage aléatoire sur une image, la retourner horizontalement,
+
+0:52:35.599,0:52:38.880
+effectuer des variations de couleur comme changer la couleur ou
+
+0:52:38.880,0:52:45.359
+la rendre grise ou encore changer le contraste ou la luminosité,
+
+0:52:45.359,0:52:49.920
+et appliquer un flou gaussien pour rendre l'image floue.
+
+0:52:49.920,0:53:01.000
+C’est donc la méthode standard d'augmentation de données pour SimCLR, MoCo, BYOL, etc.
+
+0:53:03.040,0:53:13.160
+Si vous avez déjà fait de l'augmentation de données en apprentissage supervisé, vous savez que ces augmentations sont très fortes.
+
+0:53:13.160,0:53:31.700
+Il y a un nombre follement élevé d'augmentations. En apprentissage supervisé standard, on utilise beaucoup le recadrage aléatoire et la variation de la couleur peu agressive.
+
+0:53:33.680,0:53:36.000
+Donc c'est la première chose.
+
+0:53:36.000,0:53:49.000
+La deuxième chose est que si vous enlevez ces augmentations une par une pour mesurer leur effet, on trouve que le recadrage aléatoire est l’augmentation la plus importante.
+
+0:53:49.000,0:53:59.000
+Si vous faites du retournement, de la variation de couleur et appliquer du flou mais ne faites pas de recadrage aléatoire, la représentation sera horrible.
+
+0:53:59.000,0:54:08.000
+Mais si vous ne faites qu’un recadrage aléatoire et des trucs d'ingénierie intelligents, cela fonctionne.
+
+0:54:08.000,0:54:14.160
+Pourquoi le recadrage aléatoire est l’augmentation la plus critique ? Nous ne sommes pas tout à fait certains.
+
+0:54:14.160,0:54:28.500
+Mais il y a une certaine compréhension du fait que le recadrage aléatoire est le seul moyen de changer l'information spatiale des images.
+
+0:54:28.500,0:54:42.500
+Le retournement peut le faire aussi en partie mais de manière vraiment faible. La variation de couleur et le bruit gaussien changent quant à eux les canaux de la représentation.
+
+0:54:42.599,0:54:56.000
+Et à présent, depuis juin 2021, les gens passent de cette augmentation de données traditionnelles à une augmentation par masquage.
+
+0:54:56.000,0:55:05.200
+Donc disons que vous avez l'image et vous masquez ces nombreux patchs. En fait, ici, vous masquez environ 75% des patchs.
+
+0:55:05.200,0:55:10.160
+C'est donc votre augmentation de données. Vous n'utilisez pas de variation de couleur, de bruit de gaussien ou autre.
+
+0:55:10.160,0:55:14.000
+Donc cela fonctionne plutôt bien mais il y a deux problèmes.
+
+0:55:14.000,0:55:22.119
+Premièrement, elle ne fonctionne qu'avec une architecture de type transformer. Cela ne fonctionne pas vraiment avec les ConvNets.
+
+0:55:22.119,0:55:30.160
+Beaucoup de personnes, y compris moi, essayent de trouver comment faire fonctionner le masquage avec les ConvNets.
+
+0:55:30.160,0:55:50.160
+Deuxièmement, dans un certain sens, le succès de cette chose remplace le recadrage aléatoire. C’est une autre façon d'enlever la redondance de l'information spatiale.
+
+0:55:50.160,0:55:57.599
+Il y a vraiment une recherche active sur la façon de faire le masquage.
+
+0:55:57.599,0:56:01.000
+Donc c’était à propos de l’augmentation de données.
+
+0:56:01.000,0:56:11.120
+Laissez-moi vérifier s’il y a des questions. [Chat : pourquoi cela ne fonctionne pas avec les ConvNets ?]
+
+0:56:11.119,0:56:18.880
+En gros, si vous utilisez un ConvNet, cela introduit trop de bords.
+
+0:56:18.880,0:56:24.000
+Vous voyez, il y a tellement de bords artificiels.
+
+0:56:24.000,0:56:30.119
+Mais si vous avez un transformer, vous n'avez pas besoin de vous soucier de ces bords.
+
+0:56:33.000,0:56:38.400
+Pour n'importe quel transformer, la première couche est la convolution.
+
+0:56:38.400,0:56:49.300
+Donc quand vous faites la couche de convolution, vous avez la taille du noyau égale au pas et à la taille du patch.
+
+0:56:49.359,0:56:58.400
+Donc dans ce cas, vous n’expérimentez jamais ces bords artificiels car vous les avez déjà définis.
+
+0:56:58.400,0:57:03.079
+Mais dans un ConvNet, vous ne pouvez pas faire car avez des fenêtres coulissantes.
+
+0:57:03.079,0:57:12.500
+Même si vous faites ça intelligemment dans la première couche en ne faisant pas de fenêtre coulissante pour voir ces bords artificiels,
+
+0:57:12.500,0:57:17.000
+dans la couche suivante vous n'avez pas le choix, vous verrez ces bords.
+
+0:57:17.000,0:57:26.000
+Donc je pense que c'est la raison principale pour laquelle le masquage ne fonctionne pas avec un ConvNet mais fonctionne avec un transformer.
+
+0:57:33.000,0:57:38.000
+Puis pour l'architecture du réseau, nous ne savons pas grand-chose aussi.
+
+0:57:38.000,0:57:48.000
+Mais une chose que nous savons définitivement, issue de résultats empiriques, c’est qu’il est toujours préférable d'ajouter un projecteur après le backbone.
+
+0:57:48.000,0:57:52.000
+Il faut utiliser le projecteur uniquement pendant le pré-entraînement.
+
+0:57:52.000,0:57:58.750
+Quand vous faites l'évaluation sur la tâche en aval, supprimez le projecteur et utilisez seulement le backbone.
+
+0:57:58.750,0:58:02.000
+Parfois les gens appellent le projecteur parfois un extenseur.
+
+0:58:02.000,0:58:07.400
+Un projecteur projette dans une dimension plus basse et extenseur projette dans une dimension plus haute.
+
+0:58:07.400,0:58:15.400
+Pour l'apprentissage contrastif, vous n'avez pas le choix. Vous pouvez seulement utiliser le projecteur comme Yann l’a expliqué.
+
+0:58:15.480,0:58:26.000
+Alors que pour VICReg ou les « autres méthodes », vous pouvez utiliser l'extenseur ou le projecteur.
+
+0:58:26.000,0:58:32.000
+Une deuxième chose est que MoCO utilise un encodeur avec momentum et une banque mémoire.
+
+0:58:32.000,0:58:45.000
+Mais les gens ont découvert que même sans utiliser de banque mémoire, un encodeur avec momentum améliore toujours les performances d'une tâche en aval.
+
+0:58:45.000,0:58:49.240
+Surtout quand vous n'avez qu'une une faible augmentation de données.
+
+0:58:49.240,0:58:58.799
+Le cas que je citais plus tôt. Le cas où on n’a qu’un recadrage aléatoire et pas de retournement, de variation de couleur ou de flou gaussien.
+
+0:58:58.880,0:59:04.720
+Si vous n'utilisez pas l'encodeur avec momentum, le réseau apprendra de manière horrible.
+
+0:59:04.720,0:59:15.000
+Mais si vous utilisez un encodeur avec momentum avec qu’avec le recadrage aléatoire comme augmentation de données, cela fonctionne toujours.
+
+0:59:15.079,0:59:22.079
+Ce n'est certainement pas l'état de l'art, mais c'en est en fait proche. Les performances ne diminuent pas beaucoup.
+
+0:59:22.079,0:59:27.920
+Alors pourquoi l’encodeur avec momentum nous aide-t-il ? On n’en est pas sûr.
+
+0:59:27.920,0:59:32.500
+Certaines personnes pensent qu'il ajoute de l’augmentation. C’est une façon de penser.
+
+0:59:32.520,0:59:44.000
+[Chat : qu'est-ce qu'un projecteur ?] Le projecteur est généralement un réseau de deux ou trois couches feed-forward.
+
+0:59:44.000,1:00:06.000
+Donc au lieu d'utiliser la représentation du backbone pour calculer votre fonction de perte ou votre fonction d'énergie, vous la passez d’abord dans un réseau de deux ou trois couches feed-forward.
+
+1:00:06.000,1:00:16.000
+[Chat : pourquoi supprimons-nous le projecteur lors de l’évaluation ?]
+
+1:00:16.000,1:00:23.000
+Pour l'apprentissage contrastif, il y a une bonne raison pour laquelle nous le faisons.
+
+1:00:23.000,1:00:34.319
+Donc la sortie du backbone est de taille 2048 ou 4096, là où celle du projecteur est de taille 128 ou 256.
+
+1:00:34.319,1:00:44.500
+Donc c'est vraiment petit et si vous faites une tâche en aval uniquement basée sur cette sortie de taille 256, ce n'est pas très bon.
+
+1:00:44.500,1:00:49.359
+Le projecteur enlève beaucoup d'informations.
+
+1:00:49.359,1:00:53.520
+Vous voulez en fait utiliser les plus grands vecteurs.
+
+1:01:00.000,1:01:07.520
+Il y a un papier du groupe de Pascal Vincent de l'université de Montréal [et non pas Toronto] que je n’ai pas pointé ici.
+
+1:01:07.520,1:01:31.359
+Ils ont montré que si vous faites en sorte que le backbone et le projecteur aient la même taille de dimension, le backbone contient davantage d’informations sur l'image que le projecteur.
+
+1:01:31.359,1:01:38.240
+Donc le projecteur supprime beaucoup d'informations de la représentation du backbone.
+
+1:01:38.240,1:01:51.640
+Donc il n'y a pas d'explication concrète à ce sujet. Les gens montrent juste qu’empiriquement que cela marche mal.
+
+1:01:54.640,1:02:11.300
+Je pense que c'est l'heure. Si vous avez davantage de questions vous pouvez les poser sinon on peut dire que le cours est terminé.
+
+1:02:11.359,1:02:18.720
+[Alfredo : Je pense que nous pouvons prendre les deux dernières questions. Je pense que c'était juste génial. J’ai adoré cette leçon.]
+
+1:02:18.720,1:02:24.240
+[Chat : je viens de voir que le papier en référence en bas est le titre de…]
+
+1:02:24.240,1:02:32.480
+Oui. Cette référence en particulier traite du transport optimal dans le Sinkhorn.
+
+1:02:32.480,1:02:42.000
+Je vous recommande fortement de lire ce livre. De mémoire, l’algorithme de Sinkhorn est traité au chapitre 5 ou au 6.
+
+1:02:42.880,1:02:50.720
+Mathématiquement c'est incroyable et l’algorithme l’est encore plus.
+
+1:02:50.720,1:02:56.480
+L’algorithme est si simple et si efficace.
+
+1:02:56.480,1:03:04.000
+En fait l'article original qui a introduit Sinkhorn s’appelle « Lightspeed computation of optimal transport » [de Marco Cuturi (2013)].
+
+1:03:04.000,1:03:10.480
+C’est super rapide, super logique. C’est un algorithme vraiment incroyable.
+
+1:03:10.480,1:03:17.200
+Et je vous recommande vraiment de lire ce livre. Je pense que la bibliothèque de la NYU l’a gratuitement. Vous pouvez le trouver.
+
+1:03:17.200,1:03:20.799
+Je pense que c'est tout niveau question
+
+1:03:20.799,1:03:24.400
+[Alfredo : je pense…] J’en ai vu une autre. [Alfredo : une de plus].
+
+1:03:24.400,1:03:29.000
+Si un projecteur retire beaucoup d'informations pourquoi l'utiliser pendant l’entraînement ?
+
+1:03:29.000,1:03:38.000
+C'est juste un résultat empirique. Nous avons trouvé si vous l'utilisez pendant l’entraînement, ça marche beaucoup mieux que de ne pas l'utiliser.
+
+1:03:38.079,1:03:42.500
+En fait, dans le MoCo original, ils n’ont pas utilisé de projecteur.
+
+1:03:42.500,1:03:46.500
+SimCLR a utilisé un projecteur et a surpassé MoCo.
+
+1:03:46.500,1:03:57.760
+Puis les gars de MoCo sont revenus en publiant un papier de seulement deux pages appelé MoCo v2 où la seule différence est qu'ils ont ajouté un projecteur qui a amélioré les performances.
+
+1:03:57.760,1:04:01.359
+[Chat : donc l’extenseur contrebalance l’objectif.]
+
+1:04:01.359,1:04:09.000
+En fait, je pense que même si vous pensez que c'est un extenseur, vous projetez dans une dimension plus élevée.
+
+1:04:09.000,1:04:15.039
+Dans un certain sens, cela supprime toujours de l'information. Donc en fait c'est toujours comme un projecteur.
+
+1:04:15.039,1:04:27.000
+Même en projetant dans une dimension supérieure il a beaucoup de perte d'informations. Donc je n'ai pas d'explication pour ça.
+
+1:04:27.000,1:04:29.079
+Je pense que c'est tout pour les questions.
+
+1:04:29.079,1:04:36.999
+[Alfredo : Merci beaucoup Jiachen pour ton enseignement. Je n'ai pas eu à dire quoi que ce soit. Tu es un enseignant autosupervisé.]
+
+1:04:36.999,1:04:44.720
+Je pense que je me suis habitué au chat. La dernière fois, il m'a donné du fil à retordre.
+
+1:04:44.720,1:04:48.799
+[Alfredo : aujourd'hui, tu étais juste parfait, je n'ai aucun autre commentaire.
+
+1:04:48.799,1:04:52.319
+Donc j'espère que nous allons revoir Jiachen dans le futur.
+
+1:04:52.319,1:05:01.000
+Cela dépend s'il a d'autres choses à dire mais il a toujours des choses à dire donc je crois que nous allons le voir dans un futur proche.
+
+1:05:01.000,1:05:04.750
+Sinon tout le monde, profitez de la fin de la semaine et nous verrons…]
+
+1:05:04.750,1:05:15.200
+Un dernier commentaire, nous allons publier ce soir les détails du projet, comment accéder au Google Cloud et tout. Il y aura juste à lire mon courriel.
+
+1:05:15.200,1:05:18.799
+[Alfredo : donc vous allez recevoir un email de Jiachen ce soir.
+
+1:05:18.799,1:05:25.680
+Profitez de la soirée, de la fin de la semaine, et je vous verrai mercredi de la semaine prochaine mercredi pour la prochaine leçon.
+
+1:05:25.680,1:05:29.559
+Bye-bye bonne nuit.] Bye.

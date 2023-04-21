@@ -1,0 +1,1514 @@
+0:00:00.000,0:00:04.400
+Bienvenue en classe. Nous commençons le cours par la fin car
+
+0:00:04.400,0:00:08.400
+j'ai oublié d'appuyer sur le bouton d'enregistrement. Donc je vais refaire
+
+0:00:08.400,0:00:12.480
+l'introduction de la leçon d'aujourd'hui qui a été donnée par Jiachen
+
+0:00:12.480,0:00:16.480
+qui est un de nos étudiants… qui est avec Yann et moi.
+
+0:00:16.480,0:00:19.520
+De quoi va-t-il parler ?
+
+0:00:19.520,0:00:27.519
+Alors nous avons beaucoup parlé des EBMs [modèles à base d’énergie] dans ce cours car vous savez que
+
+0:00:27.519,0:00:32.320
+nous aimons les EBMs. Yann aime les EBMs donc nous les aimons aussi.
+
+0:00:32.320,0:00:37.920
+Donc laissez-moi vous récapituler rapidement pourquoi et comment ces choses se rejoignent.
+
+0:00:37.920,0:00:42.399
+Il y a donc deux grands types d'architectures. La première que vous avez vue
+
+0:00:42.399,0:00:50.879
+avec moi dans les dernières leçons : les EBMs génératifs à variable latente (LVGEBMs)
+
+0:00:50.879,0:00:57.360
+La seconde est les méthodes d’enchâssements joints (JEMs). Donc laissez-moi vous montrer quelles sont les différences ou les similitudes.
+
+0:00:57.360,0:01:07.799
+Nous commençons avec les LVGEBMs. Nous avons un x et il y a un point qui représente un point de données [expliqué dans la suite de la vidéo].
+
+0:01:07.799,0:01:15.920
+Puis j'ai un encodeur et un prédicteur. J’ai ma représentation cachée en vert et j'ai aussi un point.
+
+0:01:15.920,0:01:20.720
+Le h va à l'intérieur du décodeur et le décodeur est aussi alimenté par une
+
+0:01:20.720,0:01:24.560
+source de variabilité représentée par une ligne droite.
+
+0:01:24.560,0:01:30.560
+Donc z, une entrée latente, peut varier le long de cette ligne.
+
+0:01:30.560,0:01:36.000
+h va être juste une valeur spécifique, un vecteur, un point, peu  importe.
+
+0:01:36.000,0:01:41.439
+Nous avons aussi besoin d'ajouter un terme de régularisation. Pourquoi en avons-nous besoin
+
+0:01:41.439,0:01:49.920
+sur la latente ? Car sinon elle devient beaucoup trop puissante et le modèle global va attribuer une énergie nulle
+
+0:01:49.920,0:01:56.479
+à toutes les valeurs possibles, donc ça va être un modèle qui s’effondre.
+
+0:01:56.479,0:02:00.200
+Donc nous avons le décodeur qui génère ỹ.
+
+0:02:00.200,0:02:06.640
+ỹ varie autour de la variété/surface. Comment introduire cette variation ? En ayant ce z
+
+0:02:06.640,0:02:12.000
+qui se déplace le long d'une ligne. Donc ỹ peut maintenant se déplacer
+
+0:02:12.000,0:02:17.680
+alors que h vous indique en gros quelle est la taille de cette
+
+0:02:17.680,0:02:20.000
+ellipse par exemple. Donc comme je vous l'ai demandé avant…
+
+0:02:20.000,0:02:25.360
+Je ne sais pas combien de personnes il reste. Il y a encore des personnes avec nous.
+
+0:02:25.360,0:02:29.280
+Vous pouvez toujours écrire dans le chat si vous le souhaitez.
+
+0:02:29.280,0:02:34.480
+Donc on a ce ỹ, ma prédiction.
+
+0:02:34.480,0:02:38.720
+Qu'est-ce qu'on a raté ? On doit ajouter un ressort.
+
+0:02:38.720,0:02:44.400
+Celui-ci permet que ma prédiction ne s’envole pas de ma cible.
+
+0:02:44.400,0:02:49.760
+Donc j'ai une cible en bas qui varie aussi, par exemple
+
+0:02:49.760,0:02:54.760
+autour de cette variété elliptique. Puis j'ai un ressort entre, le terme C.
+
+0:02:54.760,0:02:59.680
+Donc je vous ai demandé avant quelle est l'énergie du système.
+
+0:02:59.680,0:03:03.519
+L'énergie est la somme de tous ces boites rouges.
+
+0:03:03.519,0:03:06.560
+Dans ce cas, je vais avoir ce E,
+
+0:03:06.560,0:03:09.000
+fonction de x, y et z.
+
+0:03:09.000,0:03:14.000
+La somme du terme C qui est la distance entre ma prédiction et ma cible
+
+0:03:14.000,0:03:19.000
+et le terme de régularisation R. Donc ce sont les modèles génératifs.
+
+0:03:19.000,0:03:24.959
+Pourquoi sont-ils appelés génératifs ? Car il y a un ỹ. Je génère une
+
+0:03:24.959,0:03:32.720
+estimation pour ma cible, ma boule bleue y. Je vous ai montré trois types.
+
+0:03:32.720,0:03:42.000
+Hier, je vous ai montré le type architectural avec une couche cachée sous-complète pour l'auto-encodeur.
+
+0:03:42.000,0:03:48.720
+Puis je vous ai montré le type contrastif qui était le l’auto-encodeur débruiteur où nous prenons un échantillon que nous
+
+0:03:48.720,0:03:53.200
+déplaçons et appliquons une énergie élevée égale à la distance carrée du déplacement.
+
+0:03:53.200,0:04:00.560
+Puis il y avait la troisième technique qui était la technique de régularisation
+
+0:03:56.720,0:04:00.560
+qui était l’auto-encodeur variationnel où nous avons automatiquement
+
+0:04:00.560,0:04:04.400
+attribué une grande énergie aux choses qui ne sont pas observées.
+
+0:04:04.400,0:04:07.439
+Sur le côté droit, je vais introduire aujourd'hui le sujet de la leçon,
+
+0:04:07.439,0:04:12.319
+la méthode d’enchâssements joints où l'on commence par le point, le x.
+
+0:04:12.319,0:04:15.920
+Je vais avoir l'encodeur, j'ai le projecteur. J’ai le e
+
+0:04:15.920,0:04:21.680
+que j'utilise pour l’enchâssement qui est le même que h… Peut-être que j'aurais dû l'appeler h.
+
+0:04:21.680,0:04:24.880
+Donc l’enchâssement pour le x.
+
+0:04:24.880,0:04:28.160
+Toujours un point. Sur le côté droit j'ai mon y qui se
+
+0:04:28.160,0:04:33.040
+déplace autour de la variété. L'encodeur peut peut-être juste, déballer
+
+0:04:33.040,0:04:37.199
+la variété et juste se déplacer de façon linéaire. Puis je peux avoir
+
+0:04:37.199,0:04:42.639
+un projecteur qui réduit cette variabilité en un seul point.
+
+0:04:42.639,0:04:52.280
+Donc cette colonne de droite a fondamentalement intégré une invariance
+pour les variations faites sur la variété.
+
+0:04:52.280,0:04:59.360
+Donc toutes les variations de la variété… Donc le y a quelques degrés de liberté. Ces degrés de liberté
+
+0:04:59.360,0:05:03.759
+qui sont contraints sur la variété sont rongés par la colonne de droite.
+
+0:05:03.759,0:05:13.919
+Donc avec deux étapes, nous rendons cette forme elliptique en une ligne
+qui va être condensée en un seul point.
+
+0:05:13.919,0:05:18.560
+Enfin, je vais avoir mon terme de coût, mon terme d'énergie.
+
+0:05:18.560,0:05:23.680
+Et finalement l'énergie libre, libre car il n'y a pas de latente,
+
+0:05:23.680,0:05:28.320
+ce F, va être cette grande boîte qui comprend juste le terme C.
+
+0:05:28.320,0:05:33.919
+Donc l'énergie libre du système F(x,y) va être ce
+
+0:05:33.919,0:05:38.960
+coût entre les deux enchâssements, e_x et e_y.
+
+0:05:38.960,0:05:42.320
+Juste avant de commencer la leçon, je vous ai dit qu’il
+
+0:05:42.320,0:05:47.199
+y a différents types de procédures d’entraînement. Nous avons mentionné que nous avons
+
+0:05:47.199,0:05:55.199
+les méthodes contrastives (comme l'auto-encodeur débruiteur [DAE]) où vous choisissez les points qui doivent avoir une énergie élevée.
+
+0:05:55.199,0:05:59.800
+Et de l'autre côté, vous avez les méthodes architecturales et régularisées.
+
+0:05:59.800,0:06:10.199
+Dans les méthodes architecturales vous choisissez une architecture qui limite la quantité de faible énergie que vous pouvez donner.
+
+0:06:10.199,0:06:17.240
+Et dans les méthodes régularisées, vous ajoutez essentiellement une pénalité pour avoir donné une faible d'énergie à trop de choses.
+
+0:06:17.240,0:06:25.759
+Puis je vous montre très rapidement, ce n'était pas une chose importante, quelles sont ces deux options.
+
+0:06:25.759,0:06:30.639
+Il y a donc l’approche contrastive où par exemple, soit on pousse partout, soit on pousse à
+
+0:06:30.639,0:06:35.840
+des endroits spécifiques ou on passe de « off-manifold » à « on-manifold »
+
+0:06:35.840,0:06:40.080
+comme le DAE. Et sur le côté droit nous avons les
+
+0:06:40.080,0:06:44.000
+techniques architecturales et régularisées.
+
+0:06:44.000,0:06:48.880
+Par exemple on peut mettre une limite supérieure au volume d’énergie basse.
+
+0:06:48.880,0:06:54.039
+Ou on utilise un terme de régularisation. Ou on minimise le gradient et ensuite on maximiser le facteur de courbure.
+
+0:06:54.039,0:07:03.599
+C'est tout ce que je voulais dire avant de commencer le cours d'aujourd'hui sur les méthodes d’enchâssements joints [JEMs].
+
+0:07:03.599,0:07:10.560
+Vous allez en entendre parler. Ou en avez déjà entendu parler si vous avez regardé l’enregistrement [= les étudiants].
+
+0:07:10.560,0:07:15.199
+Donc on va parler de contrastif, de clustering, de distillation et de maximisation de l'information.
+
+0:07:15.199,0:07:19.199
+Nous l'appelons généralement apprentissage de représentation visuelle.
+
+0:07:19.199,0:07:23.760
+Visuel signifie qu'on ne s'intéresse qu'aux images ou aux vidéos.
+
+0:07:23.760,0:07:27.440
+On ne s'intéresse pas au langage naturel ou à la parole.
+
+0:07:27.440,0:07:34.319
+En général il y a deux types de méthode que vous pouvez faire pour l'apprentissage de la représentation visuelle.
+
+0:07:34.319,0:07:37.599
+Vous pouvez soit faire du supervisé, soit de l'autosupervisé, soit du non supervisé.
+
+0:07:37.599,0:07:41.520
+Dans le cas de l'apprentissage supervisé de la représentation vidéo, beaucoup de
+
+0:07:41.520,0:07:46.080
+gens appellent ça l'apprentissage par transfert. Donc en gros vous entraînez votre
+
+0:07:46.080,0:07:51.280
+modèle sur quelque chose comme un ensemble de données supervisées, puis vous essayez de transférer sur
+
+0:07:51.280,0:07:55.000
+un jeu de données hors de la distribution et de vérifier la performance.
+
+0:07:55.000,0:08:01.599
+Mais aujourd’hui nous allons nous concentrer sur le côté auto-supervisé, En général, nous avons
+
+0:08:01.599,0:08:07.160
+trois catégories nous maîtrisons : les modèles génératifs, les tâches de prétexte et la JEM.
+
+0:08:07.160,0:08:14.240
+Pour l’apprentissage autosupervisé de représentation visuelle, vous avez deux étapes à faire.
+
+0:08:14.240,0:08:19.120
+La première étape est le pré-entraînement. Donc l'idée est que vous utilisez
+
+0:08:19.120,0:08:24.560
+une très grande quantité de données non étiquetées pour entraîner un backbone.
+
+0:08:24.560,0:08:28.039
+Différentes méthodes produisent un backbone différent.
+
+0:08:28.039,0:08:32.120
+Donc vous aurez cette chose : un encodeur ou un backbone.
+
+0:08:32.120,0:08:37.440
+Donc vous obtenez une image et vous pouvez générer une représentation de l'image.
+
+0:08:37.440,0:08:40.559
+Puis la deuxième étape concerne l'évaluation.
+
+0:08:40.559,0:08:43.679
+Donc ici, vous pouvez utiliser une petite quantité de
+
+0:08:43.679,0:08:48.000
+données étiquetées pour entraîner un réseau sur une tâche en aval.
+
+0:08:48.000,0:08:52.000
+Donc il y a deux façons de le faire. Une que nous appelons l'extraction de caractéristiques.
+
+0:08:52.000,0:08:55.999
+Vous avez une image, vous passez par un encodeur qui génère une représentation.
+
+0:08:55.999,0:09:00.000
+Vous utilisez ensuite la représentation pour entraîner une tête de tâche en aval.
+
+0:09:00.000,0:09:04.720
+Par exemple si vous avez l'encodeur vous pouvez vectoriser toute l’image.
+
+0:09:04.720,0:09:09.920
+Vous pouvez même faire un peu d’apprentissage par renforcement.
+
+0:09:09.920,0:09:22.279
+Vous pouvez mettre une tête d’apprentissage par renforcement au sommet pour faire de l’apprentissage par renforcement sur l'espace de représentation au lieu de l'espace d'image.
+
+0:09:22.279,0:09:27.500
+La seule différence entre l'extraction de caractéristiques et le finetuning est de savoir où vous stoppez le gradient.
+
+0:09:27.500,0:09:33.040
+Dans le finetuning, vous changez l'encodeur mais pas pour l'extraction de caractéristiques.
+
+0:09:33.040,0:09:42.000
+C'est la différence. Donc principalement pour toutes les différentes méthodes, la différence vient de l'étape de pré-entraînement.
+
+0:09:42.000,0:09:51.120
+Pour l'étape de l'évaluation, il y a une façon standard d'évaluer afin que les comparaisons entre les différentes méthodes soient équitables.
+
+0:09:51.120,0:09:58.560
+Ok, parlons d'abord des deux autres méthodes. Pour les modèles génératifs,
+
+0:09:58.560,0:10:03.680
+un des plus célèbres est l'auto-encodeur. Donc vous avez juste une image…
+
+0:10:03.680,0:10:08.000
+Disons que c'est une image ici.
+
+0:10:08.000,0:10:14.320
+Dans le cas du DAE, vous avez l'image originale vous ajoutez un peu de bruit et puis
+
+0:10:14.320,0:10:20.240
+vous essayez d'utiliser l'encodeur-décodeur pour reconstruire l'image originale.
+
+0:10:20.240,0:10:30.320
+A la fin, après avoir entraîné les réseaux, vous jetez le décodeur et ne gardez que l’encodeur qui vous servira de backbone.
+
+0:10:30.320,0:10:34.640
+Vous pouvez l’utiliser pour d’autres tâches possibles.
+
+0:10:34.640,0:10:38.560
+Donc il y a une autre catégorie appelée tâches de prétexte.
+
+0:10:38.560,0:10:43.600
+C'est presque la même chose. Vous avez l'image que vous passez par le biais
+
+0:10:43.600,0:10:50.040
+d'un encodeur, mais ici vous trouvez un moyen intelligent de générer une grille d’étiquettes.
+
+0:10:50.040,0:11:00.000
+Par exemple, ceci est une image d'un tigre. On choisit 9 patchs dedans.
+
+0:11:00.000,0:11:05.360
+Par exemple ces 9 patchs différents. On les mélange et c'est votre entrée x.
+
+0:11:05.360,0:11:09.279
+Et la sortie de y est la manière correcte de les étiqueter.
+
+0:11:09.279,0:11:14.959
+C’est votre y. Vous entraînez votre réseau à
+
+0:11:14.959,0:11:20.320
+essayer de réarranger ces patchs, résoudre le puzzle pour qu’ils aient un sens.
+
+0:11:20.320,0:11:28.120
+Dans ce cas, si le réseau peut réarranger les patchs avec succès, cela signifie qu’il comprendre l'image.
+
+0:11:28.120,0:11:32.880
+Cela signifie que la représentation veut dire quelque chose.
+
+0:11:32.880,0:11:42.800
+Donc ces deux méthodes ont été assez populaires entre 2014 et 2018 ou 19.
+
+0:11:42.800,0:11:48.720
+Puis les JEMs sont apparues et sont devenues dominantes en apprentissage autosupervisé de représentation.
+
+0:11:48.720,0:11:55.959
+[Alfredo : quel est le problème majeur avec le type d'architecture précédent, avec une tâche de prétexte ?]
+
+0:11:55.959,0:12:03.040
+Ok avec la tâche de prétexte le problème est généralement de savoir comment vous la concevez.
+
+0:12:03.040,0:12:09.320
+Si vous la concevez trop facile le réseau n'apprendra pas une bonne représentation.
+
+0:12:09.320,0:12:16.959
+Mais si vous la concevez trop difficile, peut-être même plus difficile que votre tâche en aval, le réseau
+
+0:12:16.959,0:12:22.000
+Ne sera pas très bien entraîné. Donc votre tâche en aval va en souffrir.
+
+0:12:22.000,0:12:27.680
+C’est très difficile de concevoir une bonne tâche de prétexte.
+
+0:12:27.680,0:12:32.760
+[Alfredo : La représentation sera taillée sur mesure à la tâche spécifique que nous devons entraîner].
+
+0:12:32.760,0:12:36.720
+Oui, oui, oui, oui, c'est aussi un autre problème.
+
+0:12:36.720,0:12:42.160
+[Alfredo : donc la perte ici est juste une classification pour ce cas ?]
+
+0:12:42.160,0:12:45.000
+Oui c’est juste une classification.
+
+0:12:45.000,0:12:50.160
+[Alfredo : quel est le principal problème des modèles génératifs ? Pourquoi ne les utilisons pas ?]
+
+0:12:50.160,0:12:59.200
+Le principal problème pour l'auto-encodeur est ceci. Vous avez besoin de ce décodeur. Entraîner un décodeur
+
+0:12:59.200,0:13:07.839
+est déjà très difficile. Si vous avez un mauvais décodeur, vous obtiendrez un mauvais encodeur.
+
+0:13:07.839,0:13:14.360
+Aussi des fois résoudre un problème est trop dur.
+
+0:13:14.360,0:13:20.000
+[Alfredo : pourquoi est-ce que c'est difficile de décoder ?]
+
+0:13:20.000,0:13:29.000
+Car pour beaucoup de tâche en aval nous n’avez pas nécessairement à reconstruire l’image.
+
+0:13:29.000,0:13:36.720
+Disons que vous avez deux images de chiens. Si vous voulez juste faire de la classification,
+
+0:13:36.720,0:13:47.000
+les deux chiens ont la même représentation, ce qui signifie qu'ils sont juste des chiens.
+
+0:13:47.000,0:13:52.240
+Mais si vous voulez reconstruire, alors ces deux chiens ne peuvent pas être la même représentation.
+
+0:13:52.240,0:14:04.040
+Ce qui est en fait plus difficile par rapport à juste presser l'espace de représentation.
+
+0:14:04.040,0:14:12.639
+La dernière chose est que peut-être parfois, pour l'auto-encodeur, la fonction de perte n'est pas très bonne.
+
+0:14:12.639,0:14:17.839
+Car est une perte de reconstruction comme par exemple la distance euclidienne.
+
+0:14:17.839,0:14:22.839
+Dans l'espace d’image ce n'est pas vraiment une bonne perte.
+
+0:14:23.000,0:14:37.199
+Pour les deux images de chiens, je peux peut-être trouver une image de chat qui est plus proche de l'une des images de chien que ne l’est l’autre image de chien.
+
+0:14:37.199,0:14:43.000
+Donc dans ce cas, cela signifie que la distance euclidienne n'est pas vraiment une bonne mesure.
+
+0:14:43.000,0:14:50.839
+Dans beaucoup de cas. Donc je pense que c'est en général pourquoi l'auto-encodeur n'est pas une très bonne méthode d'apprentissage de représentation.
+
+0:14:50.839,0:15:00.079
+[Alfredo : est-ce pourquoi l’aspect variationnel est important pour faire une bonne méthode d'auto-encodeur génératif ?]
+
+0:15:00.079,0:15:05.800
+Non, je ne pense pas.
+
+0:15:05.800,0:15:15.000
+La seule raison de rendre le h variationnel est que parfois voulez échantillonner de h.
+
+0:15:15.000,0:15:24.000
+Dans un auto-encodeur variationnel basique, vous voulez que h soit gaussien car vous voulez échantillonner à partir de lui.
+
+0:15:24.000,0:15:35.000
+Mais si je fais juste une tâche en aval comme une classification je ne me soucie pas vraiment de savoir si la représentation est gaussienne ou non.
+
+0:15:35.000,0:15:45.000
+Si vous utilisez un auto-encodeur variationnel pour apprendre la représentation, c'est juste ajouter des contraintes supplémentaires à la
+
+0:15:45.000,0:15:49.199
+représentation mais vous ne vous souciez pas vraiment de la contrainte.
+
+0:15:49.199,0:15:58.240
+[Alfredo : quand tu fais la classification sur les neuf patchs, est-ce qu'on a comme une softargmax sur neuf catégories ici ?]
+
+0:15:58.240,0:16:05.500
+Je ne me souviens pas exactement comment ils font mais je pense que c'est plus de neuf catégories.
+
+0:16:05.500,0:16:10.720
+Oh oui oui oui. Je pense que peut-être tu as raison. Peut-être que chaque patch
+
+0:16:10.720,0:16:19.000
+a neuf catégories différentes mais vous devez les contrôler et vous assurer que tous les patchs n'appartiennent pas à la même catégorie.
+
+0:16:19.000,0:16:24.500
+[Alfredo : je vois. Je pense que c'est tout pour les questions jusqu’ici.]
+
+0:16:24.500,0:16:30.880
+Ok donc retour aux JEMs. Encore une fois, l'idée est juste d'essayer de
+
+0:16:30.880,0:16:36.560
+rendre votre backbone robuste à une certaine distorsion. Imaginez que
+
+0:16:36.560,0:16:41.040
+vous effectuez une tâche en aval de type classification et que vous déformez un peu l'image.
+
+0:16:41.040,0:16:46.399
+L’image est un chien et vous voulez la classer comme étant un animal,
+
+0:16:46.399,0:16:51.000
+un chat ou quoi que ce soit d'autre, tout en étant robuste à la distorsion.
+
+0:16:51.000,0:16:57.480
+Donc ce que vous pouvez faire, c’est avoir une image de chien et en obtenir deux versions différentes déformées.
+
+0:16:57.480,0:17:07.280
+Puis vous l'encodez avec votre backbone pour avoir une représentation et vous voulez que les deux images soient proches l’une de l’autre.
+
+0:17:07.280,0:17:14.439
+Cela veut dire que les deux images partagent certaines informations sémantiques.
+
+0:17:14.439,0:17:20.000
+Mais ensuite il y a une mauvaise chose qui peut se produire : la solution triviale.
+
+0:17:20.000,0:17:29.840
+Pourquoi ? En fait le réseau peut tricher en n’étant pas juste invariant aux augmentations de données mais aussi aux entrées.
+
+0:17:29.840,0:17:39.880
+Quelle que soit l'entrée que vous lui donnez, il peut générer la même sortie et alors la distance sera juste de zéro.
+
+0:17:39.880,0:17:49.880
+Donc dans ce cas, vous avez cette solution triviale. Toute la question, toutes les différences entre les différentes JEMs, proviennent juste de la
+
+0:17:49.880,0:17:53.000
+façon dont vous empêchez cette solution triviale.
+
+0:17:53.000,0:18:04.240
+Donc l'idée générale est qu'au lieu de considérer juste l'énergie locale entre votre paire d'images déformées,
+
+0:18:04.240,0:18:09.360
+ces méthodes prennent un ensemble de batch d’images, vous avez N paires, et
+
+0:18:09.360,0:18:18.080
+vous essayez de vous assurer que la collection de la représentation, le H_x …
+
+0:18:18.080,0:18:28.600
+Donc pour chaque image que vous obtenez h_x puis vous les collectez tous dans une matrice H_x.
+
+0:18:28.600,0:18:35.919
+La solution triviale signifie que tous les h_x sont les mêmes.
+
+0:18:35.919,0:18:43.520
+Donc on pousse dans cette matrice H_x pour s’assurer que chaque colonne ou chaque ligne sont différentes.
+
+0:18:43.520,0:18:49.360
+[Alfredo : qu'elle est cette notation de la plaque avec ce N ?]
+
+0:18:49.360,0:18:56.360
+N signifie que vous avec N fois la même chose mais avec des x et y différents.
+
+0:18:53.360,0:18:58.640
+[Alfredo : Ok donc à l'intérieur de la plaque nous avons l'énergie, c'est ça ?]
+
+0:18:58.640,0:19:04.559
+Oui [et puis en dehors, ces boîtes vertes sont…]
+
+0:19:04.559,0:19:07.999
+Les fonctions de perte. [Ok].
+
+0:19:08.400,0:19:13.280
+Donc oui, le N signifie juste que vous échantillonnez un groupe d'images
+
+0:19:13.280,0:19:19.600
+Disons que vous échantillonnez n'importe quelles images et qu'elles génèrent N x et N y.
+
+0:19:19.600,0:19:28.080
+Donc vous avez N h_x et N h_y, puis on les empile.
+
+0:19:28.080,0:19:33.440
+Vous obtenez alors H_x. Vous essayez d’être sûr que ces
+
+0:19:33.440,0:19:41.400
+H_x ont une certaine propriété comme par exemple que toutes les lignes ne peuvent pas être les mêmes.
+
+0:19:41.400,0:19:46.919
+[Alfredo : donc la perte agit sur le batch.] Oui, elle agit sur le batch.
+
+0:19:46.919,0:19:52.000
+[Alfredo : alors que l'énergie agit sur…] sur l'échantillon.
+
+0:19:52.000,0:19:56.960
+[Ok, je vois c’est logique. Autre question, peux-tu expliquer encore
+
+0:19:56.960,0:20:03.360
+une fois, qu'est-ce que le h_x et le H_x ? Quelle est la différence entre les deux ?]
+
+0:20:03.360,0:20:10.640
+h_x est juste un vecteur, un enchâssement pour une image.
+
+0:20:10.640,0:20:20.280
+H_x est une matrice de dimension N par la dimension de h_x.
+
+0:20:21.280,0:20:26.880
+Donc N par d avec d la dimension de h_x. Cela veut dire que vous
+
+0:20:26.880,0:20:32.440
+empilez juste tous les batchs d’enchâssement.
+
+0:20:32.440,0:20:36.960
+Donc cette majuscule H_x est une matrice N par d.
+
+0:20:36.960,0:20:40.960
+{Alfredo : et qu’est-ce qu’A et B ?]
+
+0:20:40.960,0:20:44.799
+A et B sont juste les fonctions de perte.
+
+0:20:44.799,0:20:48.559
+Je vous expliquerai ce qu’elles valent pour les différentes méthodes.
+
+0:20:48.559,0:20:53.240
+En fonction des JEMs, A et B sont différents.
+
+0:20:54.000,0:21:00.480
+Je peux poursuivre ? [Alfredo : Oui, je vais juste lire les questions quand elles remonteront].
+
+0:21:00.720,0:21:02.480
+Ok.
+
+0:21:02.480,0:21:11.000
+Donc les différentes JEMs peuvent varier selon quatre choses.
+
+0:21:11.000,0:21:16.360
+Premièrement, l’augmentation des données. La manière dont vous générez les versions déformées.
+
+0:21:16.360,0:21:21.360
+La deuxième est le backbone, c’est-à-dire le type de backbone que vous utilisez.
+
+0:21:21.360,0:21:29.520
+La troisième est la fonction d'énergie donc la façon dont vous définissez la distance entre les deux représentations.
+
+0:21:29.520,0:21:35.000
+La dernière est la fonction de perte. Ce que sont A et B.
+
+0:21:35.000,0:21:41.000
+Pour aujourd'hui nous supposons juste que nous avons une bonne augmentation de données
+
+0:21:41.000,0:21:49.000
+et un bon backbone comme un ResNet ou un ViT ou d'autres nouveaux trucs fantaisistes.
+
+0:21:49.000,0:21:53.159
+Ces deux points-là sont en fait super importants.
+
+0:21:53.159,0:22:10.000
+Beaucoup d’auteurs de papier à l’état de l’art ont mis beaucoup d'énergie, d'efforts d'ingénierie sur l’augmentation de données et le backbone.
+
+0:22:10.000,0:22:19.360
+Mais il n'y a pas beaucoup de compréhension théorique sur la raison pour laquelle certains backbones fonctionnent et d’autres ne fonctionnent pas.
+
+0:22:19.360,0:22:25.000
+C’est principalement des connaissances empiriques et non pas théoriques.
+
+0:22:25.000,0:22:32.799
+La seule chose sur laquelle nous avons une bonne compréhension est la fonction de perte et la fonction d'énergie.
+
+0:22:32.799,0:22:40.799
+Donc aujourd'hui, je vais surtout parler de ces deux-là et on va supposer qu’on a une bonne augmentation de données et un bon backbone.
+
+0:22:40.799,0:22:49.760
+[Alfredo : les deux backbones ont exactement les mêmes poids ?] Oui [Alors pourquoi il ne suffit pas de mettre x et y dans le même backbone ?].
+
+0:22:49.760,0:22:58.240
+On peut faire ça mais si vous lisez les papiers sur les JEMs, les gens les dessinent toutes comme ça.
+
+0:22:58.240,0:23:07.000
+Dans ce cas-ci, les deux backbones sont identiques donc vous pouvez faire ça, mais parfois ils ne sont pas identiques.
+
+0:23:07.000,0:23:10.280
+Je vais vous présenter des cas où ils sont identiques.
+
+0:23:10.280,0:23:14.880
+Et parfois même s’ils sont identiques, le gradient peut être coupé que d’un côté.
+
+0:23:14.880,0:23:23.760
+Donc j’ai dessiné de façon à ce toutes les figures de la présentation soient cohérentes les unes avec les autres.
+
+0:23:23.760,0:23:29.000
+[Alfredo : Ok, je pense aussi que nous avons d'autres diagrammes où nous utilisons ce concept de partage des paramètres
+
+0:23:29.000,0:23:34.000
+donc on a peut-être deux encodeurs où les poids sont les mêmes
+
+0:23:34.000,0:23:40.000
+donc pour le bien de la représentation et pour comprendre où va le x et où va le y.
+
+0:23:40.000,0:23:45.750
+On réplique juste le symbole pour s'assurer que nous comprenons où ils vont.
+
+0:23:45.750,0:23:51.240
+Attends, il y a une autre question. Que représente la ligne en pointillée
+
+0:23:51.279,0:23:58.320
+entre h_x et H_x ? Quelle fonction appliquons-nous sur h_x pour obtenir H_x ?
+
+0:23:58.320,0:24:03.400
+Quelqu'un ici suggère que c'est l'opérateur d'empilage.
+
+0:24:03.400,0:24:08.279
+Et c'est précisément ça.] Oui c’est juste l’empilage.
+
+0:24:08.279,0:24:15.440
+[Et il y a une autre question. Mis à part le fait que ce soit développé par Yann Le Cun, pourquoi les JEMs sont des méthodes de choix ?
+
+0:24:15.440,0:24:28.000
+Quelle est la preuve que cette méthode est meilleure que les deux autres à savoir les méthodes génératives et la tâche de prétexte ?
+
+0:24:28.000,0:24:33.440
+Pourquoi préférons-nous utiliser ces JEMs plutôt que les autres présentées avant ?]
+
+0:24:33.440,0:24:38.640
+La réponse simple est qu'ils sont beaucoup plus performants.
+
+0:24:38.640,0:25:00.000
+Si vous faites une tâche en aval de classification, quel que soit le jeu de données utilisé mais disons ImageNet, les performances des JEMs sont très proche de la méthode supervisée.
+
+0:25:00.000,0:25:10.400
+Une approche supervisée avec ResNet 50 obtient 76% de précision sur ImageNet là où une JEM obtient quelque chose comme 75%.
+
+0:25:10.400,0:25:18.200
+Mais si vous utilisez une tâche de prétexte ou un auto-encodeur, vous n’obtiendrez probablement que 40 ou 50%.
+
+0:25:18.200,0:25:29.520
+L’écart de performance est vraiment important et je pense que c'est la principale raison pour laquelle tant de personnes préfèrent cette méthode aux deux autres.
+
+0:25:29.520,0:25:32.999
+[Alfredo : rappelons les principaux problèmes.
+
+0:25:32.999,0:25:37.440
+Le problème majeur de la tâche de prétexte est le fait que…]
+
+0:25:37.440,0:25:42.120
+c'est vraiment difficile de concevoir une bonne tâche de prétexte
+
+0:25:42.120,0:25:47.480
+[alors que le problème majeur de l’approche générative est…]
+
+0:25:47.480,0:25:52.880
+je dirais la fonction de perte, la perte de reconstruction.
+
+0:25:52.880,0:25:57.840
+[L’entraînement du générateur, l’entraînement du décodeur]
+
+0:25:57.840,0:26:02.000
+Oui, oui, c'est aussi un gros problème.
+
+0:26:02.000,0:26:06.080
+[C’était donc un rappel des principaux défauts.]
+
+0:26:08.000,0:26:15.000
+Donc il y a habituellement quatre catégories de JEMs.
+
+0:26:15.000,0:26:23.000
+Votre JEM peut être contrastive ou non-contrastive (ce que Yann appelle méthodes régularisées) ou être une méthode de clustering.
+
+0:26:23.000,0:26:31.000
+La dernière catégorie porte sur toutes les autres méthodes. Nous l'appelons « autres méthodes » car nous ne comprenons pas tout à fait pourquoi elles marchent.
+
+0:26:31.000,0:26:35.000
+[rires] Donc on les regroupe et on les appelle « autres ».
+
+0:26:35.000,0:26:38.960
+[Alfredo : méthodes magiques.] Oui.
+
+0:26:38.960,0:26:51.840
+Donc commençons par ce que partage toutes les fonctions de pertes des différentes JEMs.
+
+0:26:52.000,0:26:57.159
+Les fonctions de pertes des JEMs doivent avoir deux composantes.
+
+0:26:57.159,0:27:02.880
+D’abord un terme pour rendre les paires positives proches. D'habitude c'est
+
+0:27:02.880,0:27:07.520
+juste la fonction d'énergie. Vous poussez la fonction d'énergie vers le bas
+
+0:27:07.520,0:27:12.520
+ce qui fait que les deux représentations sont plus proches l'une de l'autre.
+
+0:27:12.520,0:27:20.279
+La deuxième chose est que vous devez avoir un terme pour empêcher la solution triviale (= la sortie constante).
+
+0:27:20.279,0:27:23.120
+Donc en gros, c'est A et B dans ce graphique.
+
+0:27:23.120,0:27:30.000
+Et la façon de faire ça varie beaucoup d'une JEM à une autre.
+
+0:27:30.399,0:27:37.000
+J'ai indiqué « implicite » ici car beaucoup d’« autres méthodes »
+
+0:27:37.000,0:27:44.240
+n'ont pas vraiment de terme de perte explicite pour empêcher la solution triviale.
+
+0:27:44.240,0:27:52.240
+Beaucoup d'entre elles ne peuvent pas converger vers une solution triviale mais pendant l’entraînement, ce n'est pas le cas.
+
+0:27:52.240,0:27:56.000
+C'est pour ça que j'ai mis l’« implicite » ici.
+
+0:27:56.000,0:28:02.200
+Mais en général pour la plupart des fonctions de perte ont ces deux termes. alors une autre chose est
+
+0:28:03.440,0:28:17.919
+Une autre chose pour les JEMs pouvant différer de l’approche supervisée ou générative ou autre, est que
+
+0:28:17.919,0:28:27.200
+la seule entrée de la fonction de perte est la représentation générée en sortie de votre backbone.
+
+0:28:27.200,0:28:37.760
+Donc dans ce cas c'est différent de l’approche supervisée où vous avez votre étiquette prédite et l'étiquette réelle fixe.
+
+0:28:37.760,0:28:42.880
+Fixe signifiant et qu'on ne peut pas en changer l'échelle.
+
+0:28:42.880,0:28:49.000
+Et dans l’approche générative, vous essayez de reconstruire l'image originale qui est aussi fixe.
+
+0:28:49.000,0:28:54.240
+Alors qu’ici la fonction de perte prend seulement les deux des représentations
+
+0:28:54.240,0:29:00.000
+Donc vous pouvez changer l'échelle de la représentation, par exemple tous les multiplier par 10.
+
+0:29:00.000,0:29:11.600
+Si vous multipliez tous par 10, votre réseau produit toutes les représentations de h_x et de h_y dix fois plus grandes.
+
+0:29:11.600,0:29:24.159
+Et si vous pouvez produire des représentations 10 fois plus grandes, et que la fonction de perte décroit, votre entraînement sera super instable.
+
+0:29:24.159,0:29:35.000
+Donc en général, ces JEMs ont un moyen d'empêcher cette instabilité de se produire.
+
+0:29:35.200,0:29:40.000
+Je vais vous montrer ce que je veux dire plus tard.
+
+0:29:40.000,0:29:46.159
+[Alfredo : est-ce que les enchâssements finals sont-ils particulièrement insensibles, par-là qu’après
+
+0:29:46.159,0:29:52.480
+différentes distorsions, les x et y que nous donnons, peuvent être juste différentes parties d'un chien ?] Oui
+
+0:29:52.480,0:29:58.500
+[Donc les caractéristiques peuvent être particulièrement dissemblables mais l’information sémantique de haut niveau reste la même].
+
+0:29:58.500,0:30:04.720
+Oui. En fait vraiment beaucoup de personnes travaillent actuellement sur ce sujet.
+
+0:30:04.720,0:30:08.000
+Cela dépend de l'augmentation de données appliquée.
+
+0:30:08.000,0:30:17.679
+On a trouvé que les augmentations de données populaires ne fonctionnent en fait très bien qu’uniquement pour la classification.
+
+0:30:17.840,0:30:28.000
+Par exemple, la représentation ignore les informations spatiales car il ne s'agit pas de deux chiens différents.
+
+0:30:28.000,0:30:36.480
+Si vous faites de la détection d'objets comme tâche en aval, c’est en fait très mauvais.
+
+0:30:36.480,0:30:48.480
+Beaucoup de recherches portent sur quels types d’augmentation de données sont bons pour les JEMs et sur des tâches en aval comme la détection d’objets.
+
+0:30:48.559,0:30:57.000
+Et c'est en fait exactement ce que nous vous invitons à trouver pour votre projet de fin de semestre [que les étudiants de la NYU ont à faire].
+
+0:30:57.919,0:31:06.480
+Il faut essayer différentes manières de faire de l’apprentissage autosupervisé sur la tâche de la détection d'objets.
+
+0:31:06.480,0:31:12.480
+Donc essayer de garder les informations spatiales dans les images autant que possible.
+
+0:31:12.480,0:31:16.880
+C'est toujours un défi ouvert.
+
+0:31:16.880,0:31:29.000
+Pour l'instant, de ce qu’on comprend, si on entraîne avec ces types d’augmentations de données, le réseau jette beaucoup d'informations spatiales.
+
+0:31:29.000,0:31:35.120
+[Alfredo : donc il y a comme une connexion entre la tâche de prétexte et ces augmentations de données.] Oui.
+
+0:31:35.120,0:31:45.000
+[Car il semble que la tâche de prétexte nous donne des paramètres qui sont conçus pour résoudre une tâche spécifique inventée
+
+0:31:45.000,0:31:56.080
+et ici ces JEMs semblent être construites de manière à être invariantes à l'augmentation de données qui est en quelque sorte aussi adaptée aux tâches en aval.
+
+0:31:56.080,0:32:01.500
+Je pense donc qu'il y a encore une sorte de limite sur laquelle travailler.]
+
+0:32:01.500,0:32:07.679
+Alors parlons des méthodes contrastives.
+
+0:32:07.679,0:32:22.480
+Les méthodes contrastives deviennent très populaires au point que certaines personnes appellent juste les JEMs, « apprentissage contrastif ».
+
+0:32:22.500,0:32:26.000
+[Alfredo : aimons-nous ou pas les méthodes contrastives ?]
+
+0:32:26.000,0:32:30.480
+On ne les aime pas. [Pourquoi on n'aime pas les méthodes contrastives ?]
+
+0:32:30.480,0:32:42.640
+Car elles doivent en fait faire un échantillonnage ou faire quelque chose pour pousser la surface d'énergie dans des emplacements spatiaux.
+
+0:32:42.640,0:32:54.640
+Donc dans ce cas, si vous utilisez des espaces d’enchâssements vraiment grands, vous ne pouvez pas pousser tous les emplacements possibles.
+
+0:32:54.640,0:33:04.399
+Il est donc préférable d’utiliser des méthodes régularisées afin d’éloigner les échantillons négatifs.
+
+0:33:04.399,0:33:09.200
+plutôt qu’utiliser une méthode d'apprentissage contrastive.
+
+0:33:09.500,0:33:20.399
+[Alfredo : voyons dans le chat si les étudiants suivent. Que font les méthodes contrastives ? Tapez votre réponse dans le chat.
+
+0:33:21.000,0:33:25.360
+Réponse : on augmente l'énergie des échantillons négatifs.
+
+0:33:25.360,0:33:30.640
+Ok et quel est le problème majeur dans l'échantillon contrastif ?
+
+0:33:34.480,0:33:39.600
+Réponse : nous devons déterminer où trouver ces y,
+
+0:33:39.600,0:33:43.760
+ces échantillons spécifiques. Donc, encore une fois, il s'agit d'un problème majeur.
+
+0:33:43.760,0:33:47.919
+Alors que si utilise des techniques régularisées, on en manipule juste beaucoup.
+
+0:33:47.919,0:33:52.000
+C’est le même problème que nous avons vu à la fin du cours d'hier.
+
+0:33:52.799,0:33:57.840
+À chaque fois que j'essaie de voir l'énergie de l'interpolation linéaire de deux entrées,
+
+0:33:57.840,0:34:03.919
+la technique régularisée, l’auto-encodeur variationnel me donnait une haute énergie
+
+0:34:03.919,0:34:09.839
+pour ce type d'interpolation linéaire de deux chiffres d'entrée alors que
+
+0:34:09.839,0:34:18.839
+l’auto-encodeur débruiteur, qui est une technique contrastive, donnait une faible l'énergie sur cette interpolation linéaire.
+
+0:34:18.839,0:34:24.159
+Bref, revenons à la diapositive et essayons de comprendre ce que sont ces i, ces j et ces choses].
+
+0:34:24.159,0:34:33.960
+Donc encore une fois, comme je l'ai mentionné, toutes les JEMs doivent avoir deux composants dans la fonction de perte.
+
+0:34:33.960,0:34:38.500
+Le premier est de rapprocher les paires positives entre elles.
+
+0:34:38.500,0:34:49.999
+Donc vous obtenez une première image déformée du chien et une seconde
+image déformée du chien. Vous rapprochez les deux représentations entre elles.
+
+0:34:49.999,0:34:55.599
+Puis, pour éviter la solution triviale, vous repoussez les paires négatives.
+
+0:34:55.599,0:35:20.000
+Nos N h_x^i et N x_x^j peuvent aussi provenir d’images différentes. Par exemple l’un être généré à partir d’une image de chien et l’autre à partir d’une image de chat ou d’une personne ou quoique ce soit différent d’un chien.
+
+0:35:20.040,0:35:24.560
+Donc vous essayez d’éloigner leurs représentations.
+
+0:35:24.560,0:35:33.000
+Cela empêche l'effondrement car empêche de produire un vecteur constant.
+
+0:35:33.000,0:35:41.000
+Si vous ressortez le vecteur constant, les paires positives seront proches entre elles mais aussi les paires négatives seront proches entre elles.
+
+0:35:41.000,0:35:45.000
+Voici donc l'idée de base de l'apprentissage contrastif.
+
+0:35:45.000,0:35:52.480
+[Alfredo : que se passe t’il si tous les i et j sont des images de chiens ?]
+
+0:35:52.480,0:36:02.880
+S’il s’agit de chiens différents, il faut les repousser.
+
+0:36:02.880,0:36:12.400
+Car même si c’est le même concept, des chiens, ils vont avoir quelques différences.
+
+0:36:12.400,0:36:22.000
+Il faut que toutes les paires positives, c’est-à-dire des images/représentations d’un même chien, soient proches les unes des autres.
+
+0:36:22.000,0:36:30.000
+Et il faut que les représentations de différents chiens soient éloignées des représentations des mêmes chiens.
+
+0:36:30.000,0:36:40.480
+Cependant, ces représentations de différents chiens doivent être plus proches des chiens identiques que d’un chat ou d’une voiture ou un camion.
+
+0:36:40.480,0:36:50.760
+La méthode d’apprentissage contrastif a été introduite dans le groupe de Yann vers 2005-2006.
+
+0:36:51.960,0:37:03.520
+A cette époque, cela ne fonctionnait pas très bien. Cela fonctionnait uniquement que sur des jeux de données très simples.
+
+0:37:03.520,0:37:10.839
+Le problème des méthodes d’apprentissage contrastif est de trouver un bon moyen de définir les paires négatives.
+
+0:37:10.839,0:37:12.500
+Par exemple…
+
+0:37:12.500,0:37:25.000
+[Jiachen cherche un exemple]
+
+0:37:25.000,0:37:35.000
+Par exemple si tous mes exemples négatifs viennent de chiens et d’une classe, le réseau va trouver facilement que c’est deux choses différentes.
+
+0:37:35.000,0:37:40.400
+Ce n'est pas nécessaire d'apprendre la représentation complète du chien.
+
+0:37:40.400,0:37:48.000
+Il faut juste savoir que le chien a disons une certaine texture de peau.
+
+0:37:48.000,0:37:52.000
+Et que pour la classe, on a un éclairage différent.
+
+0:37:52.000,0:37:56.000
+Le réseau peut donc tricher lors de l’entraînement.
+
+0:37:56.000,0:38:02.500
+Donc la vraie question est de savoir comment trouver de bonnes paires négatives.
+
+0:38:02.500,0:38:08.500
+Vous voulez différencier les chiens. Ils peuvent se ressembler mais ils sont bien différents.
+
+0:38:08.500,0:38:13.359
+Donc vous poussez le réseau à apprendre une bonne représentation.
+
+0:38:13.359,0:38:17.359
+La plupart des premières tentatives ont consistées à faire de la pêche d’exemples négatifs [hard negative mining].
+
+0:38:17.359,0:38:23.720
+Donc vous avez une certaine connaissance à priori des images, des données que vous avez.
+
+0:38:23.720,0:38:33.200
+A chaque fois vous essayez d'échantillonner des négatifs qui sont très proches de l'image originale.
+
+0:38:33.200,0:38:37.000
+C'est beaucoup utilisé dans la reconnaissance visuelle.
+
+0:38:37.000,0:38:42.079
+Les gens essaient d'utiliser des à priori pour trouver les personnes qui ont des visages identiques
+
+0:38:42.079,0:38:49.000
+mais différentes personnes ont des visages similaires. Donc on utilise ces images comme échantillons négatifs
+
+0:38:49.000,0:38:53.500
+et on utilise les images de la même personne comme paires positives.
+
+0:38:53.500,0:39:01.839
+Mais en général, cela ne fonctionne pas très bien.
+
+0:39:01.839,0:39:12.000
+Donc c’était en 2005-2006. En 2020 deux papiers sont sortis : SimCLR et MoCo.
+
+0:39:12.000,0:39:20.880
+Et comment résolvent-ils le problème de trouver de bonnes paires négatives ? En utilisant des batchs de très grande taille.
+
+0:39:20.880,0:39:26.750
+En échantillonnant beaucoup beaucoup d'images négatives, vous obtiendrez de bons échantillons négatifs.
+
+0:39:26.750,0:39:33.520
+C'est ainsi qu'ils résolvent le problème de trouver de bonnes paires négatives.
+
+0:39:33.520,0:39:40.240
+[Alfredo : beaucoup de questions ici. Peut-on ajuster de combien nous poussons les échantillons négatifs ?
+
+0:39:40.240,0:39:50.400
+Si c'est un chien différent ou un chat différent, peut-on pousser avec différentes intensités en fonction du contenu de l'image ?
+
+0:39:50.400,0:40:04.319
+Donc je pense que la question est : peut-on pousser différemment en fonction de l'étiquette associée à l'image ? Mais je pense qu’on n’a pas d’étiquette.]
+
+0:40:04.319,0:40:09.200
+On ne sait même quel est le label des images. C'est un problème ici.
+
+0:40:09.200,0:40:13.359
+On ne sait pas que c'est une image de chien ou une image de chat.
+
+0:40:13.359,0:40:17.440
+[Alfredo : à moins que nous soyons ceux qui ont créé le jeu de données.
+
+0:40:17.440,0:40:24.800
+Si je prends des photos de mon chien et vous prenez des photos de vos chiens, alors on serait dans cette configuration.
+
+0:40:24.800,0:40:29.999
+Mais habituellement, on a une énorme collection d'images non étiquetées et
+
+0:40:29.999,0:40:35.999
+on doit construire une représentation qui ne s'effondre pas en un seul point
+
+0:40:35.999,0:40:41.920
+et doit être assez descriptif pour inclure toutes ces choses différentes.]
+
+0:40:41.920,0:40:44.319
+Oui. D’autre question ?
+
+0:40:44.319,0:40:48.720
+[Alfredo : les étudiants répondaient à la question dans le chat.
+
+0:40:48.720,0:40:56.960
+Mais je pense que c'est bien de lire à haute voix les questions telles afin de les avoir dans l'enregistrement.]
+
+0:40:56.960,0:40:59.000
+Absolument.
+
+0:40:59.000,0:41:04.640
+Donc SimCLR et MoCo utilisent une fonction de perte appelée InfoNCE.
+
+0:41:04.640,0:41:18.040
+Cette fonction de perte a en fait été proposée assez tôt, dans un papier en 2004.
+
+0:41:19.000,0:41:28.000
+Mais elle n'a jamais vraiment bien fonctionné jusqu'à ce qu'on ait assez de puissance de calcul pour être capable d'utiliser une plus grande taille de batch.
+
+0:41:25.599,0:41:37.200
+Et donc début de 2020 nous avons ces deux papiers étonnants utilisant la perte InfoNCE pour faire de l’apprentissage contrastif.
+
+0:41:37.200,0:41:46.480
+Expliquons donc maintenant ce qu'est cette fonction de perte InfoNCE et comment ils font ça.
+
+0:41:46.500,0:41:54.560
+C'est aussi un peu lié à la question : peut-on faire des échantillons négatifs de manières différentes ?
+
+0:41:54.560,0:41:58.240
+Donc l’InfoNCE permet d’en faire et intelligemment.
+
+0:41:58.240,0:42:04.000
+Donc voici la fonction de perte. Donc vous avez la paire positive h_x et h_y.
+
+0:42:04.000,0:42:12.440
+Vous prenez le négatif du log de… en numérateur exp(β sim(h_x,h_y))
+
+0:42:12.440,0:42:17.440
+β est un hyper paramètre et sim la similarité.
+
+0:42:17.440,0:42:23.599
+Puis vous divisez par la somme des similarités entre toutes les paires négatives.
+
+0:42:23.599,0:42:32.400
+Donc les h_x et x_y^j avec j étant la représentation d'autres images.
+
+0:42:32.400,0:42:42.480
+On peur reformuler ça en mettant le log à l'intérieur qui annule l'exponentielle.
+
+0:42:42.480,0:42:52.000
+Donc le premier terme est un - β sim(h_x,h_y) + le log de tout le reste.
+
+0:42:52.000,0:43:01.359
+Et magiquement, enfin pas magiquement car c’est fait exprès, on obtient
+
+0:43:01.359,0:43:07.319
+ce que nous appelons dans cette classe le softmax ou ce que certains appellent le vrai softmax.
+
+0:43:07.319,0:43:19.359
+Donc vous obtenez – β fois la similarité entre les paires positives + softmax entre toutes les paires négatives.
+
+0:43:19.520,0:43:26.280
+Donc vu que c’est une fonction de perte, on souhaite la minimiser, donc β est positif.
+
+0:43:26.500,0:43:33.000
+Pour minimiser vous essayez de pousser ce terme vers le haut. Vous poussez
+
+0:43:33.000,0:43:37.000
+pour que la similarité entre la paire positive soit élevée.
+
+0:43:37.000,0:43:42.500
+Puis le softmax sur toutes les paires négatives donc on pousse pour que la similarité soit basse.
+
+0:43:42.500,0:44:01.760
+Mais avec une force différente car vous essayez de pousser la paire négative a une forte similarité beaucoup plus dure que la paire négative avec une faible similarité car il y a un softmax.
+
+0:44:01.760,0:44:13.920
+Donc dans ce cas, vous faites essentiellement les deux choses suivantes : rapprocher les paires positives entre elles et éloigner les paires négatives entre elles.
+
+0:44:13.920,0:44:21.200
+Vous devez faire quelque chose pour éviter que le gradient explose.
+
+0:44:21.200,0:44:32.000
+Donc les gens ont choisi la mesure de similarité consistant en le produit intérieur entre des deux représentations normalisé par la norme.
+
+0:44:32.000,0:44:46.500
+Donc même si votre vecteur devient très long, vous pouvez toujours vous assurer qu'il s'agit d'un vecteur unitaire.
+
+0:44:46.500,0:44:52.359
+Donc c'est la fonction de perte InfoNCE, je pense que c'est intuitif et logique.
+
+0:44:52.359,0:44:55.359
+Des questions Alfredo ?
+
+0:44:55.359,0:45:03.760
+[Alfredo : oui il y a une très longue. Je lis un peu pour voir ce qui se passe. Oh, une autre en attendant.
+
+0:45:03.760,0:45:17.200
+Cette architecture devrait être vraiment utile en apprentissage par imitation car on a le contrôle sur les échantillons.]
+
+0:45:17.200,0:45:20.160
+L'apprentissage par imitation ?
+
+0:45:20.160,0:45:24.880
+[Alfredo : je ne connais pas] Je ne sais pas. En fait, je ne suis pas sûr.
+
+0:45:24.880,0:45:29.680
+Je pense que les gens en apprentissage par renforcement aiment vraiment la méthode d'apprentissage autosupervisée mais
+
+0:45:29.680,0:45:32.720
+je ne suis pas vraiment sûr de l'apprentissage par imitation.
+
+0:45:32.720,0:45:38.960
+[Alfredo : Oui, ok, peut-être que Victor peut donner des précisions…
+
+0:45:38.960,0:45:43.839
+Il indique x et y seraient des paires de démonstrations.
+
+0:45:43.839,0:45:50.800
+C'est ce que tu disais.] Euh… [Donc si x et y sont des
+
+0:45:50.800,0:45:58.800
+paires de démonstration, pour rapprocher leur représentation rapprochée… je ne suis pas tout à fait sûr.
+
+0:45:58.800,0:46:03.760
+Victor essaye d'écrire une nouvelle question pour que nous comprenions
+
+0:46:03.760,0:46:07.359
+mieux ce que tu essayes de demander et ensuite je poserai la question, ok].
+
+0:46:07.359,0:46:14.640
+Je veux ajouter que pour l'apprentissage par imitation c'est en sorte comment évaluer correctement.
+
+0:46:14.640,0:46:32.500
+Quand vous faites l'étape de pré-entraînement, vous vous souciez des tâches en aval que vous utilisez, mais ne faites pas d'apprentissage par imitation.
+
+0:46:35.119,0:46:40.680
+Je peux continuer ? [Oui, je lirai quand de nouvelles questions apparaitront.]
+
+0:46:40.680,0:46:49.680
+Ok. La différence entre le SimCLR et MoCo est comment nous allons faire cette grande taille de batch.
+
+0:46:49.680,0:46:54.999
+Ce que SimCLR fait est d’augmenter brutalement la taille du batch.
+
+0:46:54.999,0:47:03.839
+La taille de batch que les auteurs utilisent dans le papier est de 8192.
+
+0:47:03.839,0:47:14.480
+Donc c'est énorme. En comparaison, les gens qui font de l'apprentissage supervisé, utilisent communément une taille de batch de 256 ou 128.
+
+0:47:14.480,0:47:18.640
+Donc utiliser une taille de batch de 8000, c'est très important.
+
+0:47:18.640,0:47:26.559
+Et même en 2020, lorsque le papier est sorti, les gens ont été très surpris
+
+0:47:26.559,0:47:32.800
+car ça doit coûter une centaine de milliers de dollars sur Google Colab
+
+0:47:32.800,0:47:40.800
+ou autre serveur d’entraînement. Donc c'était vraiment surprenant pour beaucoup de gens.
+
+0:47:40.800,0:47:49.200
+Donc si vous utilisez SimCLR, assurez-vous d’avoir une grande taille de batch.
+
+0:47:49.200,0:47:54.240
+Là où MoCo utilise, je pense, un moyen plus intelligent qui
+
+0:47:54.240,0:47:59.119
+est une très vieille idée : l’utilisation du banque mémoire.
+
+0:47:59.119,0:48:10.000
+L'idée est d'utiliser des batchs plus petits, disons de taille 128 ou 256.
+
+0:48:10.000,0:48:20.000
+Pour les paires positives, vous les prenez dans le batch que vous traitez.
+
+0:48:20.000,0:48:50.000
+Pour former les négatives, vous prenez un élément du batch que vous traitez et un élément de la banque de mémoire qui contient des éléments de batchs précédents récents.
+
+0:48:50.000,0:48:57.000
+Donc disons que votre taille de batch vaut 256.
+
+0:48:58.240,0:49:08.240
+Si vous regroupez les 32 étapes précédentes, 32 batchs d'échantillons négatifs, vous obtenez un batch de négatifs de taille 8192.
+
+0:49:08.559,0:49:24.000
+Donc 8192 échantillons négatifs. C'est vraiment intelligent car vous économisez beaucoup d'espace car vous n’avez pas besoin de regénérez des échantillons négatifs.
+
+0:49:24.000,0:49:30.880
+Il suffit juste de stocker des exemples négatifs dans une banque mémoire.
+
+0:49:30.880,0:49:38.319
+Il y a cependant un problème : B est mis à jour à chaque pas, le backbone est mis à jour à chaque pas.
+
+0:49:38.319,0:49:44.839
+Donc au bout d'un moment, les vieux échantillons négatifs ne sont plus valables.
+
+0:49:44.839,0:49:53.200
+Le backbone ici et le backbone ici peuvent être déjà très différents, leur représentations êtres différentes.
+
+0:49:53.200,0:50:01.920
+Donc si vous faites un apprentissage contrastif dessus, vous verrez clairement une diminution des performances.
+
+0:50:01.920,0:50:11.359
+MoCo signifie « Momemtum Contrast » car utilise un backbone avec momemtum.
+
+0:50:11.960,0:50:20.319
+L'idée est de ralentir l'entraînement du backbone de droite.
+
+0:50:20.319,0:50:30.240
+On met à jour beaucoup plus lentement. Dans ce cas, la différence entre l'ancien et le nouveau backbone n'est pas si différente
+
+0:50:30.240,0:50:38.559
+Cela signifie que ces échantillons négatifs sont toujours valables, même si vous vous entraînez depuis un certain temps.
+
+0:50:38.559,0:50:42.079
+[Alfredo : est-ce qu'il manque un gradient d'arrêt en haut à droite ?]
+
+0:50:42.079,0:50:45.999
+Oh désolé, oui, il y a un gradient d'arrêt ici.
+
+0:50:48.000,0:50:52.160
+[Alfredo : en haut à droite] C’est en fait ici.
+
+0:50:52.160,0:50:57.600
+En fait, vous ne mettez rien du tout à jour.
+
+0:50:57.600,0:51:00.400
+Alors, comment fait-on ?
+
+0:51:00.400,0:51:08.000
+Pour le backbone, j’appelle ça l'appelle θ bien que je devrais plutôt l'appeler w.
+
+0:51:08.480,0:51:15.599
+Comment le mettre à jour ? C’est l'optimiseur SGD simple sans momentum ni taux de décroissance des poids.
+
+0:51:15.599,0:51:22.500
+Donc c’est simplement le dernier poids moins le taux d'apprentissage multiplié par le gradient de θ_t.
+
+0:51:22.500,0:51:34.559
+C’est comme ça que vous mettez à jour chaque comme un réseau backbone. [Alfredo : est-ce que plus lent signifie un très petit taux d'apprentissage. Que veut dire plus lent ?]
+
+0:51:34.559,0:51:38.800
+Ok, laissez-moi expliquer ça.
+
+0:51:38.800,0:51:41.119
+aissez-moi d'abord finir cette chose.
+
+0:51:41.119,0:52:01.440
+Pour le paramètre du backbone, à chaque fois que ϑ_{t+1} change, vous faites cette moyenne mobile exponentielle sur ϑ_t.
+
+0:52:01.440,0:52:09.400
+Donc, en gros, ϑ_t est le paramètre du backbone avec momentum. La moyenne mobile exponentielle sur ϑ_t.
+
+0:52:09.400,0:52:18.640
+Le m est habituellement configuré à 0,99 ou 0,996.
+
+0:52:18.640,0:52:23.520
+Donc dans ce sens, vous pouvez...
+
+0:52:23.520,0:52:28.400
+Si vous avez du temps, vous pouvez essayer vous-même. Vous pouvez l’augmenter.
+
+0:52:28.400,0:52:34.500
+C’est en fait comme le taux d'apprentissage de θ_{t+1} fois (1 – m).
+
+0:52:34.500,0:52:38.240
+Donc quand (1 – y) vaut 0,01
+
+0:52:38.240,0:52:46.319
+notre taux d'apprentissage de ϑ_t est cent fois plus petit que le taux d'apprentissage de θ_t.
+
+0:52:46.319,0:52:51.040
+Donc c'est essentiellement comme avoir un taux d'apprentissage plus petit.
+
+0:52:51.280,0:52:59.440
+Ou d’une autre manière, c'est juste la moyenne mobile exponentielle puisque la moyenne mobile de ϑ_t.
+
+0:52:59.440,0:53:03.040
+Donc à chaque fois, cela a changé très légèrement.
+
+0:53:03.079,0:53:10.960
+[Alfredo : Cela semble très contre-intuitif. Pourquoi le momentum devrait-il être très élevé ?]
+
+0:53:10.960,0:53:15.400
+Car vous voulez que ϑt soit stable.
+
+0:53:15.400,0:53:23.040
+Si vous mettez le momentum élevé, la mise à jour sera très lente.
+
+0:53:23.040,0:53:32.400
+Dans le cas extrême où m vaut 0, cela veut dire qu’on annule celui-là.
+
+0:53:32.400,0:53:38.480
+Donc à chaque fois ϑ_{t+1} est égal à θ_{t+1}.
+
+0:53:38.480,0:53:43.680
+Dans ce cas, les deux réseaux partagent les poids. Comme s'il s'agit du même réseau.
+
+0:53:43.680,0:53:54.960
+Ils partagent les poids. Mais dans le cas extrême où m vaut 1, ϑ_{t+1} est égal à ϑ_t.
+
+0:53:54.960,0:53:58.000
+En fait, vous ne changez pas les poids.
+
+0:53:58.000,0:54:03.440
+[Alfredo : c’est donc une initialisation non entraînée]. Oui, en gros initialisation aléatoire.
+
+0:54:03.440,0:54:12.200
+Donc mettre m à 0 signifie que le backbone et le backbone avec momentum ont les mêmes poids.
+
+0:54:12.200,0:54:17.160
+Mettre m à 1 signifie qu'il n'est pas entraîné du tout.
+
+0:54:17.160,0:54:23.500
+Donc en changeant m entre 0 et 1, vous pouvez changer le taux de variation de ϑ_t.
+
+0:54:27.040,0:54:31.520
+En augmentant m, vous ralentissez les changements de ϑ_t.
+
+0:54:34.000,0:54:40.400
+Je pense que c'est assez intuitif, mais je peux me tromper. [rires]
+
+0:54:40.400,0:54:45.040
+[Alfredo : je pense…] Des questions ? [Alfredo : oui j’en ai une.
+
+0:54:45.040,0:54:49.200
+Combien de diapositives supplémentaires avons-nous sur les techniques contrastives ?]
+
+0:54:49.200,0:54:54.319
+C'est tout. [Ok. Je crois que c'est tout pour aujourd'hui.]
+
+0:54:54.319,0:54:57.200
+Ok. Je…
+
+0:54:57.200,0:55:03.040
+[Attends, attends. Car j'ai oublié d'enregistrer l'introduction de la séance,
+
+0:55:03.040,0:55:10.720
+on peut dire qu'on en a fini avec la leçon. Tu peux dire encore des choses si tu dois, mais je dirais que la leçon est terminée.
+
+0:55:10.720,0:55:24.160
+Je vais redire l’introduction du jour pour l’enregistrement, pour que ceux qui n'ont pas pu venir puissent avoir les 10 premières minutes.
+
+0:55:24.319,0:55:26.160
+Ceux qui veulent partir le peuvent.
+
+0:55:26.160,0:55:31.839
+Vous pouvez rester si vous voulez poser des questions non posées précédemment.
+
+0:55:31.839,0:55:38.880
+Je vais faire de mon mieux pour essayer de me souvenir de ce que j'ai dit au début.]
+
+0:55:38.880,0:55:45.920
+Je n'ai rien d'autre à dire, mais si vous avez une question, je peux y répondre dans le chat.
+
+0:55:45.920,0:55:49.000
+Ok, donc Alfredo tu peux faire tes trucs.
+
+0:55:49.000,0:55:53.000
+[Alfredo : Ok, très bien, donc la classe est libre, vous êtes libre de partir.
+
+0:55:53.000,0:55:57.500
+Nous allons revoir Jiachen car cette leçon était, je pense, très bien.
+
+0:55:57.500,0:56:01.500
+Je veux dire que j'ai beaucoup aimé, surtout les couleurs.
+
+0:56:01.500,0:56:05.920
+Je pense que c'était très bien, blagues à part.
+
+0:56:05.920,0:56:15.000
+Donc nous allons revoir Jiachen très bientôt et nous pourrons continuer avec les techniques non-contrastives.
+
+0:56:15.000,0:56:21.520
+Je vais juste recommencer le début, ce que j'ai oublié d'enregistrer, c'était ma faute.
+
+0:56:21.520,0:56:29.640
+Et c'est tout. Encore une fois, merci d’avoir été avec nous aujourd'hui et désolé d’avoir oublié d’enregistrer le début.
+
+0:56:29.640,0:56:35.359
+Nous avons quand même cette post introduction de la leçon entière.
+
+0:56:36.640,0:56:40.000
+Bye bye à tous ceux qui sont encore là.
+
+0:56:40.000,0:56:41.839
+Oh quelqu'un est toujours là.
+
+0:56:41.839,0:56:48.559
+Donc je l'ai réparé, même si j'ai foiré, je l'ai réparé.
+
+0:56:49.200,0:56:52.520
+Très bien, au revoir.

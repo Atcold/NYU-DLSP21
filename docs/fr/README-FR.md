@@ -51,7 +51,7 @@ Henceforth, I've redesigned my whole deck of slides.
 
 ## La seconde moitié du semestre
 
-Alfredo pensait reproduire les mêmes travaux pratiques utilisés pour l'édition de l'année dernière, [NYU-DLSP20](https://github.com/Atcold/pytorch-Deep-Learning), mais dans un ordre différent.  
+Alfredo pensait reproduire les mêmes travaux pratiques utilisés pour l'édition de l'année dernière, [NYU-DLSP20](https://github.com/Atcold/NYU-DLSP20), mais dans un ordre différent.  
 
 Cependant il n'a pas pu.  
 
@@ -98,7 +98,7 @@ Before NYU-DLSP21 there were…
 
 Avant NYU-DLSP21, il y a eu :
 
-- [NYU-DLSP20](https://github.com/Atcold/pytorch-Deep-Learning) (version la plus importante)
+- [NYU-DLSP20](https://github.com/Atcold/NYU-DLSP20) (version la plus importante)
 - [NYU-DLSP19](https://github.com/Atcold/pytorch-Deep-Learning/releases/tag/dlsp19)
 - [AIMS-DLFL19](https://github.com/Atcold/pytorch-Deep-Learning/releases/tag/aims-fl18)
 - [CoDaS-HEP18](https://github.com/Atcold/pytorch-Deep-Learning/releases/tag/v1.0.0)

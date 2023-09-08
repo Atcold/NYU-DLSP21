@@ -20,7 +20,7 @@ We've treated LV-EBM as a *basic* module, which to build upon.
 
 ## Enters the semester's second half
 
-I thought I was going to repropose the same practica I've used during [NYU-DLSP20](https://github.com/Atcold/pytorch-Deep-Learning), last year edition, just in different order.
+I thought I was going to repropose the same practica I've used during [NYU-DLSP20](https://github.com/Atcold/NYU-DLSP20), last year edition, just in different order.
 
 But I couldn't.
 
@@ -43,7 +43,7 @@ A more powerful one.
 
 Before NYU-DLSP21 there were…
 
-- [NYU-DLSP20](https://github.com/Atcold/pytorch-Deep-Learning) (major release)
+- [NYU-DLSP20](https://github.com/Atcold/NYU-DLSP20) (major release)
 - [NYU-DLSP19](https://github.com/Atcold/pytorch-Deep-Learning/releases/tag/dlsp19)
 - [AIMS-DLFL19](https://github.com/Atcold/pytorch-Deep-Learning/releases/tag/aims-fl18)
 - [CoDaS-HEP18](https://github.com/Atcold/pytorch-Deep-Learning/releases/tag/v1.0.0)

@@ -30,13 +30,13 @@ def plot_data(X, y, d=0, auto=False, zoom=1, title='Training data (x, y)'):
 
 def plot_model(X, y, model):
     model.cpu()
-    mesh = torch.arange(-1.1, 1.1, 0.01)
-    xx, yy = torch.meshgrid(mesh, mesh)
+    mesh = torch.arange(-1.1, 1.11, 0.01)
+    xx, yy = torch.meshgrid(mesh, mesh, indexing='xy')
     with torch.no_grad():
         data = torch.stack((xx.reshape(-1), yy.reshape(-1)), dim=1)
         Z = model(data)
     Z = Z.argmax(dim=1).reshape(xx.shape)
-    plt.contourf(xx, yy, Z, cmap=plt.cm.Spectral, alpha=0.3)
+    plt.contourf(xx.numpy(), yy.numpy(), Z, cmap=plt.cm.Spectral, alpha=0.3)
     plot_data(X, y)
     plt.title('Model decision boundaries')
 
@@ -70,7 +70,7 @@ def plot_embeddings(X, y, model, zoom=10):
             data = torch.stack((xx.reshape(-1), yy.reshape(-1)), dim=1)
             Z = last_layer(data)
         Z = Z.argmax(dim=1).reshape(xx.shape)
-        plt.contourf(xx, yy, Z, cmap=plt.cm.Spectral, alpha=0.3, levels=y.max().item())
+        plt.contourf(xx.numpy(), yy.numpy(), Z, cmap=plt.cm.Spectral, alpha=0.3, levels=y.max().item())
     else:
         print(
             "Cannot plot: second-last layer is not a linear layer"

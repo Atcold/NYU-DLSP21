@@ -43,11 +43,11 @@ Here are some answers to frequently asked questions:
 >  
 > For credit, you can use the following BibTeX:
 > ```bibtex
-> @misc{canziani2020nyudlsp21,  
+> @misc{canziani2020nyudlsp20,  
 >   author = {Canziani, Alfredo and LeCun, Yann},  
->   title = {{NYU Deep Learning, Spring 2021}},
->   howpublished = "\url{https://atcold.github.io/NYU-DLSP21}",  
->   year = {2021},  
+>   title = {NYU Deep Learning, Spring 2020},  
+>   howpublished = "\url{https://atcold.github.io/NYU-DLSP20}",  
+>   year = {2020},  
 >   note = "[Online; accessed <today>]"  
 > }
 > ```
